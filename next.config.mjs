@@ -4,6 +4,12 @@ const nextConfig = {
   experimental: {
     // missingSuspenseWithCSRBailout has been removed in newer Next.js versions
   },
+  // Allow all hosts for Replit proxy support
+  ...(process.env.NODE_ENV === 'development' && {
+    experimental: {
+      allowedHosts: ['*'],
+    },
+  }),
   // Add dev server stability options
   ...(process.env.NODE_ENV === 'development' && {
     onDemandEntries: {
