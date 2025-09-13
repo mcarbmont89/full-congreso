@@ -5,7 +5,7 @@ export type { NewsItem, Program }
 
 // Client-side API functions that call server-side routes
 export async function fetchPrograms(): Promise<Program[]> {
-  const baseUrl = typeof window !== 'undefined' ? '' : 'http://localhost:3000'
+  const baseUrl = typeof window !== 'undefined' ? '' : 'http://localhost:5000'
   const response = await fetch(`${baseUrl}/api/programs`)
   if (!response.ok) {
     throw new Error('Failed to fetch programs')
