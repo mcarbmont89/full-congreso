@@ -1,0 +1,336 @@
+body {
+  background-color: #3b0764;
+  background-image: url("https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Fondo%20menu%CC%81%20inicio-E2Kphliz6M2WLtYSfYPrXeEIMNC6SY.png");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Estilos para el modo de alto contraste */
+body.high-contrast {
+  background-color: black;
+  color: white;
+}
+
+body.high-contrast a {
+  color: yellow;
+}
+
+body.high-contrast button {
+  background-color: white;
+  color: black;
+  border: 2px solid yellow;
+}
+
+body.high-contrast img {
+  filter: grayscale(100%) contrast(120%);
+}
+
+body.high-contrast header,
+body.high_contrast footer,
+body.high_contrast section {
+  background-color: black;
+  color: white;
+  border-color: yellow;
+}
+
+body.high_contrast .bg-purple-900 {
+  background-color: black;
+}
+
+body.high_contrast .text-white {
+  color: yellow;
+}
+
+body.high_contrast .bg-white {
+  background-color: black;
+  color: white;
+}
+
+body.high_contrast .text-gray-600,
+body.high_contrast .text-gray-500,
+body.high_contrast .text-gray-700,
+body.high_contrast .text-gray-800 {
+  color: white;
+}
+
+body.high_contrast .border,
+body.high_contrast .border-t,
+body.high_contrast .border-b {
+  border-color: yellow;
+}
+
+/* Ocultar la barra de desplazamiento pero permitir el desplazamiento */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Animación de brillo optimizada */
+@keyframes shimmer {
+  0% {
+    transform: translateX(-150%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateX(150%);
+    opacity: 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+/* Estilos para el menú móvil */
+@media (max-width: 768px) {
+  body.menu-open {
+    overflow: hidden !important;
+    position: fixed;
+    width: 100%;
+  }
+
+  /* Ensure mobile menu appears above all other content */
+  header {
+    position: relative;
+    z-index: 50;
+  }
+
+  /* Mobile menu stays visible and prevents flickering */
+  .mobile-menu-container {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 45;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    transition: none; /* Remove transitions that cause flickering */
+  }
+}
+
+  @media (max-width: 768px) {
+  /* Mobile table improvements */
+  .mobile-table td {
+    padding: 8px 4px;
+    font-size: 14px;
+  }
+
+  .mobile-table th {
+    padding: 8px 4px;
+    font-size: 12px;
+  }
+
+  /* Mobile optimizations */
+  .overflow-x-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent body scroll when mobile menu is open */
+  body.menu-open {
+    overflow: hidden !important;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent horizontal scroll on mobile */
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Fix for mobile viewport */
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* Ensure content doesn't extend beyond viewport */
+  * {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Fix for mobile swipe gestures */
+  .mobile-safe {
+    touch-action: pan-y;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Carousel and container fixes for mobile */
+  .carousel-container,
+  [data-carousel="container"] {
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow: hidden !important;
+  }
+
+  /* Fix carousel slides */
+  .carousel-slide,
+  [data-carousel="slide"] {
+    width: 100% !important;
+    max-width: 100vw !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Fix carousel navigation */
+  .carousel-nav,
+  [data-carousel="nav"] {
+    position: absolute !important;
+    z-index: 10 !important;
+  }
+
+  /* Ensure grid containers don't overflow */
+  .grid {
+    width: 100% !important;
+    max-width: 100vw !important;
+  }
+
+  /* Fix any absolute positioned elements */
+  .absolute {
+    max-width: 100vw !important;
+  }
+
+  /* Container constraints */
+  .container,
+  .mx-auto {
+    max-width: 100vw !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  /* Prevent carousel overflow */
+  .grid {
+    overflow: hidden !important;
+  }
+
+  /* Make carousel items responsive */
+  .relative.group {
+    min-width: 0 !important;
+    flex-shrink: 1 !important;
+  }
+
+  /* Line clamp utility for text truncation */
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Fix for broken images on mobile */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Mobile live stream optimizations */
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+
+  /* Text stroke utility for mobile navigation */
+  .text-stroke-sm {
+    text-shadow: 1px 1px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+  }
+}
+
+/* Add any additional global styles here */
+
+/* Ensure error messages are always visible */
+.error,
+[class*="error"],
+.alert-error,
+.bg-red-100,
+.text-red-700,
+.text-red-800 {
+  opacity: 1 !important;
+}
+
+/* Audio player error styles */
+.audio-error {
+  background-color: #fef2f2 !important;
+  border: 2px solid #fca5a5 !important;
+  color: #dc2626 !important;
+  opacity: 1 !important;
+  z-index: 1000;
+}
+.error-message {
+  opacity: 1 !important;
+  background-color: #fee2e2 !important;
+  color: #991b1b !important;
+  border: 1px solid #fca5a5 !important;
+}
+
+/* Toast notification styles */
+[data-radix-toast-viewport] {
+  z-index: 9999 !important;
+}
+
+/* Ensure all toast elements are visible with white background */
+[data-radix-toast-root] {
+  background-color: white !important;
+  border: 1px solid #d1d5db !important;
+  opacity: 1 !important;
+  color: #111827 !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-radix-toast-title],
+[data-radix-toast-description] {
+  opacity: 1 !important;
+  color: #111827 !important;
+}
+
+/* Success toasts */
+.group[data-type="foreground"]:not(.destructive) {
+  background-color: white !important;
+  color: #059669 !important;
+  border-color: #10b981 !important;
+  opacity: 1 !important;
+}
+
+/* Error/destructive toasts */
+.group[data-type="foreground"].destructive {
+  background-color: #dc2626 !important;
+  color: white !important;
+  border-color: #b91c1c !important;
+  opacity: 1 !important;
+}

@@ -1,0 +1,37 @@
+El código está respondiendo con un 429 Too Many Requests, que en HTTP significa que has superado el límite de peticiones permitidas por la API en el intervalo de tiempo establecido. En el caso de la API de X (antes Twitter) esto suele ocurrir porque:
+
+Has hecho demasiadas llamadas en poco tiempo. Cada endpoint tiene una cuota (por ejemplo, 300 peticiones cada 15 minutos en nivel estándar).
+
+No estás respetando los encabezados de “rate limit” que devuelve cada respuesta:
+
+x-rate-limit-limit → cuántas peticiones totales tienes permitidas en el window.
+
+x-rate-limit-remaining → cuántas te quedan.
+
+x-rate-limit-reset → momento (timestamp UNIX) en que se reinicia el contador.
+
+¿Qué puedes hacer para solucionarlo?
+Disminuir la frecuencia de llamadas
+• Implementa un caché en el servidor (por ejemplo, guarda la respuesta durante 1–2 minutos en memoria o en Redis) para no volver a pedir el mismo timeline en cada visita.
+• Si usas SWR o React Query, configura un revalidateOnFocus: false y un dedupingInterval mayor.
+
+Leer y respetar los headers de Rate Limit
+Antes de lanzar otra petición, comprueba x-rate-limit-remaining. Si está a cero, espera hasta la hora indicada por x-rate-limit-reset:
+
+js
+Copiar
+Editar
+// Ejemplo simplificado de backoff
+const remaining = response.headers.get('x-rate-limit-remaining');
+const resetTs   = response.headers.get('x-rate-limit-reset');
+if (remaining === '0') {
+  const waitMs = (+resetTs * 1000) - Date.now();
+  await new Promise(r => setTimeout(r, waitMs));
+  // reintenta la petición…
+}
+Revisar tu nivel de acceso
+• En modo “Essential” (gratuito) las cuotas son muy ajustadas. Pide Elevated Access (o paga un plan) si necesitas más llamadas.
+• En el portal de desarrollador de X, comprueba en el apartado “Projects & Apps” los detalles de tu proyecto y los límites asignados.
+
+Batching / Paginación
+• Si quieres más tweets, en vez de repetir la misma URL con max_results, usa la paginación (param pagination_token) para avanzar por lotes y no disparar llamadas extra.

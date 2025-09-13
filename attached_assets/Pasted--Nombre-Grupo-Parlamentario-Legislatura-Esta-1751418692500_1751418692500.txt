@@ -1,0 +1,14 @@
+| Nombre                             | Grupo Parlamentario                  | Legislatura     | Estado           | Tipo             | Género |
+| ---------------------------------- | ------------------------------------ | --------------- | ---------------- | ---------------- | ------ |
+| Graciela Ortiz González            | Morena                               | LXV (2021–2024) | Ciudad de México | Mayoría relativa | F      |
+| Mario Miguel Carrillo Cubillas     | Morena                               | LXV (2021–2024) | Ciudad de México | Plurinominal     | M      |
+| Francisco Adrián Castillo Morales  | Morena                               | LXV (2021–2024) | Ciudad de México | Plurinominal     | M      |
+| Irma Juan Carlos                   | Morena *(se requiere clarificación)* | LXV (2021–2024) | –                | –                | F/M?   |
+| Miguel Alejandro Alonso Reyes      | Morena                               | LXV (2021–2024) | –                | –                | M      |
+| Óscar Bautista Villegas            | Morena                               | LXV (2021–2024) | –                | –                | M      |
+| María del Rosario Orozco Caballero | Morena                               | LXV (2021–2024) | Puebla           | Mayoría relativa | F      |
+| Gabriela Valdepeñas González       | Morena                               | LXV (2021–2024) | Estado de México | Mayoría relativa | F      |
+| Andrés Mauricio Cantú Ramírez      | Morena                               | LXV (2021–2024) | –                | –                | M      |
+| César Agustín Hernández Pérez      | Morena                               | LXV (2021–2024) | Veracruz         | Mayoría relativa | M      |
+| Víctor Antonio Corrales Burgueño   | PAN                                  | LXV (2021–2024) | Sinaloa          | Plurinominal     | M      |
+| Roxana Rubio Valdez                | PAN                                  | LXV (2021–2024) | Sinaloa          | Plurinominal     | F      |

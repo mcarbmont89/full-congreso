@@ -1,0 +1,54 @@
+Error: ./app/transmisiones/page.tsx
+Error:   [31m×[0m The "use client" directive must be placed before other expressions. Move it to the top of the file to resolve this issue.
+    ╭─[[36;1;4m/home/runner/workspace/app/transmisiones/page.tsx[0m:9:1]
+ [2m 6[0m │ import Footer from "@/components/footer"
+ [2m 7[0m │ import { getLiveStreams, type LiveStream } from "@/lib/api"
+ [2m 8[0m │ 
+ [2m 9[0m │ "use client"
+    · [35;1m────────────[0m
+ [2m10[0m │ 
+ [2m11[0m │ import { useState, useEffect } from "react"
+    ╰────
+  [31m×[0m You're importing a component that needs `useState`. This React hook only works in a client component. To fix, mark the file (or its parent) with the `"use client"` directive.
+  [31m│[0m 
+  [31m│[0m  Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+  [31m│[0m 
+  [31m│[0m 
+    ╭─[[36;1;4m/home/runner/workspace/app/transmisiones/page.tsx[0m:11:1]
+ [2m 8[0m │ 
+ [2m 9[0m │ "use client"
+ [2m10[0m │ 
+ [2m11[0m │ import { useState, useEffect } from "react"
+    · [35;1m         ────────[0m
+ [2m12[0m │ 
+ [2m13[0m │ export default function TransmisionesPage() {
+ [2m14[0m │   const [liveStreams, setLiveStreams] = useState<LiveStream[]>([])
+    ╰────
+  [31m×[0m You're importing a component that needs `useEffect`. This React hook only works in a client component. To fix, mark the file (or its parent) with the `"use client"` directive.
+  [31m│[0m 
+  [31m│[0m  Learn more: https://nextjs.org/docs/app/api-reference/directives/use-client
+  [31m│[0m 
+  [31m│[0m 
+    ╭─[[36;1;4m/home/runner/workspace/app/transmisiones/page.tsx[0m:11:1]
+ [2m 8[0m │ 
+ [2m 9[0m │ "use client"
+ [2m10[0m │ 
+ [2m11[0m │ import { useState, useEffect } from "react"
+    · [35;1m                   ─────────[0m
+ [2m12[0m │ 
+ [2m13[0m │ export default function TransmisionesPage() {
+ [2m14[0m │   const [liveStreams, setLiveStreams] = useState<LiveStream[]>([])
+    ╰────
+    at BuildError (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/client/components/react-dev-overlay/ui/container/build-error.js:43:41)
+    at react-stack-bottom-frame (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:22429:20)
+    at renderWithHooksAgain (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:5858:20)
+    at renderWithHooks (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:5770:22)
+    at updateFunctionComponent (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:8019:19)
+    at beginWork (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:9684:18)
+    at runWithFiberInDEV (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:544:16)
+    at performUnitOfWork (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:15045:22)
+    at workLoopSync (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:14871:41)
+    at renderRootSync (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:14851:11)
+    at performWorkOnRoot (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:14335:13)
+    at performWorkOnRootViaSchedulerTask (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/react-dom@19.0.0_react@19.0.0/node_modules/react-dom/cjs/react-dom-client.development.js:15932:7)
+    at MessagePort.performWorkUntilDeadline (webpack-internal:///(pages-dir-browser)/./node_modules/.pnpm/scheduler@0.25.0/node_modules/scheduler/cjs/scheduler.development.js:44:48)

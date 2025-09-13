@@ -1,0 +1,58 @@
+Error: Hydration failed because the server rendered HTML didn't match the client. As a result this tree will be regenerated on the client. This can happen if a SSR-ed Client Component used:
+
+- A server/client branch `if (typeof window !== 'undefined')`.
+- Variable input such as `Date.now()` or `Math.random()` which changes each time it's called.
+- Date formatting in a user's locale which doesn't match the server.
+- External changing data without sending a snapshot of it along with the HTML.
+- Invalid HTML tag nesting.
+
+It can also happen if the client has a browser extension installed which messes with the HTML before React loaded.
+
+https://react.dev/link/hydration-mismatch
+
+  ...
+    <HTTPAccessFallbackBoundary notFound={undefined} forbidden={undefined} unauthorized={undefined}>
+      <RedirectBoundary>
+        <RedirectErrorBoundary router={{...}}>
+          <InnerLayoutRouter url="/radio" tree={[...]} cacheNode={{lazyData:null, ...}} segmentPath={[...]}>
+            <ClientPageRoot Component={function RadioPage} searchParams={{}} params={{}}>
+              <RadioPage params={Promise} searchParams={Promise}>
+                <div className="flex flex-...">
+                  <main className="flex-grow">
+                    <div>
+                    <div>
+                    <section>
+                    <section className="py-12" style={{...}}>
+                      <div className="container ...">
+                        <ProgramCarousel items={[...]}>
+                          <div className="relative">
+                            <div>
+                            <div ref={{current:null}} className="overflow-h..." onTouchStart={function handleTouchStart} ...>
+                              <div className="flex trans...">
+-                               <a
+-                                 className="block flex-1 min-w-0 transform transition-transform duration-300 hover:sc..."
+-                                 href="/radio/entrevistas"
+-                               >
+-                               <a
+-                                 className="block flex-1 min-w-0 transform transition-transform duration-300 hover:sc..."
+-                                 href="/radio/noticias-congreso"
+-                               >
+                    ...
+                  ...
+            ...
+
+    at throwOnHydrationMismatch (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:13311:11)
+    at popHydrationState (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:13449:9)
+    at completeWork (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:13744:17)
+    at runWithFiberInDEV (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:1511:30)
+    at completeUnitOfWork (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:15256:19)
+    at performUnitOfWork (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:15137:11)
+    at workLoopConcurrentByScheduler (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:15114:9)
+    at renderRootConcurrent (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:15089:15)
+    at performWorkOnRoot (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:14410:13)
+    at performWorkOnRootViaSchedulerTask (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:16275:7)
+    at MessagePort.performWorkUntilDeadline (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js:45:48)
+    at div (<anonymous>)
+    at ProgramCarousel (webpack-internal:///(app-pages-browser)/./components/program-carousel.tsx:148:102)
+    at RadioPage (webpack-internal:///(app-pages-browser)/./app/radio/page.tsx:397:118)
+    at ClientPageRoot (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/client/components/client-page.js:20:50)

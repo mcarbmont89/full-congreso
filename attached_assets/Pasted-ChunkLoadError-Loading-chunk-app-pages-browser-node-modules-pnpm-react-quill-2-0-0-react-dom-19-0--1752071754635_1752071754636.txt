@@ -1,0 +1,14 @@
+ChunkLoadError: Loading chunk _app-pages-browser_node_modules_pnpm_react-quill_2_0_0_react-dom_19_0_0_react_19_0_0__react_1-9de2a1 failed.
+(error: https://828fb610-6dae-4211-b2f2-09b4875c4a7a-00-2yfonru34byr8.picard.replit.dev/_next/static/chunks/_app-pages-browser_node_modules_pnpm_react-quill_2_0_0_react-dom_19_0_0_react_19_0_0__react_1-9de2a1.js)
+    at __webpack_require__.f.j (https://828fb610-6dae-4211-b2f2-09b4875c4a7a-00-2yfonru34byr8.picard.replit.dev/_next/static/chunks/webpack.js?v=1752071595559:858:29)
+    at https://828fb610-6dae-4211-b2f2-09b4875c4a7a-00-2yfonru34byr8.picard.replit.dev/_next/static/chunks/webpack.js?v=1752071595559:153:40
+    at Array.reduce (<anonymous>)
+    at __webpack_require__.e (https://828fb610-6dae-4211-b2f2-09b4875c4a7a-00-2yfonru34byr8.picard.replit.dev/_next/static/chunks/webpack.js?v=1752071595559:152:67)
+    at fn.e (https://828fb610-6dae-4211-b2f2-09b4875c4a7a-00-2yfonru34byr8.picard.replit.dev/_next/static/chunks/webpack.js?v=1752071595559:389:50)
+    at ReactQuill.loadableGenerated.modules [as loader] (webpack-internal:///(app-pages-browser)/./components/rich-text-editor.tsx:18:101)
+    at eval (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/shared/lib/lazy-dynamic/loadable.js:40:58)
+    at lazyInitializer (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/compiled/react/cjs/react.development.js:459:16)
+    at LoadableComponent (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/shared/lib/lazy-dynamic/loadable.js:63:57)
+    at RichTextEditor (webpack-internal:///(app-pages-browser)/./components/rich-text-editor.tsx:179:88)
+    at NewsAdmin (webpack-internal:///(app-pages-browser)/./app/admin/news/page.tsx:456:146)
+    at ClientPageRoot (webpack-internal:///(app-pages-browser)/./node_modules/.pnpm/next@15.2.4_react-dom@19.0.0_react@19.0.0__react@19.0.0/node_modules/next/dist/client/components/client-page.js:20:50)

@@ -1,0 +1,95 @@
+
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  experimental: {
+    // missingSuspenseWithCSRBailout has been removed in newer Next.js versions
+  },
+  webpack: (config, { isServer }) => {
+    // Exclude Node.js modules from client-side bundle
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        dns: false,
+        tls: false,
+        crypto: false,
+        stream: false,
+        path: false,
+        zlib: false,
+        http: false,
+        https: false,
+        assert: false,
+        os: false,
+        url: false,
+      }
+
+      // Exclude pg and related modules from client bundle
+      config.externals = config.externals || []
+      config.externals.push({
+        'pg': 'commonjs pg',
+        'pg-connection-string': 'commonjs pg-connection-string',
+        'pgpass': 'commonjs pgpass'
+      })
+    }
+
+    return config
+  },
+  serverExternalPackages: ['pg', 'pg-connection-string', 'pgpass', 'bcryptjs', 'jsonwebtoken', 'nodemailer'],
+  output: 'standalone',
+  assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
+  trailingSlash: false,
+  images: {
+    unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+      {
+        protocol: 'http',
+        hostname: '**',
+      },
+    ],
+    domains: [],
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/uploads/:path*',
+        destination: '/api/files/uploads/:path*',
+      },
+    ]
+  },
+  // Disable static optimization for deployment
+  staticPageGenerationTimeout: 1000,
+  generateBuildId: async () => {
+    // Generate a unique build ID to prevent caching issues
+    return Date.now().toString()
+  },
+  // Add headers to prevent caching
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
+          },
+          {
+            key: 'Pragma',
+            value: 'no-cache',
+          },
+          {
+            key: 'Expires',
+            value: '0',
+          },
+        ],
+      },
+    ]
+  },
+}
+
+export default nextConfig
