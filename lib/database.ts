@@ -21,7 +21,8 @@ function initializeConnection() {
         ssl: process.env.DATABASE_URL.includes('localhost') ? false : { rejectUnauthorized: false },
         max: 20,
         idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 2000,
+        connectionTimeoutMillis: 10000,
+        acquireTimeoutMillis: 10000,
       })
       console.log('Database connection initialized from DATABASE_URL')
     } catch (error) {
@@ -38,7 +39,8 @@ function initializeConnection() {
         ssl: process.env.PGHOST.includes('localhost') ? false : { rejectUnauthorized: false },
         max: 20,
         idleTimeoutMillis: 30000,
-        connectionTimeoutMillis: 2000,
+        connectionTimeoutMillis: 10000,
+        acquireTimeoutMillis: 10000,
       })
       console.log('Database connection initialized from PG environment variables')
     } catch (error) {
@@ -64,7 +66,8 @@ export function createDatabaseConnection(config: DatabaseConfig): Pool {
     ssl: config.ssl ? { rejectUnauthorized: false } : false,
     max: 20,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 2000,
+    connectionTimeoutMillis: 10000,
+    acquireTimeoutMillis: 10000,
   })
   
   return pool
