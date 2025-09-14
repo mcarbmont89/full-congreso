@@ -33,8 +33,11 @@ export default function LoginPage() {
       if (response.ok) {
         const data = await response.json()
         console.log('Login successful:', data)
-        // Force immediate redirect
-        window.location.href = '/admin'
+        setError('✅ Login exitoso, redirigiendo...')
+        // Add small delay to ensure cookie is set before redirect
+        setTimeout(() => {
+          window.location.href = '/admin'
+        }, 500)
       } else {
         const data = await response.json()
         setError(data.error || 'Error de autenticación')
