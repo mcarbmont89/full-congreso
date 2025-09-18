@@ -208,17 +208,17 @@ export default function LiveStreamsAdmin() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-3 sm:p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 md:mb-6 gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Transmisiones en Vivo</h1>
-          <p className="text-gray-600">Gestiona las señales y transmisiones en directo</p>
+          <h1 className="text-xl sm:text-2xl font-bold">Transmisiones en Vivo</h1>
+          <p className="text-sm sm:text-base text-gray-600">Gestiona las señales y transmisiones en directo</p>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline">
+              <Button variant="outline" className="w-full sm:w-auto min-h-[44px]">
                 Limpiar datos de la BD
               </Button>
             </AlertDialogTrigger>
@@ -283,7 +283,7 @@ export default function LiveStreamsAdmin() {
               <Button onClick={() => {
                 setEditingStream(null)
                 resetForm()
-              }}>
+              }} className="w-full sm:w-auto min-h-[44px]">
                 <Plus className="h-4 w-4 mr-2" />
                 Nueva Transmisión
               </Button>

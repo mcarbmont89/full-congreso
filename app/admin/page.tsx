@@ -31,28 +31,28 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-3 sm:p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 md:mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Panel de Administración</h1>
-            <p className="text-gray-600">Canal del Congreso - CMS</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Panel de Administración</h1>
+            <p className="text-sm sm:text-base text-gray-600">Canal del Congreso - CMS</p>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
             {user && (
-              <span className="text-sm text-gray-600">
+              <span className="text-xs sm:text-sm text-gray-600">
                 Bienvenido, {user.username}
               </span>
             )}
-            <Button onClick={handleLogout} variant="outline">
+            <Button onClick={handleLogout} variant="outline" className="w-full sm:w-auto min-h-[44px]">
               Cerrar Sesión
             </Button>
           </div>
         </div>
 
         {/* Dashboard Cards */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {/* Database Configuration */}
           <Card>
             <CardHeader>
@@ -66,7 +66,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <Link href="/admin/database-config">
-                <Button className="w-full">
+                <Button className="w-full min-h-[44px] text-sm sm:text-base">
                   Configurar Base de Datos
                 </Button>
               </Link>
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <Link href="/admin/programs">
-                <Button className="w-full">
+                <Button className="w-full min-h-[44px] text-sm sm:text-base">
                   Gestionar Programas
                 </Button>
               </Link>
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <Link href="/admin/live-streams">
-                <Button className="w-full">
+                <Button className="w-full min-h-[44px] text-sm sm:text-base">
                   Gestionar Transmisiones
                 </Button>
               </Link>
@@ -126,7 +126,7 @@ export default function AdminDashboard() {
             </CardHeader>
             <CardContent>
               <Link href="/admin/news">
-                <Button className="w-full">
+                <Button className="w-full min-h-[44px] text-sm sm:text-base">
                   Gestionar Noticias
                 </Button>
               </Link>
@@ -145,7 +145,7 @@ export default function AdminDashboard() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Button className="w-full" variant="outline">
+              <Button className="w-full min-h-[44px] text-sm sm:text-base" variant="outline">
                 Configuración
               </Button>
             </CardContent>
@@ -162,36 +162,36 @@ export default function AdminDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2">
+            <div className="space-y-2 sm:space-y-3">
               <Link 
                 href="/admin/radio-programs" 
-                className="block p-3 border rounded hover:bg-gray-50"
+                className="block p-3 border rounded hover:bg-gray-50 min-h-[44px] flex flex-col justify-center touch-manipulation"
               >
-                <div className="font-medium">Programas de Radio</div>
-                <div className="text-sm text-gray-600">Gestionar programas destacados y episodios</div>
+                <div className="font-medium text-sm sm:text-base">Programas de Radio</div>
+                <div className="text-xs sm:text-sm text-gray-600">Gestionar programas destacados y episodios</div>
               </Link>
                <Link 
                 href="/admin/radio-categories" 
-                className="block p-3 border rounded hover:bg-gray-50"
+                className="block p-3 border rounded hover:bg-gray-50 min-h-[44px] flex flex-col justify-center touch-manipulation"
               >
-                <div className="font-medium">Imágenes de Categorías del Carrusel</div>
-                <div className="text-sm text-gray-600">Gestionar imágenes de categorías para el carrusel de radio</div>
+                <div className="font-medium text-sm sm:text-base">Categorías del Carrusel</div>
+                <div className="text-xs sm:text-sm text-gray-600">Gestionar imágenes de categorías</div>
               </Link>
 
               <Link 
                 href="/admin/radio-episodes" 
-                className="block p-3 border rounded hover:bg-gray-50"
+                className="block p-3 border rounded hover:bg-gray-50 min-h-[44px] flex flex-col justify-center touch-manipulation"
               >
-                <div className="font-medium">Radio Episodes</div>
-                <div className="text-sm text-gray-600">Gestionar episodios de audio MP3 por categorías</div>
+                <div className="font-medium text-sm sm:text-base">Radio Episodes</div>
+                <div className="text-xs sm:text-sm text-gray-600">Gestionar episodios de audio MP3</div>
               </Link>
 
               <Link 
                 href="/admin/radio-live" 
-                className="block p-3 border rounded hover:bg-gray-50"
+                className="block p-3 border rounded hover:bg-gray-50 min-h-[44px] flex flex-col justify-center touch-manipulation"
               >
-                <div className="font-medium">Radio en Vivo</div>
-                <div className="text-sm text-gray-600">Configurar transmisión en vivo y estado del stream</div>
+                <div className="font-medium text-sm sm:text-base">Radio en Vivo</div>
+                <div className="text-xs sm:text-sm text-gray-600">Configurar transmisión en vivo</div>
               </Link>
 
               <button 
@@ -205,10 +205,10 @@ export default function AdminDashboard() {
                     alert('Error initializing radio database')
                   }
                 }}
-                className="block w-full p-3 border rounded hover:bg-gray-50 text-left"
+                className="block w-full p-3 border rounded hover:bg-gray-50 text-left min-h-[44px] flex flex-col justify-center touch-manipulation"
               >
-                <div className="font-medium">Inicializar Base de Datos Radio</div>
-                <div className="text-sm text-gray-600">Crear tablas y datos iniciales para Radio</div>
+                <div className="font-medium text-sm sm:text-base">Inicializar Base de Datos Radio</div>
+                <div className="text-xs sm:text-sm text-gray-600">Crear tablas y datos iniciales</div>
               </button>
             </div>
           </CardContent>
@@ -216,27 +216,27 @@ export default function AdminDashboard() {
         </div>
 
         {/* Status Section */}
-        <div className="mt-8">
+        <div className="mt-6 md:mt-8">
           <Card>
             <CardHeader>
-              <CardTitle>Estado del Sistema</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-lg sm:text-xl">Estado del Sistema</CardTitle>
+              <CardDescription className="text-sm sm:text-base">
                 Información sobre el estado actual del CMS
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid gap-4 md:grid-cols-3">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm">Sistema Operativo</span>
+              <div className="grid gap-3 sm:gap-4 sm:grid-cols-2 md:grid-cols-3">
+                <div className="flex items-center gap-2 p-2 sm:p-3 bg-green-50 rounded-lg">
+                  <div className="w-3 h-3 bg-green-500 rounded-full flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm font-medium">Sistema Operativo</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm">Autenticación Activa</span>
+                <div className="flex items-center gap-2 p-2 sm:p-3 bg-green-50 rounded-lg">
+                  <div className="w-3 h-3 bg-green-500 rounded-full flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm font-medium">Autenticación Activa</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                  <span className="text-sm">Base de Datos </span>
+                <div className="flex items-center gap-2 p-2 sm:p-3 bg-yellow-50 rounded-lg sm:col-span-2 md:col-span-1">
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full flex-shrink-0"></div>
+                  <span className="text-xs sm:text-sm font-medium">Base de Datos</span>
                 </div>
               </div>
             </CardContent>

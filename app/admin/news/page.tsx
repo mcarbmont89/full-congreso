@@ -388,8 +388,8 @@ export default function NewsAdmin() {
         </div>
 
         <Card>
-          <CardContent className="p-6">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <CardContent className="p-3 sm:p-4 md:p-6">
+            <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               <div className="space-y-6">
                 {/* Basic Information Section */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -567,8 +567,8 @@ export default function NewsAdmin() {
                 </div>
               </div>
 
-              <div className="flex justify-end space-x-4 pt-6">
-                <Button type="button" variant="outline" onClick={handleCancel}>
+              <div className="flex flex-col sm:flex-row sm:justify-end space-y-3 sm:space-y-0 sm:space-x-4 pt-6">
+                <Button type="button" variant="outline" onClick={handleCancel} className="w-full sm:w-auto min-h-[44px]">
                   Cancelar
                 </Button>
                 <Button 
@@ -576,6 +576,7 @@ export default function NewsAdmin() {
                   variant="outline" 
                   onClick={() => handleSubmit(null, 'draft')}
                   disabled={isLoading}
+                  className="w-full sm:w-auto min-h-[44px]"
                 >
                   {isLoading ? 'Guardando...' : 'Guardar como Borrador'}
                 </Button>
@@ -584,12 +585,12 @@ export default function NewsAdmin() {
                     type="button" 
                     onClick={() => handleSubmit(null, 'publish_now')}
                     disabled={isLoading}
-                    className="bg-green-600 hover:bg-green-700 text-white"
+                    className="bg-green-600 hover:bg-green-700 text-white w-full sm:w-auto min-h-[44px]"
                   >
                     {isLoading ? 'Publicando...' : 'Publicar Ahora'}
                   </Button>
                 )}
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading} className="w-full sm:w-auto min-h-[44px]">
                   {isLoading ? 'Guardando...' : (editingNews ? 'Actualizar' : 'Publicar')}
                 </Button>
               </div>
@@ -601,15 +602,15 @@ export default function NewsAdmin() {
   }
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className="p-3 sm:p-4 md:p-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 md:mb-6 gap-4">
         <div>
-          <h1 className="text-2xl font-bold">Noticias</h1>
-          <p className="text-gray-600">Gestiona artículos y noticias del portal</p>
+          <h1 className="text-xl sm:text-2xl font-bold">Noticias</h1>
+          <p className="text-sm sm:text-base text-gray-600">Gestiona artículos y noticias del portal</p>
         </div>
 
-        <div className="flex space-x-2">
-          <Button onClick={handleNewNews}>
+        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
+          <Button onClick={handleNewNews} className="w-full sm:w-auto min-h-[44px]">
             <Plus className="h-4 w-4 mr-2" />
             Nueva Noticia
           </Button>
@@ -618,9 +619,9 @@ export default function NewsAdmin() {
       </div>
 
       {/* Search and Filters */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <Card className="mb-4 md:mb-6">
+        <CardContent className="p-3 sm:p-4 md:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
             <div>
               <Label htmlFor="search">Buscar</Label>
               <Input
