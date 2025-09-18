@@ -6,8 +6,9 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const page = parseInt(searchParams.get('page') || '1')
     const limit = parseInt(searchParams.get('limit') || '20')
+    const category = searchParams.get('category') || undefined
     
-    const result = await getNewsFromDB(page, limit)
+    const result = await getNewsFromDB(page, limit, category)
     console.log('API: News fetched from DB:', result.news.length, 'items', { page, limit, total: result.total })
 
     // Add detailed debug logging

@@ -1,3 +1,4 @@
+"use client"
 
 import Link from "next/link"
 import Image from "next/image"
@@ -6,7 +7,7 @@ import Footer from "@/components/footer"
 import NewsSubmenu from "@/components/news-submenu"
 import ChannelBar from "@/components/channel-bar"
 import NewsGrid from "@/components/news-grid"
-import { getAllNewsFromDB } from "@/lib/api-database"
+import { useState, useEffect } from "react"
 
 interface NewsItem {
   id: string
@@ -20,9 +21,6 @@ interface NewsItem {
   status?: string
 }
 
-// Force dynamic rendering and disable caching
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 function createSlug(title: string): string {
   return title
@@ -34,42 +32,49 @@ function createSlug(title: string): string {
     .replace(/^-+|-+$/g, '')
 }
 
-export default async function AllNewsPage() {
-  // Automatically publish any scheduled news that should now be live
-  try {
-    await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/news/publish-scheduled`, {
-      method: 'POST',
-      cache: 'no-store'
-    })
-  } catch (error) {
-    console.error('Error auto-publishing scheduled news:', error)
+export default function AllNewsPage() {
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(true)
+
+  const fetchNews = async (page: number) => {
+    try {
+      setLoading(true)
+      
+      // Note: Auto-publish moved to server-side for security
+
+      const response = await fetch(`/api/news?page=${page}&limit=20`, {
+        cache: 'no-store'
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        const newsData = data.news || data // Handle both formats
+        
+        setNewsItems(newsData)
+        setTotal(data.total || newsData.length)
+        setTotalPages(data.totalPages || 1)
+        setCurrentPage(page)
+      } else {
+        console.error('Failed to fetch news:', response.status)
+        setNewsItems([])
+      }
+    } catch (error) {
+      console.error('Failed to load news:', error)
+      setNewsItems([])
+    } finally {
+      setLoading(false)
+    }
   }
 
-  // Fetch all news from API route (including published and scheduled)
-  let newsItems: NewsItem[] = []
+  useEffect(() => {
+    fetchNews(1)
+  }, [])
 
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/news/all`, {
-      cache: 'no-store'
-    })
-
-    if (response.ok) {
-      const allNews = await response.json()
-      // Filter to only show published news and sort chronologically
-      newsItems = allNews
-        .filter((item: NewsItem) => !item.status || item.status === 'published')
-        .sort((a: NewsItem, b: NewsItem) => {
-          const dateA = new Date(a.publishedAt || a.createdAt)
-          const dateB = new Date(b.publishedAt || b.createdAt)
-          return dateB.getTime() - dateA.getTime() // Most recent first
-        })
-    } else {
-      console.error('Failed to fetch news:', response.status, response.statusText)
-      newsItems = []
-    }
-  } catch (error) {
-    console.error('Failed to load news:', error)
-    newsItems = []
+  const handlePageChange = (page: number) => {
+    fetchNews(page)
   }
 
   return (
@@ -92,7 +97,21 @@ export default async function AllNewsPage() {
           
 
           {/* News Grid */}
-          <NewsGrid newsItems={newsItems} hideSearch={false} />
+          {loading ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+              <span className="ml-2 text-gray-600">Cargando noticias...</span>
+            </div>
+          ) : (
+            <NewsGrid 
+              newsItems={newsItems} 
+              hideSearch={false}
+              currentPage={currentPage}
+              totalPages={totalPages}
+              total={total}
+              onPageChange={handlePageChange}
+            />
+          )}
 
           {newsItems.length === 0 && (
             <div className="text-center py-12">

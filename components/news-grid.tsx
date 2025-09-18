@@ -19,9 +19,21 @@ interface NewsItem {
 interface NewsGridProps {
   newsItems: NewsItem[]
   hideSearch?: boolean
+  // Pagination props
+  currentPage?: number
+  totalPages?: number
+  total?: number
+  onPageChange?: (page: number) => void
 }
 
-export default function NewsGrid({ newsItems, hideSearch = false }: NewsGridProps) {
+export default function NewsGrid({ 
+  newsItems, 
+  hideSearch = false, 
+  currentPage = 1, 
+  totalPages = 1, 
+  total = 0, 
+  onPageChange 
+}: NewsGridProps) {
   const [imageErrors, setImageErrors] = useState(new Set<string>());
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -139,14 +151,69 @@ export default function NewsGrid({ newsItems, hideSearch = false }: NewsGridProp
         </div>
       )}
 
-      {filteredNewsItems.length > 12 && !searchTerm.trim() && (
-        <div className="flex justify-center mt-8">
+      {/* Pagination Controls */}
+      {!searchTerm.trim() && totalPages > 1 && onPageChange && (
+        <div className="flex flex-col items-center space-y-4 mt-8">
+          {/* Results info */}
           <p className="text-gray-600">
-            Mostrando todas las {filteredNewsItems.length} noticias disponibles
+            Mostrando {newsItems.length} de {total} noticias (Página {currentPage} de {totalPages})
           </p>
+          
+          {/* Pagination buttons */}
+          <div className="flex items-center space-x-2">
+            {/* Previous button */}
+            <button
+              onClick={() => onPageChange(currentPage - 1)}
+              disabled={currentPage <= 1}
+              className="px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Anterior
+            </button>
+
+            {/* Page numbers */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1)
+              .filter(pageNum => {
+                // Show first page, last page, current page, and pages around current
+                return pageNum === 1 || 
+                       pageNum === totalPages || 
+                       Math.abs(pageNum - currentPage) <= 1;
+              })
+              .map((pageNum, index, filteredPages) => {
+                const prevPageNum = filteredPages[index - 1];
+                const showEllipsis = prevPageNum && pageNum - prevPageNum > 1;
+                
+                return (
+                  <div key={pageNum} className="flex items-center">
+                    {showEllipsis && (
+                      <span className="px-2 text-gray-500">...</span>
+                    )}
+                    <button
+                      onClick={() => onPageChange(pageNum)}
+                      className={`px-3 py-2 rounded-lg text-sm font-medium ${
+                        pageNum === currentPage
+                          ? 'bg-purple-600 text-white'
+                          : 'border border-gray-300 text-gray-700 hover:bg-gray-50'
+                      }`}
+                    >
+                      {pageNum}
+                    </button>
+                  </div>
+                );
+              })}
+
+            {/* Next button */}
+            <button
+              onClick={() => onPageChange(currentPage + 1)}
+              disabled={currentPage >= totalPages}
+              className="px-3 py-2 rounded-lg border border-gray-300 text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Siguiente
+            </button>
+          </div>
         </div>
       )}
 
+      {/* Search results info */}
       {filteredNewsItems.length > 0 && searchTerm.trim() && (
         <div className="flex justify-center mt-8">
           <p className="text-gray-600">

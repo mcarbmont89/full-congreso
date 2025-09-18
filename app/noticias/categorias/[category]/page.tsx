@@ -1,7 +1,9 @@
+"use client"
+
 import NewsSubmenu from "@/components/news-submenu"
 import NewsGrid from "@/components/news-grid"
-import { getNewsByCategory } from "@/lib/api"
-import { notFound } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useParams, useRouter } from "next/navigation"
 
 // Define valid categories to match our menu items
 const validCategories = [
@@ -23,16 +25,77 @@ const categoryNames: Record<string, string> = {
   "trabajos-en-pleno": "Trabajo en pleno",
 }
 
-export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
-  const { category } = await params
+interface NewsItem {
+  id: string
+  title: string
+  summary: string
+  content: string
+  imageUrl: string
+  category?: string
+  publishedAt: Date
+  createdAt: Date
+  status?: string
+}
+
+export default function CategoryPage() {
+  const params = useParams()
+  const router = useRouter()
+  const category = params.category as string
+  
+  const [newsItems, setNewsItems] = useState<NewsItem[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+  const [total, setTotal] = useState(0)
+  const [loading, setLoading] = useState(true)
 
   // Validate the category
-  if (!validCategories.includes(category)) {
-    notFound()
+  useEffect(() => {
+    if (!validCategories.includes(category)) {
+      router.replace('/404')
+      return
+    }
+  }, [category, router])
+
+  const fetchNews = async (page: number) => {
+    // Don't fetch if category is invalid
+    if (!validCategories.includes(category)) {
+      return
+    }
+    
+    try {
+      setLoading(true)
+      
+      const response = await fetch(`/api/news?page=${page}&limit=20&category=${encodeURIComponent(categoryNames[category])}`, {
+        cache: 'no-store'
+      })
+
+      if (response.ok) {
+        const data = await response.json()
+        const newsData = data.news || data // Handle both formats
+        
+        setNewsItems(newsData)
+        setTotal(data.total || newsData.length)
+        setTotalPages(data.totalPages || 1)
+        setCurrentPage(page)
+      } else {
+        console.error('Failed to fetch news:', response.status)
+        setNewsItems([])
+      }
+    } catch (error) {
+      console.error('Failed to load news:', error)
+      setNewsItems([])
+    } finally {
+      setLoading(false)
+    }
   }
 
-  // Get news for this category
-  const news = await getNewsByCategory(categoryNames[category])
+  useEffect(() => {
+    fetchNews(1)
+  }, [category])
+
+  const handlePageChange = (page: number) => {
+    fetchNews(page)
+  }
 
   return (
     <main className="min-h-screen bg-white">
@@ -45,7 +108,21 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
         <h1 className="text-3xl font-bold mb-8">{categoryNames[category]}</h1>
 
         {/* News Grid */}
-        <NewsGrid newsItems={news} hideSearch={true} />
+        {loading ? (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
+            <span className="ml-2 text-gray-600">Cargando noticias...</span>
+          </div>
+        ) : (
+          <NewsGrid 
+            newsItems={newsItems} 
+            hideSearch={true}
+            currentPage={currentPage}
+            totalPages={totalPages}
+            total={total}
+            onPageChange={handlePageChange}
+          />
+        )}
       </div>
     </main>
   )

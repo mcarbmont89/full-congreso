@@ -565,32 +565,44 @@ export async function updateProgramOrderInDB(id: string, direction: 'up' | 'down
 }
 
 // News API functions
-export async function getNewsFromDB(page: number = 1, limit: number = 20): Promise<{news: NewsItem[], total: number, totalPages: number}> {
+export async function getNewsFromDB(page: number = 1, limit: number = 20, category?: string): Promise<{news: NewsItem[], total: number, totalPages: number}> {
   try {
     const pool = getDB()
-    console.log('Querying news from database with pagination...', { page, limit })
+    console.log('Querying news from database with pagination...', { page, limit, category })
+
+    // Build WHERE clauses
+    let whereClause = "(COALESCE(status, 'published') = 'published' OR (COALESCE(status, 'published') = 'scheduled' AND published_at <= NOW()))"
+    const params = []
+    
+    if (category) {
+      whereClause += " AND category = $1"
+      params.push(category)
+    }
 
     // First get the total count
     const countResult = await pool.query(`
       SELECT COUNT(*) as total
       FROM news
-      WHERE (COALESCE(status, 'published') = 'published' OR (COALESCE(status, 'published') = 'scheduled' AND published_at <= NOW()))
-    `)
+      WHERE ${whereClause}
+    `, params)
     
     const total = parseInt(countResult.rows[0].total)
     const totalPages = Math.ceil(total / limit)
     const offset = (page - 1) * limit
 
     // Then get the paginated results
+    const paginatedParams = [...params, limit, offset]
+    const limitOffset = category ? '$2 OFFSET $3' : '$1 OFFSET $2'
+    
     const result = await pool.query(`
       SELECT id, title, summary, content, image_url, 
              category, published_at as "publishedAt", created_at as "createdAt", 
              COALESCE(status, 'published') as status
       FROM news
-      WHERE (COALESCE(status, 'published') = 'published' OR (COALESCE(status, 'published') = 'scheduled' AND published_at <= NOW()))
+      WHERE ${whereClause}
       ORDER BY COALESCE(published_at, created_at) DESC, id DESC
-      LIMIT $1 OFFSET $2
-    `, [limit, offset])
+      LIMIT ${limitOffset}
+    `, paginatedParams)
 
     console.log('Raw database result:', result.rows.length, 'rows', { total, totalPages, page })
 
