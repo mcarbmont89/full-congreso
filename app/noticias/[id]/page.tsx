@@ -299,24 +299,17 @@ export default async function NoticiaDetallePage({ params }: { params: Promise<{
                   <div className="flex items-center">
                     <span className="text-sm font-medium text-gray-700 mr-4">Compartir:</span>
                     <div className="flex space-x-2">
-                      <button className="p-2 bg-blue-600 text-white rounded-full hover:bg-blue-700">
+                      <Link
+                        href="https://x.com/NoticiaCongreso"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="p-2 bg-gray-800 text-white rounded-full hover:bg-black transition-colors"
+                        aria-label="Compartir en X"
+                      >
                         <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z" />
+                          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                         </svg>
-                      </button>
-                      <button className="p-2 bg-blue-400 text-white rounded-full hover:bg-blue-500">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                          <path
-                            d="M23.44 4.83c-.8.37-1.5.38-2.22.02.93-.56.98-.96 1.32-2.02-.88.52-1.86.9-2.9 1.1-.82-.88-2-1.43-3.3-1.43-2.5 0-4.55 2.04-4.55 4.54 0 .36.03.7.1 1.04-3.77-.2-7.12-2-9.36-4.75-.4.67-.6 1.45-.6 2.3 0 1.56.8 2.95 2 3.77-.74-.03-1.44-.23-2.05-.57v.06c0 2.2 1.56
- 4.03 3.64 4.44-.67.2-1.37.2-2.06.08.58 1.8 2.26 3.12 4.25 3.16C5.78 18.1 3.37 18.74 1 18.46c2 1.3 4.4 2.04 6.97 2.04 8.35 0 12.92-6.92 12.92-12.93 0-.2 0-.4-.02-.6.9-.63 1.96-1.22 2.56-2.14z"
-                          />
-                        </svg>
-                      </button>
-                      <button className="p-2 bg-green-600 text-white rounded-full hover:bg-green-700">
-                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M20 3H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1zM8.9 17.1c-2.5 0-4.6-2-4.6-4.5s2-4.5 4.6-4.5c1.3 0 2.4.5 3.3 1.3l-1.3 1.3c-.5-.5-1.2-.8-2-.8-1.7 0-3.1 1.4-3.1 3.1s1.4 3.1 3.1 3.1c1.1 0 1.9-.5 2.3-1.2h-2.3v-1.7h4c.1.4.1.8.1 1.2 0 2.4-1.7 4.4-4.1 4.4zm9.1-4h-1.5v1.5h-1.5V13h-1.5v-1.5h1.5V10h1.5v1.5H18V13z" />
-                        </svg>
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 </div>
