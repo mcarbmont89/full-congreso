@@ -94,7 +94,8 @@ export default async function Home() {
       },
     );
     if (newsResponse.ok) {
-      const allNews = await newsResponse.json();
+      const newsResult = await newsResponse.json();
+      const allNews = newsResult.news || newsResult; // Handle both paginated and old format
       console.log("Homepage: Fetched news from API:", allNews.length, "items");
       // Filter to only show published news with publishedAt <= current date
       const now = new Date();

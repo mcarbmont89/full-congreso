@@ -109,7 +109,7 @@ export async function getLiveStreamsFromDB(): Promise<LiveStream[]> {
 
     const result = await pool.query(`
       SELECT id, title, thumbnail_url as "thumbnailUrl", stream_url as "streamUrl", 
-             channel, is_live as "isLive", status, created_at as "createdAt"
+             channel, is_live as "isLive", created_at as "createdAt"
       FROM live_streams 
       ORDER BY created_at DESC
     `)
@@ -565,11 +565,23 @@ export async function updateProgramOrderInDB(id: string, direction: 'up' | 'down
 }
 
 // News API functions
-export async function getNewsFromDB(): Promise<NewsItem[]> {
+export async function getNewsFromDB(page: number = 1, limit: number = 20): Promise<{news: NewsItem[], total: number, totalPages: number}> {
   try {
     const pool = getDB()
-    console.log('Querying news from database...')
+    console.log('Querying news from database with pagination...', { page, limit })
 
+    // First get the total count
+    const countResult = await pool.query(`
+      SELECT COUNT(*) as total
+      FROM news
+      WHERE (COALESCE(status, 'published') = 'published' OR (COALESCE(status, 'published') = 'scheduled' AND published_at <= NOW()))
+    `)
+    
+    const total = parseInt(countResult.rows[0].total)
+    const totalPages = Math.ceil(total / limit)
+    const offset = (page - 1) * limit
+
+    // Then get the paginated results
     const result = await pool.query(`
       SELECT id, title, summary, content, image_url, 
              category, published_at as "publishedAt", created_at as "createdAt", 
@@ -577,9 +589,10 @@ export async function getNewsFromDB(): Promise<NewsItem[]> {
       FROM news
       WHERE (COALESCE(status, 'published') = 'published' OR (COALESCE(status, 'published') = 'scheduled' AND published_at <= NOW()))
       ORDER BY COALESCE(published_at, created_at) DESC, id DESC
-    `)
+      LIMIT $1 OFFSET $2
+    `, [limit, offset])
 
-    console.log('Raw database result:', result.rows.length, 'rows')
+    console.log('Raw database result:', result.rows.length, 'rows', { total, totalPages, page })
 
     if (result.rows.length > 0) {
       console.log('Sample news item from DB:', {
@@ -590,7 +603,7 @@ export async function getNewsFromDB(): Promise<NewsItem[]> {
       })
     }
 
-    return result.rows.map(row => ({
+    const news = result.rows.map(row => ({
       id: row.id.toString(),
       title: row.title,
       summary: row.summary,
@@ -601,35 +614,51 @@ export async function getNewsFromDB(): Promise<NewsItem[]> {
       createdAt: new Date(row.createdAt),
       status: row.status
     }))
+
+    return { news, total, totalPages }
   } catch (error) {
     console.error('Error fetching news from database:', error)
     console.error('Error details:', error instanceof Error ? error.message : String(error))
-    return [] // Return empty array instead of throwing
+    return { news: [], total: 0, totalPages: 0 } // Return empty result instead of throwing
   }
 }
 
-export async function getAllNewsFromDB(): Promise<NewsItem[]> {
+export async function getAllNewsFromDB(page: number = 1, limit: number = 20): Promise<{news: NewsItem[], total: number, totalPages: number}> {
   try {
     const pool = getDB()
-    console.log('Querying all news from database...')
+    console.log('Querying all news from database with pagination...', { page, limit })
 
+    // First get the total count
+    const countResult = await pool.query(`
+      SELECT COUNT(*) as total
+      FROM news
+    `)
+    
+    const total = parseInt(countResult.rows[0].total)
+    const totalPages = Math.ceil(total / limit)
+    const offset = (page - 1) * limit
+
+    // Then get the paginated results
     const result = await pool.query(`
       SELECT id, title, summary, content, image_url as "imageUrl", 
              category, published_at as "publishedAt", created_at as "createdAt", 
              COALESCE(status, 'published') as status
       FROM news
       ORDER BY COALESCE(published_at, created_at) DESC, id DESC
-    `)
+      LIMIT $1 OFFSET $2
+    `, [limit, offset])
 
-    return result.rows.map(row => ({
+    const news = result.rows.map(row => ({
       ...row,
       id: row.id.toString(),
       publishedAt: new Date(row.publishedAt),
       createdAt: new Date(row.createdAt)
     }))
+
+    return { news, total, totalPages }
   } catch (error) {
     console.error('Error fetching all news from database:', error)
-    return []
+    return { news: [], total: 0, totalPages: 0 }
   }
 }
 
@@ -955,7 +984,6 @@ export async function getHomepageConfigFromDB(): Promise<any[]> {
       description,
       background_image_url as "backgroundImageUrl",
       hero_image_url as "heroImageUrl",
-      mobile_image_url as "mobileImageUrl",
       logo_url as "logoUrl",
       additional_images as "additionalImages",
       config_data as "configData",
@@ -989,9 +1017,9 @@ export async function createHomepageConfigInDB(data: any): Promise<any> {
 
   const result = await pool.query(`
     INSERT INTO homepage_config (
-      section, title, description, background_image_url, hero_image_url, mobile_image_url, logo_url, 
+      section, title, description, background_image_url, hero_image_url, logo_url, 
       additional_images, config_data, is_active
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
     RETURNING 
       id,
       section,
@@ -999,7 +1027,6 @@ export async function createHomepageConfigInDB(data: any): Promise<any> {
       description,
       background_image_url as "backgroundImageUrl",
       hero_image_url as "heroImageUrl",
-      mobile_image_url as "mobileImageUrl",
       logo_url as "logoUrl",
       additional_images as "additionalImages",
       config_data as "configData",
@@ -1060,11 +1087,7 @@ export async function updateHomepageConfigInDB(section: string, data: any): Prom
     paramCount++
   }
 
-  if (data.mobileImageUrl !== undefined) {
-    fields.push(`mobile_image_url = $${paramCount}`)
-    values.push(data.mobileImageUrl)
-    paramCount++
-  }
+  // mobileImageUrl removed - column does not exist in database
 
   if (data.logoUrl !== undefined) {
     fields.push(`logo_url = $${paramCount}`)

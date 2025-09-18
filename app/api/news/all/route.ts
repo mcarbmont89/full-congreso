@@ -1,15 +1,24 @@
 import { NextResponse } from 'next/server'
 import { getAllNewsFromDB } from '@/lib/api-database'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const news = await getAllNewsFromDB()
-    console.log('API: All news fetched from DB:', news.length, 'items')
+    const { searchParams } = new URL(request.url)
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '20')
+    
+    const result = await getAllNewsFromDB(page, limit)
+    console.log('API: All news fetched from DB:', result.news.length, 'items', { page, limit, total: result.total })
 
-    // Sort by creation date (newest first)
-    const sortedNews = news.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    // Sort by creation date (newest first) - already sorted in DB query
+    const sortedNews = result.news.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    
+    const response = {
+      ...result,
+      news: sortedNews
+    }
 
-    return new Response(JSON.stringify(sortedNews), {
+    return new Response(JSON.stringify(response), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',

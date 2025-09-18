@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getNewsFromDB, createNewsItemInDB } from '@/lib/api-database'
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const news = await getNewsFromDB()
-    console.log('API: News fetched from DB:', news.length, 'items')
+    const { searchParams } = new URL(request.url)
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '20')
+    
+    const result = await getNewsFromDB(page, limit)
+    console.log('API: News fetched from DB:', result.news.length, 'items', { page, limit, total: result.total })
 
     // Add detailed debug logging
-    console.log('API: All news items:', news.map(item => ({ 
+    console.log('API: All news items:', result.news.map(item => ({ 
       id: item.id, 
       title: item.title?.substring(0, 30) + '...',
       imageUrl: item.imageUrl,
@@ -17,7 +21,7 @@ export async function GET() {
     })))
 
     // Return with comprehensive no-cache headers to prevent deployment caching issues
-    return new Response(JSON.stringify(news), {
+    return new Response(JSON.stringify(result), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',

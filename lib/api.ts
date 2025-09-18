@@ -276,32 +276,39 @@ export async function deleteLiveStream(id: string): Promise<void> {
   }
 }
 
-export async function getNews() {
+export async function getNews(page: number = 1, limit: number = 20) {
   try {
     const { getNewsFromDB } = await import('./api-database')
-    return await getNewsFromDB()
+    return await getNewsFromDB(page, limit)
   } catch (error) {
     console.error('Database error in getNews:', error)
-    return []
+    return { news: [], total: 0, totalPages: 0 }
   }
 }
 
-export async function getNewsByCategory(category: string) {
+export async function getNewsByCategory(category: string, page: number = 1, limit: number = 20) {
   try {
     const { getNewsFromDB } = await import('./api-database')
-    const allNews = await getNewsFromDB()
-    return allNews.filter((item) => item.category === category)
+    const result = await getNewsFromDB()
+    // Filter by category from all news, then apply pagination
+    const categoryNews = result.news.filter((item) => item.category === category)
+    const total = categoryNews.length
+    const totalPages = Math.ceil(total / limit)
+    const offset = (page - 1) * limit
+    const paginatedNews = categoryNews.slice(offset, offset + limit)
+    
+    return { news: paginatedNews, total, totalPages }
   } catch (error) {
     console.error('Database error in getNewsByCategory:', error)
-    return []
+    return { news: [], total: 0, totalPages: 0 }
   }
 }
 
 export async function getNewsById(id: string) {
   try {
     const { getNewsFromDB } = await import('./api-database')
-    const allNews = await getNewsFromDB()
-    return allNews.find((item) => item.id === id) || null
+    const result = await getNewsFromDB(1, 1000) // Get a large number to search through all
+    return result.news.find((item) => item.id === id) || null
   } catch (error) {
     console.error('Database error in getNewsById:', error)
     return null
