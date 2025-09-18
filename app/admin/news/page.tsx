@@ -31,7 +31,7 @@ export default function NewsAdmin() {
     content: '',
     imageUrl: '',
     category: '',
-    publishedAt: new Date().toISOString().slice(0, 16),
+    publishedAt: '',
     date: new Date().toISOString().split('T')[0]
   })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
@@ -198,13 +198,9 @@ export default function NewsAdmin() {
       let publishedAt = new Date()
 
       if (forcedStatus === 'draft') {
-        // For drafts, preserve the original publishedAt if editing, otherwise use current time
+        // For drafts, set publishedAt to null to avoid data inconsistency
         status = 'draft'
-        if (editingNews && editingNews.publishedAt) {
-          publishedAt = new Date(editingNews.publishedAt)
-        } else {
-          publishedAt = new Date()
-        }
+        publishedAt = null
       } else if (forcedStatus === 'publish_now') {
         // Force immediate publication with current time
         status = 'published'
@@ -247,7 +243,7 @@ export default function NewsAdmin() {
         content: '', 
         imageUrl: '', 
         category: '',
-        publishedAt: new Date().toISOString().slice(0, 16),
+        publishedAt: '',
         date: new Date().toISOString().split('T')[0] 
       })
       setSelectedFile(null)
@@ -297,11 +293,10 @@ export default function NewsAdmin() {
       try {
         setIsLoading(true)
         
-        // Update the news item with current date and published status
+        // Send minimal payload to avoid overwriting unintended fields
         const updateData = {
-          ...newsItem,
-          publishedAt: new Date(),
-          status: 'published'
+          status: 'published',
+          publishedAt: new Date().toISOString()
         }
         
         await updateNewsItem(newsItem.id, updateData)
@@ -341,7 +336,7 @@ export default function NewsAdmin() {
       content: '', 
       imageUrl: '', 
       category: '',
-      publishedAt: new Date().toISOString().slice(0, 16),
+      publishedAt: '',
       date: new Date().toISOString().split('T')[0] 
     })
     setSelectedFile(null)
