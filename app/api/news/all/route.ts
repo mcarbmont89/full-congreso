@@ -10,12 +10,10 @@ export async function GET(request: Request) {
     const result = await getAllNewsFromDB(page, limit)
     console.log('API: All news fetched from DB:', result.news.length, 'items', { page, limit, total: result.total })
 
-    // Sort by creation date (newest first) - already sorted in DB query
-    const sortedNews = result.news.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-    
+    // News are already sorted by publishedAt (then createdAt) DESC in database query
     const response = {
       ...result,
-      news: sortedNews
+      news: result.news
     }
 
     return new Response(JSON.stringify(response), {
