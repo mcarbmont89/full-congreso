@@ -19,6 +19,8 @@ interface NewsItem {
   publishedAt: Date;
   createdAt: Date;
   status?: string;
+  isFeatured?: boolean;
+  featuredRank?: number | null;
 }
 
 interface VideoNewsItem {

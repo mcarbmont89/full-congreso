@@ -597,7 +597,8 @@ export async function getNewsFromDB(page: number = 1, limit: number = 20, catego
     const result = await pool.query(`
       SELECT id, title, summary, content, image_url, 
              category, published_at as "publishedAt", created_at as "createdAt", 
-             COALESCE(status, 'published') as status
+             COALESCE(status, 'published') as status,
+             is_featured as "isFeatured", featured_rank as "featuredRank"
       FROM news
       WHERE ${whereClause}
       ORDER BY COALESCE(published_at, created_at) DESC, id DESC
@@ -624,7 +625,9 @@ export async function getNewsFromDB(page: number = 1, limit: number = 20, catego
       category: row.category,
       publishedAt: new Date(row.publishedAt),
       createdAt: new Date(row.createdAt),
-      status: row.status
+      status: row.status,
+      isFeatured: row.isFeatured ?? false,
+      featuredRank: row.featuredRank ?? null
     }))
 
     return { news, total, totalPages }
@@ -654,7 +657,8 @@ export async function getAllNewsFromDB(page: number = 1, limit: number = 20): Pr
     const result = await pool.query(`
       SELECT id, title, summary, content, image_url as "imageUrl", 
              category, published_at as "publishedAt", created_at as "createdAt", 
-             COALESCE(status, 'published') as status
+             COALESCE(status, 'published') as status,
+             is_featured as "isFeatured", featured_rank as "featuredRank"
       FROM news
       ORDER BY COALESCE(published_at, created_at) DESC, id DESC
       LIMIT $1 OFFSET $2
@@ -664,7 +668,9 @@ export async function getAllNewsFromDB(page: number = 1, limit: number = 20): Pr
       ...row,
       id: row.id.toString(),
       publishedAt: new Date(row.publishedAt),
-      createdAt: new Date(row.createdAt)
+      createdAt: new Date(row.createdAt),
+      isFeatured: row.isFeatured ?? false,
+      featuredRank: row.featuredRank ?? null
     }))
 
     return { news, total, totalPages }
@@ -674,35 +680,29 @@ export async function getAllNewsFromDB(page: number = 1, limit: number = 20): Pr
   }
 }
 
-export async function createNewsItemInDB(data: Omit<NewsItem, 'id' | 'createdAt'> & { status?: string }): Promise<NewsItem> {
+export async function createNewsItemInDB(data: Omit<NewsItem, 'id' | 'createdAt'> & { status?: string; isFeatured?: boolean; featuredRank?: number | null }): Promise<NewsItem> {
   try {
     const pool = getDB()
 
-    // Check if status column exists, if not use INSERT without it
-    const checkColumnResult = await pool.query(`
-      SELECT column_name FROM information_schema.columns 
-      WHERE table_name = 'news' AND column_name = 'status'
-    `)
-
-    let result;
-    if (checkColumnResult.rows.length > 0) {
-      // Status column exists
-      result = await pool.query(`
-        INSERT INTO news (title, summary, content, image_url, category, published_at, status)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
-        RETURNING id, title, summary, content, image_url as "imageUrl", 
-                  category, published_at as "publishedAt", created_at as "createdAt", 
-                  COALESCE(status, 'published') as status
-      `, [data.title, data.summary, data.content, data.imageUrl, data.category, data.publishedAt, data.status || 'draft'])
-    } else {
-      // Status column doesn't exist yet
-      result = await pool.query(`
-        INSERT INTO news (title, summary, content, image_url, category, published_at)
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING id, title, summary, content, image_url as "imageUrl", 
-                  category, published_at as "publishedAt", created_at as "createdAt"
-      `, [data.title, data.summary, data.content, data.imageUrl, data.category, data.publishedAt])
-    }
+    // Insert with all new fields including featured fields
+    const result = await pool.query(`
+      INSERT INTO news (title, summary, content, image_url, category, published_at, status, is_featured, featured_rank)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+      RETURNING id, title, summary, content, image_url as "imageUrl", 
+                category, published_at as "publishedAt", created_at as "createdAt", 
+                COALESCE(status, 'published') as status,
+                is_featured as "isFeatured", featured_rank as "featuredRank"
+    `, [
+      data.title, 
+      data.summary, 
+      data.content, 
+      data.imageUrl, 
+      data.category, 
+      data.publishedAt, 
+      data.status || 'draft',
+      data.isFeatured || false,
+      data.featuredRank || null
+    ])
 
     const row = result.rows[0]
     return {
@@ -710,7 +710,9 @@ export async function createNewsItemInDB(data: Omit<NewsItem, 'id' | 'createdAt'
       id: row.id.toString(),
       publishedAt: new Date(row.publishedAt),
       createdAt: new Date(row.createdAt),
-      status: row.status || 'published'
+      status: row.status || 'published',
+      isFeatured: row.isFeatured ?? false,
+      featuredRank: row.featuredRank ?? null
     }
   } catch (error) {
     console.error('Error creating news item:', error)
@@ -720,7 +722,7 @@ export async function createNewsItemInDB(data: Omit<NewsItem, 'id' | 'createdAt'
 
 export async function updateNewsItemInDB(
   id: string,
-  data: Partial<Omit<NewsItem, "id" | "createdAt">>
+  data: Partial<Omit<NewsItem, "id" | "createdAt"> & { isFeatured?: boolean; featuredRank?: number | null }>
 ): Promise<NewsItem | null> {
   const pool = getDB()
 
@@ -752,6 +754,14 @@ export async function updateNewsItemInDB(
     fields.push(`published_at = $${paramIndex++}`)
     values.push(data.publishedAt)
   }
+  if (data.isFeatured !== undefined) {
+    fields.push(`is_featured = $${paramIndex++}`)
+    values.push(data.isFeatured)
+  }
+  if (data.featuredRank !== undefined) {
+    fields.push(`featured_rank = $${paramIndex++}`)
+    values.push(data.featuredRank)
+  }
 
   if (fields.length === 0) return null
 
@@ -762,7 +772,9 @@ export async function updateNewsItemInDB(
     SET ${fields.join(', ')}
     WHERE id = $${paramIndex}
     RETURNING id, title, summary, content, image_url as "imageUrl", 
-              category, published_at as "publishedAt", created_at as "createdAt"
+              category, published_at as "publishedAt", created_at as "createdAt",
+              COALESCE(status, 'published') as status,
+              is_featured as "isFeatured", featured_rank as "featuredRank"
   `, values)
 
   if (result.rows.length === 0) return null
@@ -772,7 +784,50 @@ export async function updateNewsItemInDB(
     ...row,
     id: row.id.toString(),
     publishedAt: new Date(row.publishedAt),
-    createdAt: new Date(row.createdAt)
+    createdAt: new Date(row.createdAt),
+    status: row.status ?? 'published',
+    isFeatured: row.isFeatured ?? false,
+    featuredRank: row.featuredRank ?? null
+  }
+}
+
+export async function getFeaturedNewsFromDB(limit: number = 1): Promise<NewsItem[]> {
+  try {
+    const pool = getDB()
+    console.log('Querying featured news from database...', { limit })
+
+    const result = await pool.query(`
+      SELECT id, title, summary, content, image_url as "imageUrl", 
+             category, published_at as "publishedAt", created_at as "createdAt", 
+             COALESCE(status, 'published') as status,
+             is_featured as "isFeatured", featured_rank as "featuredRank"
+      FROM news
+      WHERE is_featured = true 
+        AND (COALESCE(status, 'published') = 'published' OR (COALESCE(status, 'published') = 'scheduled' AND published_at <= NOW()))
+        AND image_url IS NOT NULL
+      ORDER BY (featured_rank IS NULL), featured_rank ASC, COALESCE(published_at, created_at) DESC, id DESC
+      LIMIT $1
+    `, [limit])
+
+    const news = result.rows.map(row => ({
+      id: row.id.toString(),
+      title: row.title,
+      summary: row.summary,
+      content: row.content,
+      imageUrl: row.imageUrl,
+      category: row.category,
+      publishedAt: new Date(row.publishedAt),
+      createdAt: new Date(row.createdAt),
+      status: row.status,
+      isFeatured: row.isFeatured ?? false,
+      featuredRank: row.featuredRank ?? null
+    }))
+
+    console.log('Featured news fetched from DB:', news.length, 'items')
+    return news
+  } catch (error) {
+    console.error('Error fetching featured news from database:', error)
+    return []
   }
 }
 

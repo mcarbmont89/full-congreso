@@ -349,6 +349,8 @@ export interface NewsItem {
   category?: string
   publishedAt: Date
   createdAt: Date
+  isFeatured?: boolean
+  featuredRank?: number | null
 }
 // Radio Programs Management
 export async function getRadioPrograms() {
