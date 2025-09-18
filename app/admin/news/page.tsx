@@ -91,7 +91,7 @@ export default function NewsAdmin() {
       })
       if (response.ok) {
         const data = await response.json()
-        setNews(data)
+        setNews(data.news) // Fix: Use data.news instead of data
       }
     } catch (error) {
       console.error('Error loading news:', error)
