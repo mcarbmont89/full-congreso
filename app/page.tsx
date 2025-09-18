@@ -330,7 +330,7 @@ export default async function Home() {
                         className="object-cover"
                         unoptimized={true}
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                       <div className="absolute bottom-0 left-0 right-0 p-6">
                         <h3 className="font-bold text-white text-2xl">
                           {news[0].title}
@@ -352,7 +352,7 @@ export default async function Home() {
                           className="object-cover"
                           unoptimized={true}
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                         <div className="absolute bottom-0 left-0 right-0 p-3">
                           <h3 className="font-bold text-white text-sm line-clamp-2">
                             {item.title}

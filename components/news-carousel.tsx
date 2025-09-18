@@ -101,8 +101,8 @@ export default function NewsCarousel({ newsItems }: NewsCarouselProps) {
                 unoptimized={true}
               />
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/20"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent"></div>
           </div>
         ))}
 
