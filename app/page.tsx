@@ -79,11 +79,13 @@ export default async function Home() {
     liveStreams = await getLiveStreams();
   }
 
-  // Fetch news from database API
+  // Fetch featured news first, then fill with regular news if needed
   let news = [];
+  
+  // Step 1: Try to get featured news
   try {
-    const newsResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/news`,
+    const featuredResponse = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/news/featured`,
       {
         cache: "no-store", // Ensure fresh data from CMS
         headers: {
@@ -93,37 +95,72 @@ export default async function Home() {
         },
       },
     );
-    if (newsResponse.ok) {
-      const newsResult = await newsResponse.json();
-      const allNews = newsResult.news || newsResult; // Handle both paginated and old format
-      console.log("Homepage: Fetched news from API:", allNews.length, "items");
-      // Filter to only show published news with publishedAt <= current date
-      const now = new Date();
-      const publishedNews = allNews.filter((item: NewsItemAPI) => {
-        const publishedDate = new Date(item.publishedAt || item.createdAt);
-        return (!item.status || item.status === 'published') && publishedDate <= now;
-      }).sort((a: NewsItemAPI, b: NewsItemAPI) => {
-        // Sort by publishedAt date, most recent first
-        const aDate = new Date(a.publishedAt || a.createdAt);
-        const bDate = new Date(b.publishedAt || b.createdAt);
-        return bDate.getTime() - aDate.getTime();
-      });
-
-      // Get the first 5 published news items
-      news = publishedNews.slice(0, 5);
-      console.log("Homepage: Using", news.length, "news items for display");
-    } else {
-      console.error(
-        "Homepage: News API response not OK:",
-        newsResponse.status,
-        newsResponse.statusText,
-      );
-      news = [];
+    
+    if (featuredResponse.ok) {
+      const featuredResult = await featuredResponse.json();
+      const featuredNews = featuredResult.news || [];
+      console.log("Homepage: Fetched featured news:", featuredNews.length, "items");
+      news = featuredNews;
     }
   } catch (error) {
-    console.error("Failed to load news:", error);
-    news = [];
+    console.error("Failed to load featured news:", error);
   }
+
+  // Step 2: If we don't have enough featured news, fill with regular news
+  if (news.length < 5) {
+    try {
+      const newsResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/news`,
+        {
+          cache: "no-store", // Ensure fresh data from CMS
+          headers: {
+            "Cache-Control": "no-cache, no-store, must-revalidate",
+            Pragma: "no-cache",
+            Expires: "0",
+          },
+        },
+      );
+      
+      if (newsResponse.ok) {
+        const newsResult = await newsResponse.json();
+        const allNews = newsResult.news || newsResult; // Handle both paginated and old format
+        console.log("Homepage: Fetched regular news as fallback:", allNews.length, "items");
+        
+        // Filter to only show published news with publishedAt <= current date
+        const now = new Date();
+        const publishedNews = allNews.filter((item: NewsItemAPI) => {
+          const publishedDate = new Date(item.publishedAt || item.createdAt);
+          return (!item.status || item.status === 'published') && publishedDate <= now;
+        }).sort((a: NewsItemAPI, b: NewsItemAPI) => {
+          // Sort by publishedAt date, most recent first
+          const aDate = new Date(a.publishedAt || a.createdAt);
+          const bDate = new Date(b.publishedAt || b.createdAt);
+          return bDate.getTime() - aDate.getTime();
+        });
+
+        // Get featured news IDs to avoid duplicates
+        const featuredIds = new Set(news.map((item: any) => item.id));
+        
+        // Fill remaining slots with regular news, avoiding duplicates
+        const regularNews = publishedNews.filter((item: any) => !featuredIds.has(item.id));
+        const neededCount = 5 - news.length;
+        const additionalNews = regularNews.slice(0, neededCount);
+        
+        news = [...news, ...additionalNews];
+        console.log("Homepage: Final news count:", news.length, "items (featured + regular)");
+      } else {
+        console.error(
+          "Homepage: Regular news API response not OK:",
+          newsResponse.status,
+          newsResponse.statusText,
+        );
+      }
+    } catch (error) {
+      console.error("Failed to load regular news as fallback:", error);
+    }
+  }
+  
+  console.log("Homepage: Using", news.length, "news items for display");
 
   // Parliamentary groups removed from CMS
 

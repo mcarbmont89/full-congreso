@@ -3,7 +3,7 @@ import { getFeaturedNewsFromDB } from '@/lib/api-database'
 
 export async function GET() {
   try {
-    const featuredNews = await getFeaturedNewsFromDB(3) // Get top 3 featured news
+    const featuredNews = await getFeaturedNewsFromDB(5) // Get top 5 featured news
     return NextResponse.json({ 
       success: true,
       news: featuredNews 
