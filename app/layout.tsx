@@ -3,6 +3,7 @@ import "./globals.css"
 import "../styles/rich-text.css"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
+import Script from "next/script"
 import SocialBar from "@/components/social-bar"
 import AccessibilityButton from "@/components/accessibility-button"
 import Navbar from "@/components/navbar"
@@ -80,6 +81,38 @@ export default function RootLayout({
               </FloatingPlayerProvider>
             </MobileMenuProvider>
           </ThemeProvider>
+          
+          {/* Inklusion Accessibility Tracking Pixel */}
+          <Script
+            id="inklusion-pixel"
+            strategy="afterInteractive"
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                    var i7e_e = document.createElement("script"),
+                        i7e_t = window.location.host,
+                        i7e_n = "es-US";
+                  
+                    i7e_e.type = "text/javascript", 
+                    i7e_t = "canaldelcongreso.inklusion.incluirt.com",
+                    i7e_n = "es-US",
+                    i7e_e.src = ("https:" == document.location.protocol ? "https://" : "http://") + i7e_t + "/inklusion/js/frameworks_initializer.js?lng=" + i7e_n, 
+                    document.getElementsByTagName("head")[0].appendChild(i7e_e), 
+                    i7e_e.src;
+                    i7e_tab = true;
+                    i7e_border = "#000000"; //color de borde
+                    i7e_bg = "#483285"; //color de fondo del texto de Inklusion 
+                    setTimeout(function(){
+                        var i7e_style = document.createElement("style");
+                        i7e_style.type = "text/css";
+                        i7e_style.id = "inklu_style_script";
+                        i7e_style.append("#_inklusion__tab_ { z-index: 99999 !important } ");
+                        document.body.appendChild(i7e_style);
+                    },1500);
+                })()
+              `,
+            }}
+          />
         </body>
     </html>
   )
