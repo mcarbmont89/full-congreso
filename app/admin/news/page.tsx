@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import RichTextEditor from "@/components/rich-text-editor"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus, Edit, Trash2, ArrowLeft, Search } from "lucide-react"
+import { Plus, Edit, Trash2, ArrowLeft, Search, Send } from "lucide-react"
 import { getNews, createNewsItem, updateNewsItem, deleteNewsItem, type NewsItem } from "@/lib/api-client"
 import BulkNewsUpload from "@/components/bulk-news-upload"
 
@@ -198,14 +198,28 @@ export default function NewsAdmin() {
       let publishedAt = new Date()
 
       if (forcedStatus === 'draft') {
-        // For drafts, use current time but mark as draft
+        // For drafts, preserve the original publishedAt if editing, otherwise use current time
         status = 'draft'
+        if (editingNews && editingNews.publishedAt) {
+          publishedAt = new Date(editingNews.publishedAt)
+        } else {
+          publishedAt = new Date()
+        }
+      } else if (forcedStatus === 'publish_now') {
+        // Force immediate publication with current time
+        status = 'published'
         publishedAt = new Date()
       } else if (formData.publishedAt) {
         // If date is provided, use it and determine status based on time
         publishedAt = new Date(formData.publishedAt)
         const now = new Date()
-        status = publishedAt <= now ? 'published' : 'scheduled'
+        
+        // If we're editing and the original status was 'scheduled', preserve the scheduled date
+        if (editingNews && editingNews.status === 'scheduled' && !forcedStatus) {
+          status = publishedAt <= now ? 'published' : 'scheduled'
+        } else {
+          status = publishedAt <= now ? 'published' : 'scheduled'
+        }
       } else {
         // No date provided and not forced as draft, publish immediately
         status = 'published'
@@ -272,6 +286,30 @@ export default function NewsAdmin() {
       } catch (error) {
         console.error('Error deleting news:', error)
         alert('Error al eliminar la noticia')
+      } finally {
+        setIsLoading(false)
+      }
+    }
+  }
+
+  const handlePublishNow = async (newsItem: NewsItem) => {
+    if (confirm('¿Estás seguro de que quieres publicar esta noticia ahora?')) {
+      try {
+        setIsLoading(true)
+        
+        // Update the news item with current date and published status
+        const updateData = {
+          ...newsItem,
+          publishedAt: new Date(),
+          status: 'published'
+        }
+        
+        await updateNewsItem(newsItem.id, updateData)
+        loadNews()
+        alert('Noticia publicada exitosamente')
+      } catch (error) {
+        console.error('Error publishing news:', error)
+        alert('Error al publicar la noticia')
       } finally {
         setIsLoading(false)
       }
@@ -479,6 +517,16 @@ export default function NewsAdmin() {
                 >
                   {isLoading ? 'Guardando...' : 'Guardar como Borrador'}
                 </Button>
+                {editingNews && editingNews.status === 'draft' && (
+                  <Button 
+                    type="button" 
+                    onClick={() => handleSubmit(null, 'publish_now')}
+                    disabled={isLoading}
+                    className="bg-green-600 hover:bg-green-700 text-white"
+                  >
+                    {isLoading ? 'Publicando...' : 'Publicar Ahora'}
+                  </Button>
+                )}
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? 'Guardando...' : (editingNews ? 'Actualizar' : 'Publicar')}
                 </Button>
@@ -668,6 +716,17 @@ export default function NewsAdmin() {
                       </TableCell>
                       <TableCell>
                         <div className="flex space-x-2">
+                          {newsItem.status === 'draft' && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handlePublishNow(newsItem)}
+                              className="text-green-600 hover:text-green-700 hover:bg-green-50"
+                              title="Publicar ahora"
+                            >
+                              <Send className="h-4 w-4" />
+                            </Button>
+                          )}
                           <Button
                             variant="outline"
                             size="sm"
