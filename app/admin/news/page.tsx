@@ -9,7 +9,8 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import RichTextEditor from "@/components/rich-text-editor"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus, Edit, Trash2, ArrowLeft, Search, Send } from "lucide-react"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Plus, Edit, Trash2, ArrowLeft, Search, Send, Star } from "lucide-react"
 import { getNews, createNewsItem, updateNewsItem, deleteNewsItem, type NewsItem } from "@/lib/api-client"
 import BulkNewsUpload from "@/components/bulk-news-upload"
 
@@ -32,7 +33,9 @@ export default function NewsAdmin() {
     imageUrl: '',
     category: '',
     publishedAt: '',
-    date: new Date().toISOString().split('T')[0]
+    date: new Date().toISOString().split('T')[0],
+    isFeatured: false,
+    featuredRank: null as number | null
   })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>('')
@@ -244,7 +247,9 @@ export default function NewsAdmin() {
         imageUrl: '', 
         category: '',
         publishedAt: '',
-        date: new Date().toISOString().split('T')[0] 
+        date: new Date().toISOString().split('T')[0],
+        isFeatured: false,
+        featuredRank: null
       })
       setSelectedFile(null)
       setImagePreview('')
@@ -265,7 +270,9 @@ export default function NewsAdmin() {
       imageUrl: newsItem.imageUrl,
       category: newsItem.category || '',
       publishedAt: new Date(newsItem.publishedAt).toISOString().slice(0, 16),
-      date: new Date(newsItem.publishedAt).toISOString().split('T')[0]
+      date: new Date(newsItem.publishedAt).toISOString().split('T')[0],
+      isFeatured: newsItem.isFeatured || false,
+      featuredRank: newsItem.featuredRank ?? null
     })
     setSelectedFile(null)
     setImagePreview(newsItem.imageUrl || '')
@@ -320,7 +327,9 @@ export default function NewsAdmin() {
           imageUrl: '', 
           category: '',
           publishedAt: '',  // Empty by default
-          date: new Date().toISOString().split('T')[0] 
+          date: new Date().toISOString().split('T')[0],
+          isFeatured: false,
+          featuredRank: null
         })
     setSelectedFile(null)
     setImagePreview('')
@@ -337,7 +346,9 @@ export default function NewsAdmin() {
       imageUrl: '', 
       category: '',
       publishedAt: '',
-      date: new Date().toISOString().split('T')[0] 
+      date: new Date().toISOString().split('T')[0],
+      isFeatured: false,
+      featuredRank: null
     })
     setSelectedFile(null)
     setImagePreview('')
@@ -459,6 +470,62 @@ export default function NewsAdmin() {
                     </p>
                   </div>
                 )}
+
+                {/* Featured News Section */}
+                <div className="border-t pt-6">
+                  <div className="space-y-4">
+                    <div>
+                      <Label className="text-lg font-semibold flex items-center gap-2">
+                        <Star className="h-5 w-5 text-yellow-500" />
+                        Noticia Destacada
+                      </Label>
+                      <p className="text-sm text-gray-600 mt-1">
+                        Las noticias destacadas aparecen en posiciones prominentes con mayor visibilidad.
+                      </p>
+                    </div>
+                    
+                    <div className="flex items-center space-x-2">
+                      <Checkbox 
+                        id="isFeatured" 
+                        checked={formData.isFeatured}
+                        onCheckedChange={(checked) => 
+                          setFormData({ 
+                            ...formData, 
+                            isFeatured: checked as boolean,
+                            featuredRank: checked ? formData.featuredRank || 1 : null
+                          })
+                        }
+                      />
+                      <Label htmlFor="isFeatured" className="text-sm font-medium">
+                        Destacar esta noticia
+                      </Label>
+                    </div>
+
+                    {formData.isFeatured && (
+                      <div className="ml-6">
+                        <Label htmlFor="featuredRank" className="text-sm">
+                          Prioridad de visualización
+                        </Label>
+                        <Input
+                          id="featuredRank"
+                          type="number"
+                          min="0"
+                          max="999"
+                          value={formData.featuredRank || ''}
+                          onChange={(e) => setFormData({ 
+                            ...formData, 
+                            featuredRank: e.target.value ? parseInt(e.target.value) : null 
+                          })}
+                          className="mt-1 w-32"
+                          placeholder="0"
+                        />
+                        <p className="text-xs text-gray-500 mt-1">
+                          Números menores tienen mayor prioridad (0 = más alta prioridad)
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
                 {/* Content Section */}
                 <div className="space-y-8">
