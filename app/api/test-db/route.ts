@@ -1,13 +1,14 @@
 
 import { NextResponse } from 'next/server'
 import { getLiveStreamsFromDB, getProgramsFromDB, getNewsFromDB } from '@/lib/api-database'
+import type { LiveStream, Program, NewsItem } from '@/lib/api'
 
 export async function GET() {
   try {
     // Test basic database operations
-    const liveStreams = await getLiveStreamsFromDB()
-    const programs = await getProgramsFromDB()
-    const news = await getNewsFromDB()
+    const liveStreams: LiveStream[] = await getLiveStreamsFromDB()
+    const programs: Program[] = await getProgramsFromDB()
+    const news: {news: NewsItem[], total: number, totalPages: number} = await getNewsFromDB()
     
     return NextResponse.json({ 
       success: true, 
@@ -15,7 +16,7 @@ export async function GET() {
       data: {
         liveStreamsCount: liveStreams.length,
         programsCount: programs.length,
-        newsCount: news.length
+        newsCount: news.news.length
       }
     })
   } catch (error) {

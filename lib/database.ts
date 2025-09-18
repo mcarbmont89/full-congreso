@@ -22,7 +22,7 @@ function initializeConnection() {
         max: 20,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 10000,
-        acquireTimeoutMillis: 10000,
+
       })
       console.log('Database connection initialized from DATABASE_URL')
     } catch (error) {
@@ -40,7 +40,7 @@ function initializeConnection() {
         max: 20,
         idleTimeoutMillis: 30000,
         connectionTimeoutMillis: 10000,
-        acquireTimeoutMillis: 10000,
+
       })
       console.log('Database connection initialized from PG environment variables')
     } catch (error) {
@@ -67,7 +67,6 @@ export function createDatabaseConnection(config: DatabaseConfig): Pool {
     max: 20,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000,
-    acquireTimeoutMillis: 10000,
   })
   
   return pool

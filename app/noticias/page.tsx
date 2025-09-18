@@ -109,7 +109,7 @@ export default async function NewsPage() {
       const now = new Date();
       
       // Filter to only show published news with publishedAt <= current date
-      newsItems = allNews.filter((item: NewsItem) => {
+      newsItems = allNews.news.filter((item: NewsItem) => {
         const publishedDate = new Date(item.publishedAt);
         return item.status === 'published' && publishedDate <= now;
       }).sort((a: NewsItem, b: NewsItem) => {

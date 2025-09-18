@@ -36,7 +36,7 @@ export default async function NoticiaDetallePage({ params }: { params: Promise<{
 
   try {
     const newsData = await getNewsFromDB()
-    news = newsData.map(item => ({
+    news = newsData.news.map(item => ({
       ...item,
       publishedAt: item.publishedAt ? item.publishedAt.toISOString() : undefined,
       createdAt: item.createdAt ? item.createdAt.toISOString() : undefined
