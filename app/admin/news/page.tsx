@@ -195,12 +195,12 @@ export default function NewsAdmin() {
 
       // Determine status and publication date
       let status = forcedStatus
-      let publishedAt = new Date()
+      let publishedAt: Date = new Date()
 
       if (forcedStatus === 'draft') {
-        // For drafts, set publishedAt to null to avoid data inconsistency
+        // For drafts, use current time but status will be handled by API
         status = 'draft'
-        publishedAt = null
+        publishedAt = new Date()
       } else if (forcedStatus === 'publish_now') {
         // Force immediate publication with current time
         status = 'published'
@@ -296,7 +296,7 @@ export default function NewsAdmin() {
         // Send minimal payload to avoid overwriting unintended fields
         const updateData = {
           status: 'published',
-          publishedAt: new Date().toISOString()
+          publishedAt: new Date()
         }
         
         await updateNewsItem(newsItem.id, updateData)
