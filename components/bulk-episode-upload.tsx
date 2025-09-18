@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useToast } from "@/hooks/use-toast"
 import { Upload, X, Plus } from "lucide-react"
@@ -12,6 +13,7 @@ import { Upload, X, Plus } from "lucide-react"
 interface BulkEpisodeData {
   publishDate: string
   title: string
+  description: string
   file: File | null
   image: File | null
   programId: string
@@ -24,7 +26,7 @@ interface BulkEpisodeUploadProps {
 export default function BulkEpisodeUpload({ onComplete }: BulkEpisodeUploadProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [episodes, setEpisodes] = useState<BulkEpisodeData[]>([
-    { publishDate: '', title: '', file: null, image: null, programId: '' }
+    { publishDate: '', title: '', description: '', file: null, image: null, programId: '' }
   ])
   const [isUploading, setIsUploading] = useState(false)
   const [programs, setPrograms] = useState<any[]>([])
@@ -45,7 +47,7 @@ export default function BulkEpisodeUpload({ onComplete }: BulkEpisodeUploadProps
 
   const addEpisode = () => {
     if (episodes.length < 10) {
-      setEpisodes([...episodes, { publishDate: '', title: '', file: null, image: null, programId: '' }])
+      setEpisodes([...episodes, { publishDate: '', title: '', description: '', file: null, image: null, programId: '' }])
     }
   }
 
@@ -142,7 +144,7 @@ export default function BulkEpisodeUpload({ onComplete }: BulkEpisodeUploadProps
         // Create episode
         const episodeData = {
           title: episode.title,
-          description: `Episodio de ${selectedProgram?.title || 'Programa'}`,
+          description: episode.description || `Episodio de ${selectedProgram?.title || 'Programa'}`,
           audioUrl: audioUrl,
           duration: '30MIN', // Default duration
           publishDate: episode.publishDate,
@@ -171,7 +173,7 @@ export default function BulkEpisodeUpload({ onComplete }: BulkEpisodeUploadProps
       })
 
       // Reset form
-      setEpisodes([{ publishDate: '', title: '', file: null, image: null, programId: '' }])
+      setEpisodes([{ publishDate: '', title: '', description: '', file: null, image: null, programId: '' }])
       setIsOpen(false)
       onComplete()
 
@@ -258,6 +260,19 @@ export default function BulkEpisodeUpload({ onComplete }: BulkEpisodeUploadProps
                   onChange={(e) => updateEpisode(index, 'title', e.target.value)}
                   placeholder="Título del episodio"
                 />
+              </div>
+
+              <div>
+                <Label>Descripción</Label>
+                <Textarea
+                  value={episode.description}
+                  onChange={(e) => updateEpisode(index, 'description', e.target.value)}
+                  placeholder="Descripción del episodio (opcional)"
+                  rows={3}
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Si no se especifica, se generará automáticamente
+                </p>
               </div>
 
               <div>
