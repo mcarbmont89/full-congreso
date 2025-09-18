@@ -74,11 +74,16 @@ export default function Navbar() {
         </nav>
 
         <button
-          className="md:hidden text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#3b0764] focus:ring-opacity-50 rounded-md p-2 min-h-[44px] min-w-[44px] flex items-center justify-center"
+          className="md:hidden text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#3b0764] focus:ring-opacity-50 rounded-md p-2 min-h-[44px] min-w-[44px] flex items-center justify-center touch-manipulation active:scale-95 transition-transform"
           onClick={toggleMenu}
+          onTouchStart={(e) => {
+            e.preventDefault()
+            toggleMenu()
+          }}
           aria-expanded={isMenuOpen}
           aria-label="Menú principal"
           type="button"
+          style={{ touchAction: 'manipulation' }}
         >
           {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>

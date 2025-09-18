@@ -148,6 +148,7 @@ export default function AutoScrollCarousel({ items, showLiveIndicator = false, l
   const minSwipeDistance = 50;
 
   const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault(); // Prevent touch delays
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
