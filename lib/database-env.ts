@@ -101,6 +101,32 @@ export async function initializeDatabase() {
       END $$;
     `)
 
+    // Add is_featured column if it doesn't exist (for existing tables)
+    await pool.query(`
+      DO $$ 
+      BEGIN 
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'news' AND column_name = 'is_featured'
+        ) THEN
+          ALTER TABLE news ADD COLUMN is_featured BOOLEAN NOT NULL DEFAULT false;
+        END IF;
+      END $$;
+    `)
+
+    // Add featured_rank column if it doesn't exist (for existing tables)
+    await pool.query(`
+      DO $$ 
+      BEGIN 
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'news' AND column_name = 'featured_rank'
+        ) THEN
+          ALTER TABLE news ADD COLUMN featured_rank INTEGER NULL;
+        END IF;
+      END $$;
+    `)
+
     // Create organs table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS organs (
