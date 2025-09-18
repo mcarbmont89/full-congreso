@@ -151,18 +151,18 @@ export default function ProgramacionAdmin() {
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <div className="mb-6">
+    <div className="p-3 sm:p-4 md:p-6 max-w-7xl mx-auto">
+      <div className="mb-4 md:mb-6">
         <div>
-          <h1 className="text-3xl font-bold flex items-center gap-2">
-            <Calendar className="h-8 w-8 text-purple-600" />
+          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+            <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600" />
             Programación Diaria
           </h1>
-          <p className="text-gray-600 mt-1">Gestiona la programación diaria de todos los canales</p>
+          <p className="text-sm sm:text-base text-gray-600 mt-1">Gestiona la programación diaria de todos los canales</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-4 md:mb-6">
         {/* Upload Section */}
         <Card>
           <CardHeader>
@@ -171,25 +171,25 @@ export default function ProgramacionAdmin() {
               Subir Programación Excel
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 sm:p-6">
             <div className="space-y-4">
               <div>
                 <Input
                   type="file"
                   accept=".xlsx,.xls"
                   onChange={handleFileChange}
-                  className="mb-4"
+                  className="mb-4 text-sm"
                 />
-                <p className="text-sm text-gray-600 flex items-center gap-2">
-                  <FileSpreadsheet className="h-4 w-4" />
-                  Archivo Excel con 3 hojas (Canales: 45.1, 45.2, 45.3)
+                <p className="text-xs sm:text-sm text-gray-600 flex items-start sm:items-center gap-2 leading-tight">
+                  <FileSpreadsheet className="h-4 w-4 flex-shrink-0 mt-0.5 sm:mt-0" />
+                  <span>Archivo Excel con 3 hojas (Canales: 45.1, 45.2, 45.3)</span>
                 </p>
               </div>
 
               <Button 
                 onClick={handleUpload} 
                 disabled={!file || uploading}
-                className="w-full"
+                className="w-full h-12 text-sm sm:text-base"
               >
                 {uploading ? (
                   <>
@@ -221,20 +221,20 @@ export default function ProgramacionAdmin() {
               Acciones de Programación
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-4 sm:p-6">
             <div className="space-y-4">
-              <div className="grid grid-cols-3 gap-2 text-sm">
-                <div className="bg-purple-50 p-3 rounded-lg text-center">
-                  <div className="font-semibold text-purple-700">Canal 45.1</div>
-                  <div className="text-purple-600">Principal</div>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
+                <div className="bg-purple-50 p-2 sm:p-3 rounded-lg text-center">
+                  <div className="font-semibold text-purple-700 text-xs sm:text-sm">Canal 45.1</div>
+                  <div className="text-purple-600 text-xs">Principal</div>
                 </div>
-                <div className="bg-blue-50 p-3 rounded-lg text-center">
-                  <div className="font-semibold text-blue-700">Canal 45.2</div>
-                  <div className="text-blue-600">Secundario</div>
+                <div className="bg-blue-50 p-2 sm:p-3 rounded-lg text-center">
+                  <div className="font-semibold text-blue-700 text-xs sm:text-sm">Canal 45.2</div>
+                  <div className="text-blue-600 text-xs">Secundario</div>
                 </div>
-                <div className="bg-green-50 p-3 rounded-lg text-center">
-                  <div className="font-semibold text-green-700">Canal 45.3</div>
-                  <div className="text-green-600">Tercero</div>
+                <div className="bg-green-50 p-2 sm:p-3 rounded-lg text-center">
+                  <div className="font-semibold text-green-700 text-xs sm:text-sm">Canal 45.3</div>
+                  <div className="text-green-600 text-xs">Tercero</div>
                 </div>
               </div>
 
@@ -242,7 +242,7 @@ export default function ProgramacionAdmin() {
                 {programmingData && (
                   <Button 
                     onClick={handleSaveProgramming}
-                    className="w-full"
+                    className="w-full h-12 text-sm sm:text-base"
                     variant="default"
                   >
                     <Save className="h-4 w-4 mr-2" />
@@ -253,7 +253,7 @@ export default function ProgramacionAdmin() {
                 {programmingData && (
                   <Button 
                     onClick={handleClearProgramming}
-                    className="w-full"
+                    className="w-full h-12 text-sm sm:text-base"
                     variant="destructive"
                   >
                     <RefreshCw className="h-4 w-4 mr-2" />
@@ -268,38 +268,60 @@ export default function ProgramacionAdmin() {
 
       {programmingData && (
         <Card>
-          <CardHeader>
-            <CardTitle>Vista Previa de Programación</CardTitle>
+          <CardHeader className="p-4 sm:p-6">
+            <CardTitle className="text-lg sm:text-xl">Vista Previa de Programación</CardTitle>
           </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="45.1">
-              <TabsList className="grid w-full grid-cols-3">
-                <TabsTrigger value="45.1">Canal 45.1</TabsTrigger>
-                <TabsTrigger value="45.2">Canal 45.2</TabsTrigger>
-                <TabsTrigger value="45.3">Canal 45.3</TabsTrigger>
+          <CardContent className="p-4 sm:p-6">
+            <Tabs defaultValue={Object.keys(programmingData)[0] || "45.1"}>
+              <TabsList className={`grid w-full h-auto ${Object.keys(programmingData).length === 3 ? 'grid-cols-3' : Object.keys(programmingData).length === 2 ? 'grid-cols-2' : 'grid-cols-1'}`}>
+                {Object.keys(programmingData).map(channel => (
+                  <TabsTrigger key={channel} value={channel} className="text-xs sm:text-sm px-2 py-2">
+                    <span className="hidden sm:inline">Canal </span>{channel}
+                  </TabsTrigger>
+                ))}
               </TabsList>
 
               {Object.keys(programmingData).map(channel => (
-                <TabsContent key={channel} value={channel}>
-                  <div className="overflow-x-auto">
-                    <table className="min-w-full border-collapse border border-gray-300">
+                <TabsContent key={channel} value={channel} className="mt-4">
+                  {/* Mobile View - Cards */}
+                  <div className="block md:hidden space-y-3">
+                    {programmingData[channel]?.map((program: any, index: number) => (
+                      <div key={index} className="bg-gray-50 p-3 rounded-lg border">
+                        <div className="flex justify-between items-start mb-2">
+                          <span className="font-semibold text-purple-600 text-sm">
+                            {program.hora || program.time || 'N/A'}
+                          </span>
+                        </div>
+                        <h4 className="font-medium text-gray-900 mb-1 text-sm break-words line-clamp-2">
+                          {program.programa || program.program || 'N/A'}
+                        </h4>
+                        <p className="text-gray-600 text-xs leading-relaxed break-words line-clamp-3">
+                          {program.descripcion || program.description || 'N/A'}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Desktop View - Table */}
+                  <div className="hidden md:block overflow-x-auto">
+                    <table className="min-w-full border-collapse border border-gray-300 text-sm">
                       <thead>
                         <tr className="bg-gray-50">
-                          <th className="border border-gray-300 px-4 py-2">Hora</th>
-                          <th className="border border-gray-300 px-4 py-2">Programa</th>
-                          <th className="border border-gray-300 px-4 py-2">Descripción</th>
+                          <th className="border border-gray-300 px-3 py-2 text-left font-medium">Hora</th>
+                          <th className="border border-gray-300 px-3 py-2 text-left font-medium">Programa</th>
+                          <th className="border border-gray-300 px-3 py-2 text-left font-medium">Descripción</th>
                         </tr>
                       </thead>
                       <tbody>
                         {programmingData[channel]?.map((program: any, index: number) => (
-                          <tr key={index}>
-                            <td className="border border-gray-300 px-4 py-2">
+                          <tr key={index} className="hover:bg-gray-50">
+                            <td className="border border-gray-300 px-3 py-2 font-medium text-purple-600">
                               {program.hora || program.time || 'N/A'}
                             </td>
-                            <td className="border border-gray-300 px-4 py-2">
+                            <td className="border border-gray-300 px-3 py-2 font-medium break-words">
                               {program.programa || program.program || 'N/A'}
                             </td>
-                            <td className="border border-gray-300 px-4 py-2">
+                            <td className="border border-gray-300 px-3 py-2 text-gray-600 break-words">
                               {program.descripcion || program.description || 'N/A'}
                             </td>
                           </tr>
