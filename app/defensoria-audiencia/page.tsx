@@ -12,7 +12,7 @@ export default function DefensoriaAudienciaPage() {
     <>
       <main className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative w-full h-screen flex flex-col items-center justify-center overflow-hidden">
+        <section className="relative w-full h-[50vh] flex flex-col items-center justify-center overflow-hidden">
           {/* Background */}
           <div className="absolute inset-0 z-0">
             <Image
