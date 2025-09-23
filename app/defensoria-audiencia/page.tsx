@@ -27,15 +27,15 @@ export default function DefensoriaAudienciaPage() {
           <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
             {/* Logo */}
             <div className="flex justify-center mb-2 mt-[20px]">
-              <div className="w-[180px] h-[90px] sm:w-[220px] sm:h-[110px] md:w-[260px] md:h-[130px] relative">
-                <Image
-                  src="/images/defensoria-logo.png"
-                  alt="Logo Defensoría de Audiencia"
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
+              <Image
+                src="/images/defensoria-logo.png"
+                alt="Logo Defensoría de Audiencia"
+                width={180}
+                height={90}
+                className="object-contain sm:w-[220px] sm:h-[110px] md:w-[260px] md:h-[130px]"
+                style={{ width: "auto", height: "auto" }}
+                priority
+              />
             </div>
 
             {/* Slogan */}
