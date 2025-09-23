@@ -16,7 +16,7 @@ export default function DefensoriaAudienciaPage() {
           {/* Background */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="/images/defensoria-fondo-micrositio.png"
+              src="/images/defensoria-fondo-header.png"
               alt="Fondo Defensoría de Audiencia"
               fill
               className="object-cover"
@@ -30,9 +30,9 @@ export default function DefensoriaAudienciaPage() {
               <Image
                 src="/images/defensoria-logo.png"
                 alt="Logo Defensoría de Audiencia"
-                width={80}
-                height={40}
-                className="object-contain sm:w-[90px] sm:h-[45px] md:w-[100px] md:h-[50px]"
+                width={4}
+                height={2}
+                className="object-contain sm:w-[5px] sm:h-[3px] md:w-[5px] md:h-[3px]"
                 style={{ width: "auto", height: "auto" }}
                 priority
               />
