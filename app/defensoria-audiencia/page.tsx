@@ -49,7 +49,7 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-6 md:mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-2 md:mb-3">
               <ContactModal type="Queja">
                 <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
                   <Image
