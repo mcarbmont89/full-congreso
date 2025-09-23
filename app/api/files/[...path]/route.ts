@@ -29,14 +29,58 @@ export async function GET(
 
     if (!existsSync(fullPath)) {
       console.log('File not found:', fullPath)
-
-      // Check if directory exists and list files for debugging
+      
+      // Try to find a similar file with different extension
       const dirPath = join(process.cwd(), 'public', filePath.split('/').slice(0, -1).join('/'))
-      if (existsSync(dirPath)) {
+      const fileName = filePath.split('/').pop()?.split('.')[0]
+      
+      if (existsSync(dirPath) && fileName) {
         const fs = require('fs')
         const files = fs.readdirSync(dirPath)
-        console.log('Directory exists:', true)
-        console.log('Files in directory:', files)
+        const similarFile = files.find(f => f.startsWith(fileName))
+        
+        if (similarFile) {
+          console.log('Found similar file:', similarFile)
+          const similarPath = join(dirPath, similarFile)
+          const stats = await stat(similarPath)
+          const fileBuffer = await readFile(similarPath)
+          
+          // Determine content type for similar file
+          const similarExt = similarFile.split('.').pop()?.toLowerCase()
+          let similarContentType = 'application/octet-stream'
+          
+          switch (similarExt) {
+            case 'jpg':
+            case 'jpeg':
+              similarContentType = 'image/jpeg'
+              break
+            case 'png':
+              similarContentType = 'image/png'
+              break
+            case 'gif':
+              similarContentType = 'image/gif'
+              break
+            case 'webp':
+              similarContentType = 'image/webp'
+              break
+            case 'svg':
+              similarContentType = 'image/svg+xml'
+              break
+          }
+          
+          return new NextResponse(new Uint8Array(fileBuffer), {
+            status: 200,
+            headers: {
+              'Content-Type': similarContentType,
+              'Content-Length': stats.size.toString(),
+              'Accept-Ranges': 'bytes',
+              'Cache-Control': 'public, max-age=31536000',
+              'Access-Control-Allow-Origin': '*',
+              'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+              'Access-Control-Allow-Headers': 'Range',
+            },
+          })
+        }
       }
 
       return new NextResponse('File not found', { status: 404 })

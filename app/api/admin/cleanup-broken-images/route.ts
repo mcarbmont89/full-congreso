@@ -1,7 +1,7 @@
 
 import { NextResponse } from 'next/server'
 import { getDatabaseConnection } from '@/lib/database'
-import { existsSync } from 'fs'
+import { existsSync, readdirSync } from 'fs'
 import { join } from 'path'
 
 export async function POST() {
@@ -144,10 +144,46 @@ export async function GET() {
       }
     }
 
+    // Auto-fix broken images by finding similar files
+    const fixedImages = []
+    
+    for (const brokenImage of brokenImages) {
+      const dirPath = join(process.cwd(), 'public', brokenImage.url.split('/').slice(0, -1).join('/'))
+      const fileName = brokenImage.url.split('/').pop()?.split('.')[0]
+      
+      if (existsSync(dirPath) && fileName) {
+        const files = readdirSync(dirPath)
+        const similarFile = files.find(f => f.startsWith(fileName))
+        
+        if (similarFile) {
+          const newUrl = brokenImage.url.replace(brokenImage.url.split('/').pop()!, similarFile)
+          
+          try {
+            // Update the database with the corrected URL
+            await pool.query(
+              `UPDATE news SET ${brokenImage.field} = $1 WHERE id = $2`,
+              [newUrl, brokenImage.id]
+            )
+            
+            fixedImages.push({
+              id: brokenImage.id,
+              title: brokenImage.title,
+              oldUrl: brokenImage.url,
+              newUrl: newUrl
+            })
+          } catch (error) {
+            console.error('Error fixing image URL:', error)
+          }
+        }
+      }
+    }
+
     return NextResponse.json({
       success: true,
       brokenImages: brokenImages.length,
-      details: brokenImages
+      fixedImages: fixedImages.length,
+      details: brokenImages,
+      fixes: fixedImages
     })
 
   } catch (error) {
