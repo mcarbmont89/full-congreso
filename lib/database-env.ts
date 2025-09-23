@@ -13,6 +13,16 @@ export function getDB(): Pool {
       user: process.env.PGUSER,
       password: process.env.PGPASSWORD,
     })
+    
+    // Set Mexico City timezone for all database connections
+    pool.on('connect', async (client) => {
+      try {
+        await client.query("SET timezone = 'America/Mexico_City'")
+        console.log('Database timezone set to Mexico City')
+      } catch (error) {
+        console.error('Error setting database timezone:', error)
+      }
+    })
   }
   return pool
 }
@@ -24,10 +34,22 @@ export function createDatabaseConnectionFromEnv(): Pool {
     throw new Error('DATABASE_URL environment variable is not set')
   }
 
-  return new Pool({
+  const pool = new Pool({
     connectionString: databaseUrl,
     ssl: databaseUrl.includes('localhost') ? false : { rejectUnauthorized: false }
   })
+  
+  // Set Mexico City timezone for all database connections
+  pool.on('connect', async (client) => {
+    try {
+      await client.query("SET timezone = 'America/Mexico_City'")
+      console.log('Database timezone set to Mexico City')
+    } catch (error) {
+      console.error('Error setting database timezone:', error)
+    }
+  })
+  
+  return pool
 }
 
 export async function initializeDatabase() {
