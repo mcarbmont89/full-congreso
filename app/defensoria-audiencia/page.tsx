@@ -26,7 +26,7 @@ export default function DefensoriaAudienciaPage() {
           
           <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
             {/* Logo */}
-            <div className="flex justify-center mb-6 md:mb-8">
+            <div className="flex justify-center mb-4 md:mb-5">
               <div className="w-[280px] h-[140px] sm:w-[350px] sm:h-[175px] md:w-[400px] md:h-[200px] relative">
                 <Image
                   src="/images/defensoria-logo.png"
@@ -39,7 +39,7 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Slogan */}
-            <div className="flex justify-center mb-8 md:mb-12">
+            <div className="flex justify-center mb-6 md:mb-8">
               <div className="w-[320px] h-[80px] sm:w-[480px] sm:h-[100px] md:w-[600px] md:h-[120px] relative">
                 <Image
                   src="/images/defensoria-slogan.png"
@@ -52,7 +52,7 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-8 md:mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-6 md:mb-8">
               <ContactModal type="Queja">
                 <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
                   <Image
