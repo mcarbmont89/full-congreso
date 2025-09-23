@@ -1,24 +1,102 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getDB } from '@/lib/database-env'
+import { jwtVerify } from 'jose'
+
+const JWT_SECRET = new TextEncoder().encode(
+  process.env.JWT_SECRET || 'default-secret-key-for-development-only'
+)
+
+// Helper function to verify authentication
+async function verifyAuth(request: NextRequest): Promise<{ success: boolean; error?: string }> {
+  const token = request.cookies.get('auth-token')?.value
+
+  if (!token) {
+    return { success: false, error: 'Authentication token not found' }
+  }
+
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET)
+    
+    // Additional security check: ensure the token has required fields
+    if (!payload.username || !payload.role) {
+      return { success: false, error: 'Invalid token payload' }
+    }
+
+    return { success: true }
+  } catch (error) {
+    return { success: false, error: 'Invalid or expired token' }
+  }
+}
+
+// Helper function to verify admin role
+async function verifyAdminAuth(request: NextRequest): Promise<{ success: boolean; error?: string }> {
+  const token = request.cookies.get('auth-token')?.value
+
+  if (!token) {
+    return { success: false, error: 'Authentication token not found' }
+  }
+
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET)
+    
+    // Additional security check: ensure the token has required fields and admin role
+    if (!payload.username || !payload.role) {
+      return { success: false, error: 'Invalid token payload' }
+    }
+
+    if (payload.role !== 'admin') {
+      return { success: false, error: 'Admin role required' }
+    }
+
+    return { success: true }
+  } catch (error) {
+    return { success: false, error: 'Invalid or expired token' }
+  }
+}
 
 export async function GET(request: NextRequest) {
   try {
     const db = getDB()
     const { searchParams } = new URL(request.url)
     const section = searchParams.get('section')
+    const includeInactive = searchParams.get('admin') === 'true' // Admin can see all
+    
+    // Check if admin access is requested
+    let isAdminRequest = false
+    if (includeInactive) {
+      // Admin access requested - verify authentication and authorization
+      const authResult = await verifyAdminAuth(request)
+      if (!authResult.success) {
+        return NextResponse.json(
+          { error: authResult.error || 'Unauthorized' },
+          { status: authResult.error === 'Admin role required' ? 403 : 401 }
+        )
+      }
+      isAdminRequest = true // Admin authenticated successfully
+    }
     
     let query = `
       SELECT id, section, title, content, image_url, file_url, metadata, display_order, is_active, created_at, updated_at
       FROM defensoria_content
-      WHERE is_active = true
     `
     const params: any[] = []
+    let whereClause = ''
+    
+    // If not admin request, filter only active content
+    if (!isAdminRequest) {
+      whereClause = 'WHERE is_active = true'
+    }
     
     if (section) {
-      query += ` AND section = $1`
+      if (whereClause) {
+        whereClause += ` AND section = $${params.length + 1}`
+      } else {
+        whereClause = `WHERE section = $${params.length + 1}`
+      }
       params.push(section)
     }
     
+    query += whereClause
     query += ` ORDER BY display_order ASC, created_at DESC`
     
     console.log('Querying defensoria content from database...', { section })
@@ -37,6 +115,15 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Verify admin authentication for write operations
+  const authResult = await verifyAdminAuth(request)
+  if (!authResult.success) {
+    return NextResponse.json(
+      { error: authResult.error || 'Unauthorized' },
+      { status: authResult.error === 'Admin role required' ? 403 : 401 }
+    )
+  }
+
   try {
     const db = getDB()
     const body = await request.json()
@@ -48,7 +135,8 @@ export async function POST(request: NextRequest) {
       image_url,
       file_url,
       metadata,
-      display_order = 0
+      display_order = 0,
+      is_active = true
     } = body
     
     if (!section) {
@@ -61,10 +149,10 @@ export async function POST(request: NextRequest) {
     console.log('Creating defensoria content:', { section, title })
     
     const result = await db.query(`
-      INSERT INTO defensoria_content (section, title, content, image_url, file_url, metadata, display_order, updated_at)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, CURRENT_TIMESTAMP)
+      INSERT INTO defensoria_content (section, title, content, image_url, file_url, metadata, display_order, is_active, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP)
       RETURNING *
-    `, [section, title, content, image_url, file_url, JSON.stringify(metadata), display_order])
+    `, [section, title, content, image_url, file_url, JSON.stringify(metadata), display_order, is_active])
     
     console.log('Defensoria content created:', result.rows[0])
     
@@ -79,6 +167,15 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  // Verify admin authentication for write operations
+  const authResult = await verifyAdminAuth(request)
+  if (!authResult.success) {
+    return NextResponse.json(
+      { error: authResult.error || 'Unauthorized' },
+      { status: authResult.error === 'Admin role required' ? 403 : 401 }
+    )
+  }
+
   try {
     const db = getDB()
     const body = await request.json()
@@ -139,6 +236,15 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  // Verify admin authentication for write operations
+  const authResult = await verifyAdminAuth(request)
+  if (!authResult.success) {
+    return NextResponse.json(
+      { error: authResult.error || 'Unauthorized' },
+      { status: authResult.error === 'Admin role required' ? 403 : 401 }
+    )
+  }
+
   try {
     const db = getDB()
     const { searchParams } = new URL(request.url)
