@@ -26,7 +26,7 @@ export default function DefensoriaAudienciaPage() {
           
           <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
             {/* Logo */}
-            <div className="flex justify-center mb-4 md:mb-5">
+            <div className="flex justify-center mb-4 md:mb-5 mt-[30px]">
               <div className="w-[280px] h-[140px] sm:w-[350px] sm:h-[175px] md:w-[400px] md:h-[200px] relative">
                 <Image
                   src="/images/defensoria-logo.png"
