@@ -16,7 +16,7 @@ export default function DefensoriaAudienciaPage() {
           {/* Background */}
           <div className="absolute inset-0 z-0">
             <Image
-              src="/images/defensoria-fondo-header.png"
+              src="/images/defensoria-fondo-micrositio.png"
               alt="Fondo Defensoría de Audiencia"
               fill
               className="object-cover"
