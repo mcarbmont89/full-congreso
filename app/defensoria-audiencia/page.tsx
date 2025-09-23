@@ -39,16 +39,13 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Slogan */}
-            <div className="flex justify-center mb-6 md:mb-8">
-              <div className="w-[320px] h-[80px] sm:w-[480px] sm:h-[100px] md:w-[600px] md:h-[120px] relative">
-                <Image
-                  src="/images/defensoria-slogan.png"
-                  alt="¡Tu Voz Importa! Comparte con nosotros tus comentarios"
-                  fill
-                  className="object-contain"
-                  priority
-                />
-              </div>
+            <div className="text-center mb-6 md:mb-8 px-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
+                ¡TU VOZ IMPORTA!
+              </h2>
+              <p className="text-base sm:text-lg md:text-xl text-white/90 font-medium">
+                Comparte con nosotros tus comentarios
+              </p>
             </div>
 
             {/* Action Buttons */}
