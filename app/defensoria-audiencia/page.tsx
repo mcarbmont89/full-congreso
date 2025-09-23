@@ -39,7 +39,7 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Slogan */}
-            <div className="text-center mb-3 px-4">
+            <div className="text-center mb-[20px] px-4">
               <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-1">
                 ¡TU VOZ IMPORTA!
               </h2>
@@ -49,7 +49,7 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center items-center mb-3">
+            <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center items-center mb-[15px]">
               <ContactModal type="Queja">
                 <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
                   <Image
@@ -91,7 +91,7 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Social Media Icons */}
-            <div className="flex justify-center items-center gap-3 md:gap-4 flex-wrap">
+            <div className="flex justify-center items-center gap-3 md:gap-4 flex-wrap -mt-[5px]">
               {/* Facebook */}
               <a 
                 href="https://www.facebook.com/share/16ZPgemiKV/?mibextid=wwXIfr"
