@@ -30,9 +30,9 @@ export default function DefensoriaAudienciaPage() {
               <Image
                 src="/images/defensoria-logo.png"
                 alt="Logo Defensoría de Audiencia"
-                width={60}
-                height={30}
-                className="object-contain sm:w-[70px] sm:h-[35px] md:w-[80px] md:h-[40px]"
+                width={15}
+                height={8}
+                className="object-contain sm:w-[18px] sm:h-[9px] md:w-[20px] md:h-[10px]"
                 style={{ width: "auto", height: "auto" }}
                 priority
               />
