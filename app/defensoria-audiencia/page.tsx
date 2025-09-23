@@ -181,7 +181,7 @@ export default function DefensoriaAudienciaPage() {
 
         {/* ¿Qué hace la Defensoría? Section */}
         <section className="py-20 relative overflow-hidden" style={{
-          backgroundImage: "url('/images/defensoria-micrositio-fondo.png')",
+          backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
