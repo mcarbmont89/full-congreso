@@ -283,18 +283,24 @@ export default function DefensoriaAudienciaPage() {
         </section>
 
         {/* Conoce tu Ley Section */}
-        <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
-          <div className="container mx-auto px-6 text-center">
-            <div className="max-w-2xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-6">
+        <section className="py-20 bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100 relative overflow-hidden">
+          <div className="container mx-auto px-6 text-center relative z-10">
+            <div className="max-w-3xl mx-auto">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-6 drop-shadow-sm">
                 Conoce tu <span className="text-blue-600">Ley</span>
               </h2>
-              <p className="text-lg text-gray-600 mb-8">
+              <div className="w-24 h-1 bg-blue-600 mx-auto mb-8 rounded-full"></div>
+              <p className="text-xl md:text-2xl text-gray-700 mb-10 leading-relaxed font-medium">
                 Descarga el marco legal que rige los derechos de audiencia y las obligaciones del Canal del Congreso.
               </p>
-              <ConoceTuLeyButton variant="secondary" defaultText="Descargar PDF" showIcon={true} />
+              <div className="transform hover:scale-105 transition-all duration-300 inline-block">
+                <ConoceTuLeyButton variant="secondary" defaultText="Descargar PDF" showIcon={true} />
+              </div>
             </div>
           </div>
+          {/* Background decoration */}
+          <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-200/30 to-indigo-200/30 rounded-full -translate-y-20 translate-x-20 blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-purple-200/20 to-blue-200/20 rounded-full translate-y-20 -translate-x-20 blur-3xl"></div>
         </section>
 
         {/* Defensora Profile Section */}
@@ -313,25 +319,26 @@ export default function DefensoriaAudienciaPage() {
         </Suspense>
 
         {/* Contact Information Section */}
-        <section className="py-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white">
-          <div className="container mx-auto px-6 text-center">
-            <h2 className="text-4xl font-bold mb-8">
+        <section className="py-24 bg-gradient-to-br from-indigo-900 via-purple-900 to-blue-900 text-white relative overflow-hidden">
+          <div className="container mx-auto px-6 text-center relative z-10">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 drop-shadow-lg">
               ¿Tienes alguna consulta adicional?
             </h2>
-            <p className="text-xl text-purple-200 mb-8 max-w-2xl mx-auto">
+            <div className="w-24 h-1 bg-purple-400 mx-auto mb-10 rounded-full"></div>
+            <p className="text-xl md:text-2xl text-purple-200 mb-12 max-w-3xl mx-auto leading-relaxed font-medium">
               Nuestro equipo está aquí para ayudarte. Contáctanos directamente a través de nuestros canales oficiales.
             </p>
             
-            <div className="flex flex-col lg:flex-row items-center justify-center gap-6">
+            <div className="flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-12">
               {/* Email contact */}
-              <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-                <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="flex items-center space-x-6 bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 group transform hover:scale-105 shadow-2xl">
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
-                    className="w-7 h-7 text-white"
+                    className="w-8 h-8 text-white"
                   >
                     <path
                       strokeLinecap="round"
@@ -353,14 +360,14 @@ export default function DefensoriaAudienciaPage() {
               </div>
 
               {/* Contact form link */}
-              <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-                <div className="w-14 h-14 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+              <div className="flex items-center space-x-6 bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/20 hover:border-white/30 transition-all duration-300 group transform hover:scale-105 shadow-2xl">
+                <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
-                    className="w-7 h-7 text-white"
+                    className="w-8 h-8 text-white"
                   >
                     <path
                       strokeLinecap="round"
