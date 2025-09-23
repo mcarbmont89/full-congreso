@@ -1,7 +1,6 @@
 import { Suspense } from 'react'
 import Image from "next/image"
 import Link from "next/link"
-import Navbar from "@/components/navbar"
 import Footer from "@/components/footer"
 import ContactModal from "@/components/defensoria/contact-modal"
 import DefensoraProfile from "@/components/defensoria/defensora-profile"
@@ -11,7 +10,6 @@ import ReportsSection from "@/components/defensoria/reports-section"
 export default function DefensoriaAudienciaPage() {
   return (
     <>
-      <Navbar />
       <main className="min-h-screen">
         {/* Hero Section */}
         <section className="relative w-full h-[600px] flex items-center overflow-hidden">
