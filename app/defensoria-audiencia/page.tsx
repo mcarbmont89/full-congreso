@@ -12,7 +12,7 @@ export default function DefensoriaAudienciaPage() {
     <>
       <main className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative w-full h-[45vh] flex flex-col items-center justify-center overflow-hidden">
+        <section className="relative w-full min-h-[60vh] md:min-h-[70vh] flex flex-col items-center justify-center overflow-hidden py-8 md:py-12">
           {/* Background */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -24,9 +24,9 @@ export default function DefensoriaAudienciaPage() {
             />
           </div>
           
-          <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
+          <div className="relative z-10 text-center text-white px-4 md:px-6 max-w-4xl mx-auto w-full">
             {/* Logo */}
-            <div className="flex justify-center mb-2 mt-[20px]">
+            <div className="flex justify-center mb-4 md:mb-6">
               <Image
                 src="/images/defensoria-logo.png"
                 alt="Logo Defensoría de Audiencia"
@@ -39,17 +39,17 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Slogan */}
-            <div className="text-center mb-[20px] px-4">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-1">
+            <div className="text-center mb-6 md:mb-8 px-2">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 md:mb-3">
                 ¡TU VOZ IMPORTA!
               </h2>
-              <p className="text-lg sm:text-xl md:text-2xl text-white/90 font-medium">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 font-medium">
                 Comparte con nosotros tus comentarios
               </p>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center items-center mb-[15px]">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center mb-6 md:mb-8">
               <ContactModal type="Queja">
                 <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
                   <Image
@@ -91,7 +91,7 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Social Media Icons */}
-            <div className="flex justify-center items-center gap-3 md:gap-4 flex-wrap -mt-[5px]">
+            <div className="flex justify-center items-center gap-2 sm:gap-3 md:gap-4 flex-wrap">
               {/* Facebook */}
               <a 
                 href="https://www.facebook.com/share/16ZPgemiKV/?mibextid=wwXIfr"
