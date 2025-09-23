@@ -13,7 +13,7 @@ export default function DefensoriaAudienciaPage() {
     <>
       <main className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative w-full min-h-[60vh] md:min-h-[70vh] flex flex-col items-center justify-center overflow-hidden py-8 md:py-12">
+        <section className="relative w-full min-h-[65vh] md:min-h-[75vh] flex flex-col items-center justify-center overflow-hidden py-10 md:py-16">
           {/* Background */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -23,68 +23,72 @@ export default function DefensoriaAudienciaPage() {
               className="object-cover"
               priority
             />
+            {/* Background overlay for better text contrast */}
+            <div className="absolute inset-0 bg-black/20"></div>
           </div>
           
-          <div className="relative z-10 text-center text-white px-4 md:px-6 max-w-4xl mx-auto w-full">
+          <div className="relative z-20 text-center text-white px-4 md:px-6 max-w-5xl mx-auto w-full">
             {/* Logo */}
-            <div className="flex justify-center mb-6 md:mb-8">
-              <Image
-                src="/images/defensoria-logo.png"
-                alt="Logo Defensoría de Audiencia"
-                width={240}
-                height={120}
-                className="object-contain w-[200px] h-[100px] sm:w-[240px] sm:h-[120px] md:w-[280px] md:h-[140px] lg:w-[320px] lg:h-[160px]"
-                style={{ width: "auto", height: "auto" }}
-                priority
-              />
+            <div className="flex justify-center mb-8 md:mb-10">
+              <div className="drop-shadow-2xl">
+                <Image
+                  src="/images/defensoria-logo.png"
+                  alt="Logo Defensoría de Audiencia"
+                  width={240}
+                  height={120}
+                  className="object-contain w-[200px] h-[100px] sm:w-[240px] sm:h-[120px] md:w-[280px] md:h-[140px] lg:w-[320px] lg:h-[160px]"
+                  style={{ width: "auto", height: "auto" }}
+                  priority
+                />
+              </div>
             </div>
 
             {/* Slogan */}
-            <div className="text-center mb-6 md:mb-8 px-2">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 md:mb-3">
+            <div className="text-center mb-8 md:mb-10 px-2">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white mb-3 md:mb-4 drop-shadow-lg">
                 ¡TU VOZ IMPORTA!
               </h2>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 font-medium">
+              <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-white font-medium drop-shadow-md">
                 Comparte con nosotros tus comentarios
               </p>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center mb-6 md:mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 lg:gap-8 justify-center items-center mb-8 md:mb-10">
               <ContactModal type="Queja">
-                <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
+                <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 drop-shadow-lg">
                   <Image
                     src="/images/boton-quejas.png"
                     alt="Quejas"
-                    width={130}
-                    height={39}
-                    className="object-contain sm:w-[150px] sm:h-[45px] md:w-[170px] md:h-[51px]"
+                    width={160}
+                    height={48}
+                    className="object-contain w-[140px] h-[42px] sm:w-[160px] sm:h-[48px] md:w-[180px] md:h-[54px] lg:w-[200px] lg:h-[60px]"
                     style={{ width: "auto", height: "auto" }}
                   />
                 </div>
               </ContactModal>
               
               <ContactModal type="Sugerencia">
-                <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
+                <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 drop-shadow-lg">
                   <Image
                     src="/images/boton-sugerencias.png"
                     alt="Sugerencias"
-                    width={130}
-                    height={39}
-                    className="object-contain sm:w-[150px] sm:h-[45px] md:w-[170px] md:h-[51px]"
+                    width={160}
+                    height={48}
+                    className="object-contain w-[140px] h-[42px] sm:w-[160px] sm:h-[48px] md:w-[180px] md:h-[54px] lg:w-[200px] lg:h-[60px]"
                     style={{ width: "auto", height: "auto" }}
                   />
                 </div>
               </ContactModal>
 
               <ContactModal type="Felicitaciones">
-                <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
+                <div className="cursor-pointer transform hover:scale-105 transition-all duration-300 drop-shadow-lg">
                   <Image
                     src="/images/boton-felicitaciones.png"
                     alt="Felicitaciones"
-                    width={130}
-                    height={39}
-                    className="object-contain sm:w-[150px] sm:h-[45px] md:w-[170px] md:h-[51px]"
+                    width={160}
+                    height={48}
+                    className="object-contain w-[140px] h-[42px] sm:w-[160px] sm:h-[48px] md:w-[180px] md:h-[54px] lg:w-[200px] lg:h-[60px]"
                     style={{ width: "auto", height: "auto" }}
                   />
                 </div>
@@ -92,7 +96,7 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Social Media Icons */}
-            <div className="flex justify-center items-center gap-2 sm:gap-3 md:gap-4 flex-wrap">
+            <div className="flex justify-center items-center gap-3 sm:gap-4 md:gap-5 lg:gap-6 flex-wrap max-w-md mx-auto">
               {/* Facebook */}
               <a 
                 href="https://www.facebook.com/share/16ZPgemiKV/?mibextid=wwXIfr"
