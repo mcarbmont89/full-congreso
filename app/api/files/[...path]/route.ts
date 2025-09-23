@@ -37,7 +37,7 @@ export async function GET(
       if (existsSync(dirPath) && fileName) {
         const fs = require('fs')
         const files = fs.readdirSync(dirPath)
-        const similarFile = files.find(f => f.startsWith(fileName))
+        const similarFile = files.find((f: string) => f.startsWith(fileName))
         
         if (similarFile) {
           console.log('Found similar file:', similarFile)
