@@ -6,6 +6,7 @@ import ContactModal from "@/components/defensoria/contact-modal"
 import DefensoraProfile from "@/components/defensoria/defensora-profile"
 import RecentRequests from "@/components/defensoria/recent-requests"
 import ReportsSection from "@/components/defensoria/reports-section"
+import ConoceTuLeyButton from "@/components/defensoria/conoce-tu-ley-button"
 
 export default function DefensoriaAudienciaPage() {
   return (
@@ -263,15 +264,9 @@ export default function DefensoriaAudienciaPage() {
                 </div>
               </div>
 
-              {/* Conoce la Ley Button */}
+              {/* Conoce la Ley Button - CMS Managed */}
               <div className="text-center mt-12">
-                <Link
-                  href="/downloads/conoce-tu-ley.pdf"
-                  download
-                  className="inline-flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold py-4 px-12 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-purple-500/25 text-lg"
-                >
-                  Conoce la Ley
-                </Link>
+                <ConoceTuLeyButton variant="primary" defaultText="Conoce la Ley" />
               </div>
             </div>
           </div>
@@ -287,16 +282,7 @@ export default function DefensoriaAudienciaPage() {
               <p className="text-lg text-gray-600 mb-8">
                 Descarga el marco legal que rige los derechos de audiencia y las obligaciones del Canal del Congreso.
               </p>
-              <Link
-                href="/downloads/conoce-tu-ley.pdf"
-                download
-                className="inline-flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-purple-500/25"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-                Descargar PDF
-              </Link>
+              <ConoceTuLeyButton variant="secondary" defaultText="Descargar PDF" showIcon={true} />
             </div>
           </div>
         </section>

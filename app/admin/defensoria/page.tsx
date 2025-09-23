@@ -31,7 +31,8 @@ interface DefensoriaContent {
 const SECTION_LABELS = {
   defensora_info: 'Información de la Defensora',
   recent_requests: 'Solicitudes Recientes',
-  reports: 'Informes y Documentos'
+  reports: 'Informes y Documentos',
+  site_files: 'Archivos del Sitio (Botón "Conoce tu Ley")'
 }
 
 const SECTION_OPTIONS = Object.entries(SECTION_LABELS).map(([value, label]) => ({
@@ -436,9 +437,17 @@ export default function DefensoriaAdmin() {
                   id="content"
                   value={formData.content}
                   onChange={(e) => handleInputChange('content', e.target.value)}
-                  placeholder="Contenido HTML permitido"
+                  placeholder={formData.section === 'site_files' 
+                    ? 'Descripción del archivo (opcional)' 
+                    : 'Contenido HTML permitido'
+                  }
                   rows={6}
                 />
+                {formData.section === 'site_files' && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Para archivos del botón "Conoce tu Ley". Solo debe haber un archivo activo por vez.
+                  </p>
+                )}
               </div>
 
               <div>
