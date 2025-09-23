@@ -154,7 +154,7 @@ function StreamingPlayerButton({ streamUrl }: { streamUrl: string }) {
             className="bg-[#e11d48] hover:bg-[#be185d] text-white rounded-full p-3 flex items-center space-x-2 transition-colors"
           >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z"/>
+              <path d="M8 5v14l11-7z" />
             </svg>
             <span className="font-medium">Radio en Vivo</span>
           </button>
@@ -165,11 +165,13 @@ function StreamingPlayerButton({ streamUrl }: { streamUrl: string }) {
               <div className="flex items-center justify-center mb-3">
                 <div className="flex items-center space-x-2 text-green-400">
                   <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                  <span className="text-sm font-medium">EN VIVO - Radio Congreso</span>
+                  <span className="text-sm font-medium">
+                    EN VIVO - Radio Congreso
+                  </span>
                 </div>
               </div>
 
-              <audio 
+              <audio
                 src={streamUrl}
                 controls
                 playsInline
@@ -178,8 +180,8 @@ function StreamingPlayerButton({ streamUrl }: { streamUrl: string }) {
                 preload="none"
                 className="w-full h-12 bg-gray-800 rounded"
                 style={{
-                  backgroundColor: '#374151',
-                  borderRadius: '6px'
+                  backgroundColor: "#374151",
+                  borderRadius: "6px",
                 }}
               />
 
@@ -195,7 +197,7 @@ function StreamingPlayerButton({ streamUrl }: { streamUrl: string }) {
             className="bg-[#e11d48] hover:bg-[#be185d] text-white rounded-full p-3 flex items-center space-x-2 transition-colors"
           >
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M8 5v14l11-7z"/>
+              <path d="M8 5v14l11-7z" />
             </svg>
             <span className="font-medium">Radio en Vivo</span>
           </button>
@@ -333,7 +335,7 @@ export default function RadioPage() {
   };
 
   return (
-      <div className="flex flex-col min-h-screen bg-white">
+    <div className="flex flex-col min-h-screen bg-white">
       <main className="flex-grow">
         <div className="bg-[#3b0764] text-white py-2">
           <div className="container mx-auto px-4 flex items-center justify-between">
@@ -342,21 +344,21 @@ export default function RadioPage() {
                 // Map channel IDs to transmisiones routes
                 const getChannelLink = (channelId: string) => {
                   switch (channelId) {
-                    case 'canal-45-1':
-                      return '/transmisiones?stream=1'
-                    case 'canal-45-2': 
-                      return '/transmisiones?stream=3'
-                    case 'canal-45-3':
-                      return '/transmisiones?stream=2'
-                    case 'canal-45-4':
-                      return '/transmisiones?stream=4'
+                    case "canal-45-1":
+                      return "/transmisiones?stream=1";
+                    case "canal-45-2":
+                      return "/transmisiones?stream=3";
+                    case "canal-45-3":
+                      return "/transmisiones?stream=2";
+                    case "canal-45-4":
+                      return "/transmisiones?stream=4";
                     default:
-                      return '/radio' // Stay on radio for Radio Congreso
+                      return "/radio"; // Stay on radio for Radio Congreso
                   }
-                }
+                };
 
-                const channelLink = getChannelLink(channel.id)
-                const isRadio = channel.id === 'radio-congreso'
+                const channelLink = getChannelLink(channel.id);
+                const isRadio = channel.id === "radio-congreso";
 
                 if (isRadio) {
                   return (
@@ -365,7 +367,12 @@ export default function RadioPage() {
                       className={`rounded-full px-4 py-0.5 flex items-center whitespace-nowrap flex-shrink-0 ${
                         channel.active && false ? "ring-2 ring-white/50" : ""
                       }`}
-                      style={{ backgroundColor: channel.id === 'radio-congreso' ? 'transparent': channel.color }}
+                      style={{
+                        backgroundColor:
+                          channel.id === "radio-congreso"
+                            ? "transparent"
+                            : channel.color,
+                      }}
                     >
                       <Image
                         src="/images/radio-congreso-logo.png"
@@ -375,7 +382,7 @@ export default function RadioPage() {
                         className="h-30 w-30 object-contain"
                       />
                     </div>
-                  )
+                  );
                 }
 
                 return (
@@ -398,7 +405,7 @@ export default function RadioPage() {
                       {channel.name}
                     </span>
                   </Link>
-                )
+                );
               })}
             </div>
           </div>
@@ -412,7 +419,7 @@ export default function RadioPage() {
                 {radioPrograms.map((program) => (
                   <Link
                     key={program.id}
-                    href={`/radio/${programSlug(program.title)}`}
+                    href={`/radio/${programSlug(program.title)}/episodios`}
                     className="text-sm hover:text-gray-300 transition-colors whitespace-nowrap flex-shrink-0"
                   >
                     {program.title}
@@ -443,7 +450,9 @@ export default function RadioPage() {
 
         <section
           className="py-12"
-          style={{ backgroundImage: "url('/images/light-hexagon-pattern.png')" }}
+          style={{
+            backgroundImage: "url('/images/light-hexagon-pattern.png')",
+          }}
         >
           <div className="container mx-auto px-4">
             <ProgramCarousel items={carouselItems} />
@@ -452,7 +461,9 @@ export default function RadioPage() {
 
         <section
           className="py-4 md:py-8"
-          style={{ backgroundImage: "url('/images/light-hexagon-pattern.png')" }}
+          style={{
+            backgroundImage: "url('/images/light-hexagon-pattern.png')",
+          }}
         >
           <div className="container mx-auto px-2 md:px-4">
             <div className="mb-4 md:mb-8">
@@ -490,7 +501,9 @@ export default function RadioPage() {
                     <div key={program.id} className="w-full overflow-hidden">
                       <div className="block md:hidden">
                         <div className="bg-white rounded-lg shadow-md overflow-hidden">
-                          <Link href={`/radio/${programSlug(program.title)}/episodios`}>
+                          <Link
+                            href={`/radio/${programSlug(program.title)}/episodios`}
+                          >
                             <div className="relative h-48 w-full cursor-pointer hover:opacity-90 transition-opacity">
                               <Image
                                 src={
@@ -594,6 +607,6 @@ export default function RadioPage() {
         </section>
       </main>
       <Footer />
-      </div>
+    </div>
   );
 }
