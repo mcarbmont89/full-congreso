@@ -111,6 +111,103 @@ function createEmailTemplate(data: ContactFormData): string {
   `
 }
 
+// Generic email interface
+export interface EmailData {
+  to: string
+  subject: string
+  html: string
+  replyTo?: string
+  from?: string
+}
+
+// Generic email sending function
+export async function sendEmail(data: EmailData) {
+  try {
+    const smtpConfig = await getSmtpConfig()
+
+    if (!smtpConfig) {
+      // Fallback to simulation mode
+      console.log("SMTP not configured. Email would be sent with the following data:", {
+        to: data.to,
+        from: data.from || "notificaciones@canaldelcongreso.gob.mx",
+        subject: data.subject,
+        data: data,
+      })
+      return { 
+        success: false, 
+        error: "SMTP no está configurado. Por favor, configura SMTP en el panel de administración." 
+      }
+    }
+
+    // Create nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      host: smtpConfig.host,
+      port: parseInt(smtpConfig.port),
+      secure: smtpConfig.secure,
+      auth: {
+        user: smtpConfig.user,
+        pass: smtpConfig.pass,
+      },
+      // Add timeout settings
+      connectionTimeout: 10000, // 10 seconds
+      greetingTimeout: 5000, // 5 seconds
+      socketTimeout: 10000, // 10 seconds
+    })
+
+    // Verify SMTP connection
+    try {
+      await transporter.verify()
+    } catch (verifyError) {
+      console.error("SMTP verification failed:", verifyError)
+      let errorMessage = "Error de verificación SMTP: "
+      if (verifyError instanceof Error) {
+        if (verifyError.message.includes('EAUTH')) {
+          errorMessage += "Credenciales incorrectas (usuario/contraseña)"
+        } else if (verifyError.message.includes('ECONNECTION')) {
+          errorMessage += "No se puede conectar al servidor SMTP"
+        } else if (verifyError.message.includes('ETIMEDOUT')) {
+          errorMessage += "Tiempo de conexión agotado"
+        } else {
+          errorMessage += verifyError.message
+        }
+      } else {
+        errorMessage += "Error desconocido"
+      }
+      return { success: false, error: errorMessage }
+    }
+
+    // Send email
+    const info = await transporter.sendMail({
+      from: data.from || `"Canal del Congreso" <${smtpConfig.from}>`,
+      to: data.to,
+      replyTo: data.replyTo,
+      subject: data.subject,
+      html: data.html,
+    })
+
+    console.log("Email sent successfully:", info.messageId)
+    return { success: true, messageId: info.messageId }
+
+  } catch (error: any) {
+    console.error("Error sending email:", error)
+    let errorMessage = "Error al enviar email: "
+    if (error instanceof Error) {
+      if (error.message.includes('EAUTH')) {
+        errorMessage += "Credenciales incorrectas"
+      } else if (error.message.includes('ECONNECTION')) {
+        errorMessage += "Error de conexión con el servidor"
+      } else if (error.message.includes('ETIMEDOUT')) {
+        errorMessage += "Tiempo de conexión agotado"
+      } else {
+        errorMessage += error.message
+      }
+    } else {
+      errorMessage += "Error desconocido"
+    }
+    return { success: false, error: errorMessage }
+  }
+}
+
 export async function sendContactEmail(data: ContactFormData) {
   try {
     const smtpConfig = await getSmtpConfig()

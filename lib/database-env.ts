@@ -161,9 +161,26 @@ export async function initializeDatabase() {
       )
     `)
 
+    // Create defensoria_content table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS defensoria_content (
+        id SERIAL PRIMARY KEY,
+        section VARCHAR(100) NOT NULL,
+        title VARCHAR(255),
+        content TEXT,
+        image_url VARCHAR(500),
+        file_url VARCHAR(500),
+        metadata JSONB,
+        display_order INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
     return {
       message: 'All tables created successfully',
-      tables: ['programs', 'live_streams', 'news', 'organs']
+      tables: ['programs', 'live_streams', 'news', 'organs', 'defensoria_content']
     }
   } finally {
     await pool.end()
