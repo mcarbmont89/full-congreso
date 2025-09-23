@@ -12,7 +12,7 @@ export default function DefensoriaAudienciaPage() {
     <>
       <main className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative w-full h-[50vh] flex flex-col items-center justify-center overflow-hidden">
+        <section className="relative w-full h-[45vh] flex flex-col items-center justify-center overflow-hidden">
           {/* Background */}
           <div className="absolute inset-0 z-0">
             <Image
@@ -26,8 +26,8 @@ export default function DefensoriaAudienciaPage() {
           
           <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto">
             {/* Logo */}
-            <div className="flex justify-center mb-4 md:mb-5 mt-[60px]">
-              <div className="w-[280px] h-[140px] sm:w-[350px] sm:h-[175px] md:w-[400px] md:h-[200px] relative">
+            <div className="flex justify-center mb-2 mt-[20px]">
+              <div className="w-[180px] h-[90px] sm:w-[220px] sm:h-[110px] md:w-[260px] md:h-[130px] relative">
                 <Image
                   src="/images/defensoria-logo.png"
                   alt="Logo Defensoría de Audiencia"
@@ -39,25 +39,25 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Slogan */}
-            <div className="text-center mb-6 md:mb-8 px-4">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-2">
+            <div className="text-center mb-3 px-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-1">
                 ¡TU VOZ IMPORTA!
               </h2>
-              <p className="text-base sm:text-lg md:text-xl text-white/90 font-medium">
+              <p className="text-lg sm:text-xl md:text-2xl text-white/90 font-medium">
                 Comparte con nosotros tus comentarios
               </p>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-2 md:mb-3">
+            <div className="flex flex-col sm:flex-row gap-2 md:gap-3 justify-center items-center mb-3">
               <ContactModal type="Queja">
                 <div className="cursor-pointer transform hover:scale-105 transition-all duration-300">
                   <Image
                     src="/images/boton-quejas.png"
                     alt="Quejas"
-                    width={160}
-                    height={48}
-                    className="object-contain sm:w-[180px] sm:h-[54px] md:w-[200px] md:h-[60px]"
+                    width={130}
+                    height={39}
+                    className="object-contain sm:w-[150px] sm:h-[45px] md:w-[170px] md:h-[51px]"
                     style={{ width: "auto", height: "auto" }}
                   />
                 </div>
@@ -68,9 +68,9 @@ export default function DefensoriaAudienciaPage() {
                   <Image
                     src="/images/boton-sugerencias.png"
                     alt="Sugerencias"
-                    width={160}
-                    height={48}
-                    className="object-contain sm:w-[180px] sm:h-[54px] md:w-[200px] md:h-[60px]"
+                    width={130}
+                    height={39}
+                    className="object-contain sm:w-[150px] sm:h-[45px] md:w-[170px] md:h-[51px]"
                     style={{ width: "auto", height: "auto" }}
                   />
                 </div>
@@ -81,9 +81,9 @@ export default function DefensoriaAudienciaPage() {
                   <Image
                     src="/images/boton-felicitaciones.png"
                     alt="Felicitaciones"
-                    width={160}
-                    height={48}
-                    className="object-contain sm:w-[180px] sm:h-[54px] md:w-[200px] md:h-[60px]"
+                    width={130}
+                    height={39}
+                    className="object-contain sm:w-[150px] sm:h-[45px] md:w-[170px] md:h-[51px]"
                     style={{ width: "auto", height: "auto" }}
                   />
                 </div>
@@ -91,7 +91,7 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Social Media Icons */}
-            <div className="flex justify-center items-center gap-6 flex-wrap">
+            <div className="flex justify-center items-center gap-3 md:gap-4 flex-wrap">
               {/* Facebook */}
               <a 
                 href="https://www.facebook.com/share/16ZPgemiKV/?mibextid=wwXIfr"
