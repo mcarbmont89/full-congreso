@@ -1,19 +1,18 @@
 
 import { NextResponse } from 'next/server'
 import { getDB } from '@/lib/database-env'
-import { getMexicoCityNowForSQL, formatMexicoCityTime } from '@/lib/timezone'
+import { formatMexicoCityTime } from '@/lib/timezone'
 
 export async function POST() {
   try {
     const pool = getDB()
     
     // First, check which items will be published (using Mexico City timezone)
-    const mexicoCityNow = getMexicoCityNowForSQL()
     const checkResult = await pool.query(`
       SELECT id, title, published_at, status
       FROM news 
-      WHERE status = 'scheduled' AND published_at <= $1::timestamp
-    `, [mexicoCityNow])
+      WHERE status = 'scheduled' AND published_at <= CURRENT_TIMESTAMP
+    `)
     
     console.log(`Found ${checkResult.rows.length} scheduled items ready to publish (Mexico City time: ${formatMexicoCityTime(new Date())}):`, 
       checkResult.rows.map(row => ({
@@ -36,9 +35,9 @@ export async function POST() {
     const result = await pool.query(`
       UPDATE news 
       SET status = 'published' 
-      WHERE status = 'scheduled' AND published_at <= $1::timestamp
+      WHERE status = 'scheduled' AND published_at <= CURRENT_TIMESTAMP
       RETURNING id, title, published_at
-    `, [mexicoCityNow])
+    `)
 
     console.log(`Successfully published ${result.rows.length} scheduled news items`)
     
