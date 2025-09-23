@@ -179,6 +179,104 @@ export default function DefensoriaAudienciaPage() {
           </div>
         </section>
 
+        {/* ¿Qué hace la Defensoría? Section */}
+        <section className="py-20 relative overflow-hidden" style={{
+          backgroundImage: "url('/images/defensoria-micrositio-fondo.png')",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
+        }}>
+          <div className="container mx-auto px-6">
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-8">
+                ¿QUÉ HACE LA <span className="text-purple-600">DEFENSORÍA</span><br />
+                <span className="text-purple-600">DE AUDIENCIAS</span> POR TI?
+              </h2>
+            </div>
+
+            <div className="max-w-6xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+                {/* Card 1 */}
+                <div className="relative">
+                  <div className="bg-white rounded-2xl p-8 shadow-lg border-4 border-purple-500 text-center min-h-[350px] flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-center mb-6">
+                        <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center">
+                          <Image
+                            src="/images/defensoria-icono-1.png"
+                            alt="Recibe y procesa"
+                            width={48}
+                            height={48}
+                            className="object-contain"
+                          />
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-800 mb-4">
+                        Recibe y procesa las observaciones, quejas y sugerencias.
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 2 */}
+                <div className="relative">
+                  <div className="bg-white rounded-2xl p-8 shadow-lg border-4 border-purple-500 text-center min-h-[350px] flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-center mb-6">
+                        <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center">
+                          <Image
+                            src="/images/defensoria-icono-2.png"
+                            alt="Supervisa contenidos"
+                            width={48}
+                            height={48}
+                            className="object-contain"
+                          />
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-800 mb-4">
+                        Supervisa que los contenidos sean hacia alguna audiencia selecta.
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Card 3 */}
+                <div className="relative">
+                  <div className="bg-white rounded-2xl p-8 shadow-lg border-4 border-purple-500 text-center min-h-[350px] flex flex-col justify-between">
+                    <div>
+                      <div className="flex justify-center mb-6">
+                        <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center">
+                          <Image
+                            src="/images/defensoria-icono-3.png"
+                            alt="Vigila derechos"
+                            width={48}
+                            height={48}
+                            className="object-contain"
+                          />
+                        </div>
+                      </div>
+                      <h3 className="text-xl font-bold text-gray-800 mb-4">
+                        Vigila que se respeten los derechos en temas de audiencia.
+                      </h3>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Conoce la Ley Button */}
+              <div className="text-center mt-12">
+                <Link
+                  href="/downloads/conoce-tu-ley.pdf"
+                  download
+                  className="inline-flex items-center justify-center bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700 text-white font-bold py-4 px-12 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-purple-500/25 text-lg"
+                >
+                  Conoce la Ley
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Conoce tu Ley Section */}
         <section className="py-16 bg-gradient-to-br from-gray-50 to-blue-50">
           <div className="container mx-auto px-6 text-center">
