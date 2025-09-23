@@ -131,15 +131,35 @@ export default async function NewsPage() {
       
       // Filter to only show published news with publishedAt <= current date
       // Exclude featured news to avoid duplicates
-      newsItems = allNews.news.filter((item: NewsItem) => {
+      let regularNews = allNews.news.filter((item: NewsItem) => {
         const publishedDate = new Date(item.publishedAt);
         return item.status === 'published' && 
                publishedDate <= now && 
                !featuredNewsIds.includes(item.id);
-      }).sort((a: NewsItem, b: NewsItem) => {
+      });
+
+      // If we don't have enough regular news items after filtering,
+      // include some featured news to ensure we have content for carousel/grid
+      if (regularNews.length < 6) {
+        const additionalNews = allNews.news.filter((item: NewsItem) => {
+          const publishedDate = new Date(item.publishedAt);
+          return item.status === 'published' && 
+                 publishedDate <= now;
+        }).slice(0, 6);
+        
+        // Use all published news if regular news is insufficient
+        newsItems = additionalNews;
+        console.log("News page: Using all published news due to insufficient regular news after filtering");
+      } else {
+        newsItems = regularNews;
+      }
+
+      newsItems = newsItems.sort((a: NewsItem, b: NewsItem) => {
         // Sort by publishedAt date, most recent first
         return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
       });
+
+      console.log("News page: Final newsItems for carousel/grid:", newsItems.length, "items");
     } else {
       console.error(
         "Failed to fetch news:",
