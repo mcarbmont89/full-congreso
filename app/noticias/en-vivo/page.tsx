@@ -7,8 +7,11 @@ import VideoGrid from "@/components/video-grid"
 
 // Fetch video news from database
 async function getVideoNewsFromDB() {
-  // Skip API calls during build time
-  if (typeof window === 'undefined' && process.env.NODE_ENV === 'production' && !process.env.NEXT_PUBLIC_APP_URL) {
+  // Skip API calls during build time or when server is not available
+  if (typeof window === 'undefined' && (
+    process.env.NODE_ENV === 'production' || 
+    process.env.NEXT_PHASE === 'phase-production-build'
+  )) {
     console.log('Skipping API call during build time')
     return []
   }
