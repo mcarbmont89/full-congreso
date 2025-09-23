@@ -185,38 +185,42 @@ export default function DefensoriaAudienciaPage() {
         </section>
 
         {/* ¿Qué hace la Defensoría? Section */}
-        <section className="py-20 relative overflow-hidden" style={{
+        <section className="py-24 relative overflow-hidden" style={{
           backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')",
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat'
         }}>
-          <div className="container mx-auto px-6">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-800 mb-8">
+          {/* Background overlay for better text contrast */}
+          <div className="absolute inset-0 bg-white/10"></div>
+          
+          <div className="container mx-auto px-6 relative z-10">
+            <div className="text-center mb-20">
+              <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-800 mb-4 drop-shadow-sm">
                 ¿QUÉ HACE LA <span className="text-purple-600">DEFENSORÍA</span><br />
                 <span className="text-purple-600">DE AUDIENCIAS</span> POR TI?
               </h2>
+              <div className="w-24 h-1 bg-purple-600 mx-auto mt-6 rounded-full"></div>
             </div>
 
-            <div className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-10 lg:gap-12">
                 {/* Card 1 */}
-                <div className="relative">
-                  <div className="bg-white rounded-2xl p-8 shadow-lg border-4 border-purple-500 text-center min-h-[350px] flex flex-col justify-between">
+                <div className="relative transform hover:scale-105 transition-all duration-300 group">
+                  <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 shadow-2xl border-4 border-purple-500 text-center min-h-[380px] flex flex-col justify-between hover:shadow-3xl transition-all duration-300">
                     <div>
-                      <div className="flex justify-center mb-6">
-                        <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center">
+                      <div className="flex justify-center mb-8">
+                        <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                           <Image
                             src="/images/defensoria-icono-1.png"
                             alt="Recibe y procesa"
-                            width={48}
-                            height={48}
+                            width={56}
+                            height={56}
                             className="object-contain"
                           />
                         </div>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-800 mb-4">
+                      <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 leading-tight">
                         Recibe y procesa las observaciones, quejas y sugerencias.
                       </h3>
                     </div>
@@ -224,21 +228,21 @@ export default function DefensoriaAudienciaPage() {
                 </div>
 
                 {/* Card 2 */}
-                <div className="relative">
-                  <div className="bg-white rounded-2xl p-8 shadow-lg border-4 border-purple-500 text-center min-h-[350px] flex flex-col justify-between">
+                <div className="relative transform hover:scale-105 transition-all duration-300 group">
+                  <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 shadow-2xl border-4 border-purple-500 text-center min-h-[380px] flex flex-col justify-between hover:shadow-3xl transition-all duration-300">
                     <div>
-                      <div className="flex justify-center mb-6">
-                        <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center">
+                      <div className="flex justify-center mb-8">
+                        <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                           <Image
                             src="/images/defensoria-icono-2.png"
                             alt="Supervisa contenidos"
-                            width={48}
-                            height={48}
+                            width={56}
+                            height={56}
                             className="object-contain"
                           />
                         </div>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-800 mb-4">
+                      <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 leading-tight">
                         Supervisa que los contenidos sean hacia alguna audiencia selecta.
                       </h3>
                     </div>
@@ -246,21 +250,21 @@ export default function DefensoriaAudienciaPage() {
                 </div>
 
                 {/* Card 3 */}
-                <div className="relative">
-                  <div className="bg-white rounded-2xl p-8 shadow-lg border-4 border-purple-500 text-center min-h-[350px] flex flex-col justify-between">
+                <div className="relative transform hover:scale-105 transition-all duration-300 group">
+                  <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-10 shadow-2xl border-4 border-purple-500 text-center min-h-[380px] flex flex-col justify-between hover:shadow-3xl transition-all duration-300">
                     <div>
-                      <div className="flex justify-center mb-6">
-                        <div className="w-20 h-20 bg-purple-100 rounded-full flex items-center justify-center">
+                      <div className="flex justify-center mb-8">
+                        <div className="w-24 h-24 bg-gradient-to-br from-purple-100 to-purple-200 rounded-full flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300">
                           <Image
                             src="/images/defensoria-icono-3.png"
                             alt="Vigila derechos"
-                            width={48}
-                            height={48}
+                            width={56}
+                            height={56}
                             className="object-contain"
                           />
                         </div>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-800 mb-4">
+                      <h3 className="text-xl md:text-2xl font-bold text-gray-800 mb-4 leading-tight">
                         Vigila que se respeten los derechos en temas de audiencia.
                       </h3>
                     </div>
@@ -269,8 +273,10 @@ export default function DefensoriaAudienciaPage() {
               </div>
 
               {/* Conoce la Ley Button - CMS Managed */}
-              <div className="text-center mt-12">
-                <ConoceTuLeyButton variant="primary" defaultText="Conoce la Ley" />
+              <div className="text-center mt-16">
+                <div className="transform hover:scale-105 transition-all duration-300 inline-block">
+                  <ConoceTuLeyButton variant="primary" defaultText="Conoce la Ley" />
+                </div>
               </div>
             </div>
           </div>
