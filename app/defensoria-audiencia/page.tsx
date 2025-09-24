@@ -275,7 +275,7 @@ export default function DefensoriaAudienciaPage() {
         </section>
 
         {/* ===================== INFORMES Y REPORTES ===================== */}
-        <section className="py-12 md:py-16 bg-gradient-to-br from-[#5b199a] to-[#3c0f66] text-white">
+        <section className="py-12 md:py-16 bg-gradient-to-br from-[#5b199a] to-[#3c0f66] text-white" style={{ backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')" }}>
           <div className="container mx-auto px-4 md:px-6 max-w-6xl">
             <h2 className="text-center font-black uppercase text-[22px] md:text-[28px] mb-8">
               INFORMES Y REPORTES
@@ -323,40 +323,6 @@ export default function DefensoriaAudienciaPage() {
                   </div>
                 </div>
               ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ===================== CONTACTO ===================== */}
-        <section className="py-12 md:py-16" style={{ backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')" }}>
-          <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
-            <h2 className="font-black text-[#1f1f1f] text-[22px] md:text-[28px] mb-8">
-              ¿TIENES ALGUNA CONSULTA ADICIONAL?
-            </h2>
-            
-            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-10">
-              <p className="text-gray-600 text-lg mb-8">
-                Nuestro equipo está aquí para ayudarte. Contáctanos directamente a través de nuestros canales oficiales.
-              </p>
-              
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-[#7746d6] rounded-full flex items-center justify-center">
-                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm text-gray-500 font-medium">Correo electrónico</p>
-                    <a 
-                      href="mailto:defensoria.audiencia@canaldelcongreso.gob.mx"
-                      className="text-[#7746d6] font-semibold hover:text-[#6a38cf]"
-                    >
-                      defensoria.audiencia@canaldelcongreso.gob.mx
-                    </a>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </section>
