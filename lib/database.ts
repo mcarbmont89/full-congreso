@@ -81,6 +81,15 @@ export function getDatabaseConnection(): Pool | null {
 
 export { pool }
 
+// Export query function for compatibility with existing route handlers
+export async function query(text: string, params?: any[]): Promise<any> {
+  const connection = getDatabaseConnection()
+  if (!connection) {
+    throw new Error('Database connection not available')
+  }
+  return connection.query(text, params)
+}
+
 export async function testDatabaseConnection(config: DatabaseConfig): Promise<boolean> {
   try {
     const testPool = new Pool({

@@ -162,6 +162,21 @@ export async function POST() {
       ON CONFLICT (slug) DO NOTHING
     `)
 
+    // Create documents table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS documents (
+        id SERIAL PRIMARY KEY,
+        title VARCHAR(255) NOT NULL,
+        description TEXT,
+        file_name VARCHAR(255) NOT NULL,
+        file_url TEXT NOT NULL,
+        file_size BIGINT,
+        category VARCHAR(100) DEFAULT 'general',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
     // Verify tables were created
     const tablesResult = await pool.query(`
       SELECT table_name 

@@ -57,6 +57,24 @@ async function verifyAdminAuth(request: NextRequest): Promise<{ success: boolean
 export async function GET(request: NextRequest) {
   try {
     const db = getDB()
+    
+    // Ensure defensoria_content table exists
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS defensoria_content (
+        id SERIAL PRIMARY KEY,
+        section VARCHAR(100) NOT NULL,
+        title VARCHAR(255),
+        content TEXT,
+        image_url TEXT,
+        file_url TEXT,
+        metadata JSONB,
+        display_order INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+    
     const { searchParams } = new URL(request.url)
     const section = searchParams.get('section')
     const includeInactive = searchParams.get('admin') === 'true' // Admin can see all

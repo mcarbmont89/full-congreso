@@ -121,7 +121,7 @@ export default function DefensoriaAudienciaPage() {
               {/* Card 1 */}
               <div className="rounded-2xl bg-white shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
                 <div className="flex justify-center mb-4">
-                  <Image src="/images/defensoria-icono-1.png" alt="Recibir" width={200} height={200} />
+                  <Image src="/images/defensoria-icono-1.png" alt="Recibir" width={200} height={200} className="w-auto h-auto" />
                 </div>
                 <h3 className="text-[16px] md:text-[17px] font-extrabold text-[#262626] leading-snug">
                   Recibir documentar y procesar<br />
@@ -135,7 +135,7 @@ export default function DefensoriaAudienciaPage() {
                 <span className="hidden md:block absolute -left-4 top-6 bottom-6 w-[2px] bg-[#7d4bcd] opacity-60" />
                 <span className="hidden md:block absolute -right-4 top-6 bottom-6 w-[2px] bg-[#7d4bcd] opacity-60" />
                 <div className="flex justify-center mb-4">
-                  <Image src="/images/defensoria-icono-2.png" alt="Representar" width={200} height={200} />
+                  <Image src="/images/defensoria-icono-2.png" alt="Representar" width={200} height={200} className="w-auto h-auto" />
                 </div>
                 <h3 className="text-[16px] md:text-[17px] font-extrabold text-[#262626] leading-snug">
                   Representar tus intereses<br />
@@ -147,7 +147,7 @@ export default function DefensoriaAudienciaPage() {
               {/* Card 3 */}
               <div className="rounded-2xl bg-white shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
                 <div className="flex justify-center mb-4">
-                  <Image src="/images/defensoria-icono-3.png" alt="Promover" width={200} height={200} />
+                  <Image src="/images/defensoria-icono-3.png" alt="Promover" width={200} height={200} className="w-auto h-auto" />
                 </div>
                 <h3 className="text-[16px] md:text-[17px] font-extrabold text-[#262626] leading-snug">
                   Promover y proteger<br />

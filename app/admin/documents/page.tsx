@@ -125,7 +125,7 @@ export default function DocumentsAdmin() {
         throw new Error('Error saving document')
       }
     } catch (error) {
-      setMessage('Error al subir el documento: ' + error.message)
+      setMessage('Error al subir el documento: ' + (error instanceof Error ? error.message : 'Unknown error'))
     } finally {
       setIsUploading(false)
     }
