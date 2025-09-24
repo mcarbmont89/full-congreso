@@ -168,32 +168,47 @@ export default function DefensoriaAudienciaPage() {
         {/* ===================== CONOCE A TU DEFENSORA ===================== */}
         <section className="relative py-12 md:py-16 bg-gradient-to-br from-[#5b199a] to-[#3c0f66] text-white">
           <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight uppercase mb-8">
+            <h2 className="text-center text-2xl md:text-3xl lg:text-4xl font-black tracking-tight uppercase mb-8 md:mb-12">
               CONOCE A TU DEFENSORA<br />DE AUDIENCIA
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-[260px_minmax(0,1fr)] gap-6 items-start">
-              <div className="rounded-lg overflow-hidden shadow-xl">
+            <div className="grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] gap-8 md:gap-12 items-start">
+              <div className="rounded-lg overflow-hidden shadow-xl mx-auto md:mx-0">
                 <Image
                   src="/images/defensora-photo.jpg"
                   alt="Defensora de Audiencia"
-                  width={260}
-                  height={320}
-                  className="w-[260px] h-auto object-cover"
+                  width={280}
+                  height={400}
+                  className="w-[280px] h-[400px] object-cover"
                 />
               </div>
 
-              <div>
-                <h3 className="text-lg md:text-xl font-extrabold mb-2">
+              <div className="space-y-4">
+                <h3 className="text-xl md:text-2xl font-extrabold text-white mb-4">
                   Mtra. María Gabriela Ortiz Portilla
                 </h3>
-                <p className="text-sm md:text-[15px] leading-6 opacity-95">
-                  Es Licenciada en Relaciones Internacionales por la Universidad Iberoamericana, con estudios en
-                  Derecho Internacional en la Université Jean Moulin Lyon III (Francia). Cuenta con una maestría en
-                  Derecho por la Universidad Anáhuac y un Máster en Comunicación Política y Gobernanza por The George
-                  Washington University. Desde el 26 de abril de 2022 se desempeña como Defensora de la Audiencia del
-                  Canal del Congreso.
-                </p>
+                <div className="space-y-4 text-sm md:text-[15px] leading-6 text-white/95">
+                  <p>
+                    Es Licenciada en Relaciones Internacionales por la Universidad Iberoamericana donde
+                    realizó un Diplomado en Derecho Internacional en la Université Jean Moulin Lyon en
+                    Francia, además, cuenta con una maestría en Derecho por la Universidad Anáhuac y un
+                    Máster en Comunicación Política y Gobernanza por The George Washington University,
+                    donde realizó un trabajo de investigación sobre perspectiva de género y su utilidad en las
+                    instituciones de gobierno.
+                  </p>
+                  <p>
+                    El 26 de abril de 2022 fue designada como Defensora de la Audiencia del Canal del
+                    Congreso por el H. Comité de Información del Canal de Televisión del Congreso General de los
+                    Estados Unidos Mexicanos.
+                  </p>
+                  <p>
+                    Desde la Defensoría de Audiencia del Canal del Congreso ha trabajado por la igualdad de
+                    género, en octubre 2023, organizó y moderó un foro virtual de mujeres especialistas en
+                    violencia de género y violencia mediática. Durante este enriquecedor proyecto, trabajó
+                    directamente con lideresas de espacios sociales de gran relevancia social y de actualidad de
+                    igualdad de género se sean reflejados en la programación del Canal del Congreso.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
