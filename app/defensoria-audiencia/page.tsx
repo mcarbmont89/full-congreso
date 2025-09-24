@@ -174,12 +174,19 @@ export default function DefensoriaAudienciaPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-[1fr_3fr] gap-x-8 gap-y-8 items-stretch">
               <div>
-                <div className="relative h-[480px] md:h-[560px] rounded-lg overflow-hidden shadow-xl bg-gray-200">
+                <div className="relative h-[480px] md:h-[560px] rounded-lg overflow-hidden shadow-xl bg-purple-300 flex items-center justify-center">
+                  <div className="text-center text-purple-800 font-bold">
+                    <div className="text-6xl mb-2">👤</div>
+                    <div>Defensora Photo</div>
+                  </div>
                   <Image
                     src="/images/defensora-photo.jpg"
                     alt="Defensora de Audiencia"
                     fill
-                    className="object-cover"
+                    className="object-cover z-10"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
                   />
                 </div>
               </div>
