@@ -172,18 +172,18 @@ export default function DefensoriaAudienciaPage() {
               CONOCE A TU DEFENSORA<br />DE AUDIENCIA
             </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-[280px_minmax(0,1fr)] gap-8 md:gap-12 items-start">
-              <div className="rounded-lg overflow-hidden shadow-xl mx-auto md:mx-0">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12 items-start">
+              <div className="md:col-span-1 rounded-lg overflow-hidden shadow-xl mx-auto md:mx-0">
                 <Image
                   src="/images/defensora-photo.jpg"
                   alt="Defensora de Audiencia"
                   width={280}
                   height={400}
-                  className="w-[280px] h-[400px] object-cover"
+                  className="w-full h-auto object-cover max-w-[280px]"
                 />
               </div>
 
-              <div className="space-y-4">
+              <div className="md:col-span-3 space-y-4">
                 <h3 className="text-xl md:text-2xl font-extrabold text-white mb-4">
                   Mtra. María Gabriela Ortiz Portilla
                 </h3>
