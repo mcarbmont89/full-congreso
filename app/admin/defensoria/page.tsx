@@ -99,7 +99,7 @@ export default function DefensoriaAdmin() {
     try {
       // Include admin=true parameter to get all content including inactive
       const response = await fetch('/api/defensoria-audiencia?admin=true')
-      
+
       if (response.status === 401) {
         toast({
           title: "Sesión expirada",
@@ -110,7 +110,7 @@ export default function DefensoriaAdmin() {
         window.location.href = '/login'
         return
       }
-      
+
       if (response.status === 403) {
         toast({
           title: "Acceso denegado",
@@ -119,7 +119,7 @@ export default function DefensoriaAdmin() {
         })
         return
       }
-      
+
       if (response.ok) {
         const data = await response.json()
         setContent(data)
@@ -153,7 +153,7 @@ export default function DefensoriaAdmin() {
     const file = event.target.files?.[0]
     if (file) {
       setSelectedFile(file)
-      
+
       // Create preview for images
       if (file.type.startsWith('image/')) {
         const reader = new FileReader()
@@ -168,7 +168,7 @@ export default function DefensoriaAdmin() {
   const uploadFile = async (file: File): Promise<string | null> => {
     const formData = new FormData()
     formData.append('file', file)
-    
+
     try {
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -206,7 +206,7 @@ export default function DefensoriaAdmin() {
 
       const url = '/api/defensoria-audiencia'
       const method = editingContent ? 'PUT' : 'POST'
-      
+
       const requestData = editingContent 
         ? { ...finalFormData, id: editingContent.id }
         : finalFormData
@@ -228,7 +228,7 @@ export default function DefensoriaAdmin() {
         window.location.href = '/login'
         return
       }
-      
+
       if (response.status === 403) {
         toast({
           title: "Acceso denegado",
@@ -243,7 +243,7 @@ export default function DefensoriaAdmin() {
           title: "Éxito",
           description: editingContent ? "Contenido actualizado" : "Contenido creado"
         })
-        
+
         resetForm()
         loadContent()
       } else {
@@ -302,7 +302,7 @@ export default function DefensoriaAdmin() {
         window.location.href = '/login'
         return
       }
-      
+
       if (response.status === 403) {
         toast({
           title: "Acceso denegado",
@@ -361,7 +361,7 @@ export default function DefensoriaAdmin() {
       recent_requests: 'bg-blue-100 text-blue-800',
       reports: 'bg-green-100 text-green-800'
     }
-    
+
     return (
       <Badge className={colors[section as keyof typeof colors] || 'bg-gray-100 text-gray-800'}>
         {SECTION_LABELS[section as keyof typeof SECTION_LABELS] || section}
@@ -433,22 +433,69 @@ export default function DefensoriaAdmin() {
 
               <div>
                 <Label htmlFor="content">Contenido</Label>
-                <Textarea
-                  id="content"
-                  value={formData.content}
-                  onChange={(e) => handleInputChange('content', e.target.value)}
-                  placeholder={formData.section === 'site_files' 
-                    ? 'Descripción del archivo (opcional)' 
-                    : 'Contenido HTML permitido'
-                  }
-                  rows={6}
-                />
+                {formData.section === 'defensora_info' ? (
+                  <div className="border rounded-lg">
+                    <div className="p-3 border-b bg-gray-50">
+                      <p className="text-sm text-gray-600">
+                        Editor de texto enriquecido para información de la defensora
+                      </p>
+                    </div>
+                    <Textarea
+                      id="content"
+                      value={formData.content}
+                      onChange={(e) => handleInputChange('content', e.target.value)}
+                      placeholder="Información biografica, trayectoria profesional, etc."
+                      rows={10}
+                      className="border-0 rounded-none"
+                    />
+                  </div>
+                ) : (
+                  <Textarea
+                    id="content"
+                    value={formData.content}
+                    onChange={(e) => handleInputChange('content', e.target.value)}
+                    placeholder={
+                      formData.section === 'site_files' 
+                        ? 'Descripción del archivo (opcional)' 
+                        : formData.section === 'recent_requests'
+                        ? 'Descripción detallada de la solicitud atendida'
+                        : formData.section === 'reports'
+                        ? 'Resumen ejecutivo del informe'
+                        : 'Contenido HTML permitido'
+                    }
+                    rows={6}
+                  />
+                )}
+
                 {formData.section === 'site_files' && (
                   <p className="text-sm text-gray-500 mt-1">
                     Para archivos del botón "Conoce tu Ley". Solo debe haber un archivo activo por vez.
                   </p>
                 )}
+
+                {formData.section === 'recent_requests' && (
+                  <p className="text-sm text-blue-600 mt-1">
+                    Tip: Incluya fecha, tipo de solicitud, y resultado obtenido.
+                  </p>
+                )}
+
+                {formData.section === 'reports' && (
+                  <p className="text-sm text-green-600 mt-1">
+                    Tip: Agregue un resumen ejecutivo que motive la descarga del documento completo.
+                  </p>
+                )}
               </div>
+
+              {/* Content Preview */}
+              {formData.content && (
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <Label className="text-sm font-medium text-gray-700">Vista Previa:</Label>
+                  <div 
+                    className="mt-2 prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: formData.content.slice(0, 200) + '...' }}
+                  />
+                </div>
+              )}
 
               <div>
                 <Label htmlFor="file">Archivo (Imagen o Documento)</Label>

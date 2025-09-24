@@ -1,7 +1,46 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readFile, stat } from 'fs/promises'
-import { join, normalize, sep } from 'path'
+import { join, normalize, sep, extname, basename } from 'path'
 import { existsSync } from 'fs'
+import * as path from 'path';
+import * as fs from 'fs';
+
+// Helper function to determine Content-Type based on file extension
+function getContentType(ext: string): string {
+  switch (ext) {
+    case '.jpg':
+    case '.jpeg':
+      return 'image/jpeg';
+    case '.png':
+      return 'image/png';
+    case '.gif':
+      return 'image/gif';
+    case '.webp':
+      return 'image/webp';
+    case '.svg':
+      return 'image/svg+xml';
+    case '.pdf':
+      return 'application/pdf';
+    case '.doc':
+      return 'application/msword';
+    case '.docx':
+      return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    case '.mp3':
+      return 'audio/mpeg';
+    case '.mp4':
+      return 'video/mp4';
+    case '.webm':
+      return 'video/webm';
+    case '.wav':
+      return 'audio/wav';
+    case '.ogg':
+      return 'audio/ogg';
+    case '.m4a':
+      return 'audio/mp4';
+    default:
+      return 'application/octet-stream';
+  }
+}
 
 export async function OPTIONS() {
   return new NextResponse(null, {
@@ -21,15 +60,15 @@ export async function GET(
   try {
     const params = await context.params
     const filePath = params.path.join('/')
-    
+
     // Prevent directory traversal attacks
     if (filePath.includes('..') || params.path.some(segment => segment === '..')) {
       return new NextResponse('Invalid path', { status: 400 })
     }
-    
+
     const baseDir = join(process.cwd(), 'public')
     const fullPath = normalize(join(baseDir, filePath))
-    
+
     // Ensure the resolved path is within the public directory
     if (!fullPath.startsWith(baseDir + sep) && fullPath !== baseDir) {
       return new NextResponse('Invalid path', { status: 400 })
@@ -41,26 +80,26 @@ export async function GET(
 
     if (!existsSync(fullPath)) {
       console.log('File not found:', fullPath)
-      
+
       // Try to find a similar file with different extension
       const dirPath = join(process.cwd(), 'public', filePath.split('/').slice(0, -1).join('/'))
       const fileName = filePath.split('/').pop()?.split('.')[0]
-      
+
       if (existsSync(dirPath) && fileName) {
         const fs = require('fs')
         const files = fs.readdirSync(dirPath)
         const similarFile = files.find((f: string) => f.startsWith(fileName))
-        
+
         if (similarFile) {
           console.log('Found similar file:', similarFile)
           const similarPath = join(dirPath, similarFile)
           const stats = await stat(similarPath)
           const fileBuffer = await readFile(similarPath)
-          
+
           // Determine content type for similar file
           const similarExt = similarFile.split('.').pop()?.toLowerCase()
           let similarContentType = 'application/octet-stream'
-          
+
           switch (similarExt) {
             case 'jpg':
             case 'jpeg':
@@ -88,7 +127,7 @@ export async function GET(
               similarContentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
               break
           }
-          
+
           const headers: Record<string, string> = {
             'Content-Type': similarContentType,
             'Content-Length': stats.size.toString(),
@@ -99,12 +138,12 @@ export async function GET(
             'Access-Control-Allow-Headers': 'Range',
             'X-Content-Type-Options': 'nosniff',
           }
-          
+
           // Force download for documents
           if (similarContentType.includes('pdf') || similarContentType.includes('word') || similarContentType.includes('msword')) {
             headers['Content-Disposition'] = `attachment; filename="${similarFile}"`
           }
-          
+
           return new NextResponse(new Uint8Array(fileBuffer), {
             status: 200,
             headers,
@@ -188,7 +227,7 @@ export async function GET(
         'Access-Control-Allow-Headers': 'Range',
         'X-Content-Type-Options': 'nosniff',
       }
-      
+
       // Force download for documents in range requests too
       if (contentType.includes('pdf') || contentType.includes('word') || contentType.includes('msword')) {
         const fileName = filePath.split('/').pop() || 'document'
@@ -214,7 +253,7 @@ export async function GET(
       'Access-Control-Allow-Headers': 'Range',
       'X-Content-Type-Options': 'nosniff',
     }
-    
+
     // Force download for documents
     if (contentType.includes('pdf') || contentType.includes('word') || contentType.includes('msword')) {
       const fileName = filePath.split('/').pop() || 'document'
