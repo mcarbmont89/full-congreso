@@ -182,7 +182,14 @@ export default function RecentRequestsSection() {
 
   if (isLoading) {
     return (
-      <section className="py-12 md:py-14 bg-white">
+      <section 
+        className="py-12 md:py-14 bg-white"
+        style={{
+          backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-center font-black text-[#1f1f1f] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
             RECIENTES SOLICITUDES
@@ -200,74 +207,75 @@ export default function RecentRequestsSection() {
   }
 
   return (
-    <section className="py-12 md:py-14 bg-white">
+    <section 
+      className="py-12 md:py-14 bg-white"
+      style={{
+        backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-center font-black text-[#1f1f1f] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
           RECIENTES SOLICITUDES
         </h2>
 
-        <div className="mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className="mx-auto max-w-6xl">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {requests.map((request) => (
-              <Card
+              <div
                 key={request.id}
-                className="group hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border-0 bg-white overflow-hidden"
+                className="bg-white rounded-2xl shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd]/20 p-6 text-center hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300"
               >
-                <CardHeader className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white">
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg font-semibold leading-tight group-hover:text-purple-100 transition-colors line-clamp-2">
-                      {request.title}
-                    </CardTitle>
-                    {request.metadata?.status && getStatusIcon(request.metadata.status)}
-                  </div>
-                </CardHeader>
+                {/* Title */}
+                <div className="mb-4">
+                  <h3 className="text-[16px] md:text-[18px] font-black text-[#7746d6] leading-tight mb-2">
+                    {request.title}
+                  </h3>
+                </div>
 
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    {/* Status and Type Badges */}
-                    <div className="flex flex-wrap gap-2">
-                      {request.metadata?.status && (
-                        <Badge className={`${getStatusColor(request.metadata.status)} font-medium`}>
-                          {request.metadata.status}
-                        </Badge>
-                      )}
-                      {request.metadata?.type && (
-                        <Badge className={`${getTypeColor(request.metadata.type)} font-medium`}>
-                          {request.metadata.type}
-                        </Badge>
-                      )}
-                    </div>
+                {/* Status and Type Badges */}
+                <div className="flex flex-wrap justify-center gap-2 mb-4">
+                  {request.metadata?.status && (
+                    <Badge className={`${getStatusColor(request.metadata.status)} font-medium text-xs`}>
+                      {request.metadata.status}
+                    </Badge>
+                  )}
+                  {request.metadata?.type && (
+                    <Badge className={`${getTypeColor(request.metadata.type)} font-medium text-xs`}>
+                      {request.metadata.type}
+                    </Badge>
+                  )}
+                </div>
 
-                    {/* Content */}
-                    <p className="text-gray-700 leading-relaxed line-clamp-3">
-                      {request.content}
+                {/* Content */}
+                <p className="text-[13px] md:text-[14px] text-gray-700 leading-relaxed mb-4">
+                  {request.content}
+                </p>
+
+                {/* Description */}
+                {request.metadata?.description && (
+                  <div className="bg-[#7746d6]/10 p-3 rounded-lg mb-4">
+                    <p className="text-xs text-[#7746d6] font-medium">
+                      {request.metadata.description}
                     </p>
-
-                    {/* Description */}
-                    {request.metadata?.description && (
-                      <div className="bg-gray-50 p-3 rounded-lg border-l-4 border-purple-500">
-                        <p className="text-sm text-gray-600 font-medium">
-                          {request.metadata.description}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Date */}
-                    {request.metadata?.date && (
-                      <div className="flex items-center text-sm text-gray-500 pt-2 border-t">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        <span>
-                          Atendido el {new Date(request.metadata.date).toLocaleDateString('es-MX', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </span>
-                      </div>
-                    )}
                   </div>
-                </CardContent>
-              </Card>
+                )}
+
+                {/* Date */}
+                {request.metadata?.date && (
+                  <div className="flex items-center justify-center text-xs text-gray-500 pt-2 border-t border-gray-200">
+                    <Calendar className="w-3 h-3 mr-1" />
+                    <span>
+                      {new Date(request.metadata.date).toLocaleDateString('es-MX', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </span>
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
