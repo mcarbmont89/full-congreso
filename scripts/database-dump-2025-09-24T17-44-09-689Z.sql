@@ -5,8 +5,6 @@
 -- Dumped from database version 16.9 (63f4182)
 -- Dumped by pg_dump version 16.9
 
--- Started on 2025-09-23 00:24:33 UTC
-
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
@@ -18,95 +16,17 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-ALTER TABLE IF EXISTS ONLY public.radio_episodes DROP CONSTRAINT IF EXISTS radio_episodes_program_id_fkey;
-ALTER TABLE IF EXISTS ONLY public.news_tags DROP CONSTRAINT IF EXISTS news_tags_tag_id_fkey;
-ALTER TABLE IF EXISTS ONLY public.news_tags DROP CONSTRAINT IF EXISTS news_tags_news_id_fkey;
-ALTER TABLE IF EXISTS ONLY public.legislators DROP CONSTRAINT IF EXISTS legislators_parliamentary_group_id_fkey;
-ALTER TABLE IF EXISTS ONLY public.categories DROP CONSTRAINT IF EXISTS categories_parent_id_fkey;
-DROP INDEX IF EXISTS public.idx_radio_navigation_active_order;
-ALTER TABLE IF EXISTS ONLY public.video_news DROP CONSTRAINT IF EXISTS video_news_pkey;
-ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS users_username_key;
-ALTER TABLE IF EXISTS ONLY public.users DROP CONSTRAINT IF EXISTS users_pkey;
-ALTER TABLE IF EXISTS ONLY public.tags DROP CONSTRAINT IF EXISTS tags_slug_key;
-ALTER TABLE IF EXISTS ONLY public.tags DROP CONSTRAINT IF EXISTS tags_pkey;
-ALTER TABLE IF EXISTS ONLY public.tags DROP CONSTRAINT IF EXISTS tags_name_key;
-ALTER TABLE IF EXISTS ONLY public.radio_programs DROP CONSTRAINT IF EXISTS radio_programs_pkey;
-ALTER TABLE IF EXISTS ONLY public.radio_navigation DROP CONSTRAINT IF EXISTS radio_navigation_pkey;
-ALTER TABLE IF EXISTS ONLY public.radio_episodes DROP CONSTRAINT IF EXISTS radio_episodes_pkey;
-ALTER TABLE IF EXISTS ONLY public.programs DROP CONSTRAINT IF EXISTS programs_pkey;
-ALTER TABLE IF EXISTS ONLY public.parliamentary_groups DROP CONSTRAINT IF EXISTS parliamentary_groups_pkey;
-ALTER TABLE IF EXISTS ONLY public.organs DROP CONSTRAINT IF EXISTS organs_pkey;
-ALTER TABLE IF EXISTS ONLY public.news_tags DROP CONSTRAINT IF EXISTS news_tags_pkey;
-ALTER TABLE IF EXISTS ONLY public.news DROP CONSTRAINT IF EXISTS news_pkey;
-ALTER TABLE IF EXISTS ONLY public.live_streams DROP CONSTRAINT IF EXISTS live_streams_pkey;
-ALTER TABLE IF EXISTS ONLY public.legislators DROP CONSTRAINT IF EXISTS legislators_pkey;
-ALTER TABLE IF EXISTS ONLY public.homepage_config DROP CONSTRAINT IF EXISTS homepage_config_section_key;
-ALTER TABLE IF EXISTS ONLY public.homepage_config DROP CONSTRAINT IF EXISTS homepage_config_pkey;
-ALTER TABLE IF EXISTS ONLY public.contact_messages DROP CONSTRAINT IF EXISTS contact_messages_pkey;
-ALTER TABLE IF EXISTS ONLY public.channel_config DROP CONSTRAINT IF EXISTS channel_config_pkey;
-ALTER TABLE IF EXISTS ONLY public.categories DROP CONSTRAINT IF EXISTS categories_slug_key;
-ALTER TABLE IF EXISTS ONLY public.categories DROP CONSTRAINT IF EXISTS categories_pkey;
-ALTER TABLE IF EXISTS ONLY public.categories DROP CONSTRAINT IF EXISTS categories_name_key;
-ALTER TABLE IF EXISTS public.video_news ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.users ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.tags ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.radio_programs ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.radio_episodes ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.programs ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.parliamentary_groups ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.organs ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.news ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.live_streams ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.legislators ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.homepage_config ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.contact_messages ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.channel_config ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS public.categories ALTER COLUMN id DROP DEFAULT;
-DROP SEQUENCE IF EXISTS public.video_news_id_seq;
-DROP TABLE IF EXISTS public.video_news;
-DROP SEQUENCE IF EXISTS public.users_id_seq;
-DROP TABLE IF EXISTS public.users;
-DROP SEQUENCE IF EXISTS public.tags_id_seq;
-DROP TABLE IF EXISTS public.tags;
-DROP SEQUENCE IF EXISTS public.radio_programs_id_seq;
-DROP TABLE IF EXISTS public.radio_programs;
-DROP TABLE IF EXISTS public.radio_navigation;
-DROP SEQUENCE IF EXISTS public.radio_episodes_id_seq;
-DROP TABLE IF EXISTS public.radio_episodes;
-DROP SEQUENCE IF EXISTS public.programs_id_seq;
-DROP TABLE IF EXISTS public.programs;
-DROP SEQUENCE IF EXISTS public.parliamentary_groups_id_seq;
-DROP TABLE IF EXISTS public.parliamentary_groups;
-DROP SEQUENCE IF EXISTS public.organs_id_seq;
-DROP TABLE IF EXISTS public.organs;
-DROP TABLE IF EXISTS public.news_tags;
-DROP SEQUENCE IF EXISTS public.news_id_seq;
-DROP TABLE IF EXISTS public.news;
-DROP SEQUENCE IF EXISTS public.live_streams_id_seq;
-DROP TABLE IF EXISTS public.live_streams;
-DROP SEQUENCE IF EXISTS public.legislators_id_seq;
-DROP TABLE IF EXISTS public.legislators;
-DROP SEQUENCE IF EXISTS public.homepage_config_id_seq;
-DROP TABLE IF EXISTS public.homepage_config;
-DROP SEQUENCE IF EXISTS public.contact_messages_id_seq;
-DROP TABLE IF EXISTS public.contact_messages;
-DROP SEQUENCE IF EXISTS public.channel_config_id_seq;
-DROP TABLE IF EXISTS public.channel_config;
-DROP SEQUENCE IF EXISTS public.categories_id_seq;
-DROP TABLE IF EXISTS public.categories;
--- *not* dropping schema, since initdb creates it
 --
--- TOC entry 5 (class 2615 OID 40960)
--- Name: public; Type: SCHEMA; Schema: -; Owner: -
+-- Name: public; Type: SCHEMA; Schema: -; Owner: neondb_owner
 --
 
 -- *not* creating schema, since initdb creates it
 
 
+ALTER SCHEMA public OWNER TO neondb_owner;
+
 --
--- TOC entry 3563 (class 0 OID 0)
--- Dependencies: 5
--- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: -
+-- Name: SCHEMA public; Type: COMMENT; Schema: -; Owner: neondb_owner
 --
 
 COMMENT ON SCHEMA public IS '';
@@ -117,8 +37,7 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
--- TOC entry 215 (class 1259 OID 40962)
--- Name: categories; Type: TABLE; Schema: public; Owner: -
+-- Name: categories; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.categories (
@@ -132,9 +51,10 @@ CREATE TABLE public.categories (
 );
 
 
+ALTER TABLE public.categories OWNER TO neondb_owner;
+
 --
--- TOC entry 216 (class 1259 OID 40969)
--- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: categories_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.categories_id_seq
@@ -146,18 +66,17 @@ CREATE SEQUENCE public.categories_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.categories_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3564 (class 0 OID 0)
--- Dependencies: 216
--- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.categories_id_seq OWNED BY public.categories.id;
 
 
 --
--- TOC entry 246 (class 1259 OID 49153)
--- Name: channel_config; Type: TABLE; Schema: public; Owner: -
+-- Name: channel_config; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.channel_config (
@@ -175,9 +94,10 @@ CREATE TABLE public.channel_config (
 );
 
 
+ALTER TABLE public.channel_config OWNER TO neondb_owner;
+
 --
--- TOC entry 245 (class 1259 OID 49152)
--- Name: channel_config_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: channel_config_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.channel_config_id_seq
@@ -189,18 +109,17 @@ CREATE SEQUENCE public.channel_config_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.channel_config_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3565 (class 0 OID 0)
--- Dependencies: 245
--- Name: channel_config_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: channel_config_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.channel_config_id_seq OWNED BY public.channel_config.id;
 
 
 --
--- TOC entry 217 (class 1259 OID 40970)
--- Name: contact_messages; Type: TABLE; Schema: public; Owner: -
+-- Name: contact_messages; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.contact_messages (
@@ -216,9 +135,10 @@ CREATE TABLE public.contact_messages (
 );
 
 
+ALTER TABLE public.contact_messages OWNER TO neondb_owner;
+
 --
--- TOC entry 218 (class 1259 OID 40979)
--- Name: contact_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: contact_messages_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.contact_messages_id_seq
@@ -230,18 +150,60 @@ CREATE SEQUENCE public.contact_messages_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.contact_messages_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3566 (class 0 OID 0)
--- Dependencies: 218
--- Name: contact_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: contact_messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.contact_messages_id_seq OWNED BY public.contact_messages.id;
 
 
 --
--- TOC entry 219 (class 1259 OID 40980)
--- Name: homepage_config; Type: TABLE; Schema: public; Owner: -
+-- Name: defensoria_content; Type: TABLE; Schema: public; Owner: neondb_owner
+--
+
+CREATE TABLE public.defensoria_content (
+    id integer NOT NULL,
+    section character varying(100) NOT NULL,
+    title character varying(255),
+    content text,
+    image_url character varying(500),
+    file_url character varying(500),
+    metadata jsonb,
+    display_order integer DEFAULT 0,
+    is_active boolean DEFAULT true,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.defensoria_content OWNER TO neondb_owner;
+
+--
+-- Name: defensoria_content_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
+--
+
+CREATE SEQUENCE public.defensoria_content_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.defensoria_content_id_seq OWNER TO neondb_owner;
+
+--
+-- Name: defensoria_content_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
+--
+
+ALTER SEQUENCE public.defensoria_content_id_seq OWNED BY public.defensoria_content.id;
+
+
+--
+-- Name: homepage_config; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.homepage_config (
@@ -260,9 +222,10 @@ CREATE TABLE public.homepage_config (
 );
 
 
+ALTER TABLE public.homepage_config OWNER TO neondb_owner;
+
 --
--- TOC entry 220 (class 1259 OID 40988)
--- Name: homepage_config_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: homepage_config_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.homepage_config_id_seq
@@ -274,18 +237,17 @@ CREATE SEQUENCE public.homepage_config_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.homepage_config_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3567 (class 0 OID 0)
--- Dependencies: 220
--- Name: homepage_config_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: homepage_config_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.homepage_config_id_seq OWNED BY public.homepage_config.id;
 
 
 --
--- TOC entry 221 (class 1259 OID 40989)
--- Name: legislators; Type: TABLE; Schema: public; Owner: -
+-- Name: legislators; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.legislators (
@@ -307,9 +269,10 @@ CREATE TABLE public.legislators (
 );
 
 
+ALTER TABLE public.legislators OWNER TO neondb_owner;
+
 --
--- TOC entry 222 (class 1259 OID 40999)
--- Name: legislators_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: legislators_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.legislators_id_seq
@@ -321,18 +284,17 @@ CREATE SEQUENCE public.legislators_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.legislators_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3568 (class 0 OID 0)
--- Dependencies: 222
--- Name: legislators_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: legislators_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.legislators_id_seq OWNED BY public.legislators.id;
 
 
 --
--- TOC entry 223 (class 1259 OID 41000)
--- Name: live_streams; Type: TABLE; Schema: public; Owner: -
+-- Name: live_streams; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.live_streams (
@@ -347,9 +309,10 @@ CREATE TABLE public.live_streams (
 );
 
 
+ALTER TABLE public.live_streams OWNER TO neondb_owner;
+
 --
--- TOC entry 224 (class 1259 OID 41008)
--- Name: live_streams_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: live_streams_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.live_streams_id_seq
@@ -361,18 +324,17 @@ CREATE SEQUENCE public.live_streams_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.live_streams_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3569 (class 0 OID 0)
--- Dependencies: 224
--- Name: live_streams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: live_streams_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.live_streams_id_seq OWNED BY public.live_streams.id;
 
 
 --
--- TOC entry 225 (class 1259 OID 41009)
--- Name: news; Type: TABLE; Schema: public; Owner: -
+-- Name: news; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.news (
@@ -391,9 +353,10 @@ CREATE TABLE public.news (
 );
 
 
+ALTER TABLE public.news OWNER TO neondb_owner;
+
 --
--- TOC entry 226 (class 1259 OID 41018)
--- Name: news_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: news_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.news_id_seq
@@ -405,18 +368,17 @@ CREATE SEQUENCE public.news_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.news_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3570 (class 0 OID 0)
--- Dependencies: 226
--- Name: news_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: news_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.news_id_seq OWNED BY public.news.id;
 
 
 --
--- TOC entry 227 (class 1259 OID 41019)
--- Name: news_tags; Type: TABLE; Schema: public; Owner: -
+-- Name: news_tags; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.news_tags (
@@ -425,9 +387,10 @@ CREATE TABLE public.news_tags (
 );
 
 
+ALTER TABLE public.news_tags OWNER TO neondb_owner;
+
 --
--- TOC entry 228 (class 1259 OID 41022)
--- Name: organs; Type: TABLE; Schema: public; Owner: -
+-- Name: organs; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.organs (
@@ -441,9 +404,10 @@ CREATE TABLE public.organs (
 );
 
 
+ALTER TABLE public.organs OWNER TO neondb_owner;
+
 --
--- TOC entry 229 (class 1259 OID 41029)
--- Name: organs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: organs_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.organs_id_seq
@@ -455,18 +419,17 @@ CREATE SEQUENCE public.organs_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.organs_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3571 (class 0 OID 0)
--- Dependencies: 229
--- Name: organs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: organs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.organs_id_seq OWNED BY public.organs.id;
 
 
 --
--- TOC entry 230 (class 1259 OID 41030)
--- Name: parliamentary_groups; Type: TABLE; Schema: public; Owner: -
+-- Name: parliamentary_groups; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.parliamentary_groups (
@@ -481,9 +444,10 @@ CREATE TABLE public.parliamentary_groups (
 );
 
 
+ALTER TABLE public.parliamentary_groups OWNER TO neondb_owner;
+
 --
--- TOC entry 231 (class 1259 OID 41037)
--- Name: parliamentary_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: parliamentary_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.parliamentary_groups_id_seq
@@ -495,18 +459,17 @@ CREATE SEQUENCE public.parliamentary_groups_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.parliamentary_groups_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3572 (class 0 OID 0)
--- Dependencies: 231
--- Name: parliamentary_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: parliamentary_groups_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.parliamentary_groups_id_seq OWNED BY public.parliamentary_groups.id;
 
 
 --
--- TOC entry 232 (class 1259 OID 41038)
--- Name: programs; Type: TABLE; Schema: public; Owner: -
+-- Name: programs; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.programs (
@@ -521,9 +484,10 @@ CREATE TABLE public.programs (
 );
 
 
+ALTER TABLE public.programs OWNER TO neondb_owner;
+
 --
--- TOC entry 233 (class 1259 OID 41046)
--- Name: programs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: programs_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.programs_id_seq
@@ -535,18 +499,59 @@ CREATE SEQUENCE public.programs_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.programs_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3573 (class 0 OID 0)
--- Dependencies: 233
--- Name: programs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: programs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.programs_id_seq OWNED BY public.programs.id;
 
 
 --
--- TOC entry 234 (class 1259 OID 41047)
--- Name: radio_episodes; Type: TABLE; Schema: public; Owner: -
+-- Name: radio_categories; Type: TABLE; Schema: public; Owner: neondb_owner
+--
+
+CREATE TABLE public.radio_categories (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    slug character varying(255) NOT NULL,
+    description text,
+    image_url character varying(500),
+    link_url character varying(500),
+    display_order integer DEFAULT 0,
+    active boolean DEFAULT true,
+    created_at timestamp without time zone DEFAULT now(),
+    updated_at timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.radio_categories OWNER TO neondb_owner;
+
+--
+-- Name: radio_categories_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
+--
+
+CREATE SEQUENCE public.radio_categories_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.radio_categories_id_seq OWNER TO neondb_owner;
+
+--
+-- Name: radio_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
+--
+
+ALTER SEQUENCE public.radio_categories_id_seq OWNED BY public.radio_categories.id;
+
+
+--
+-- Name: radio_episodes; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.radio_episodes (
@@ -564,9 +569,10 @@ CREATE TABLE public.radio_episodes (
 );
 
 
+ALTER TABLE public.radio_episodes OWNER TO neondb_owner;
+
 --
--- TOC entry 235 (class 1259 OID 41055)
--- Name: radio_episodes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: radio_episodes_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.radio_episodes_id_seq
@@ -578,18 +584,17 @@ CREATE SEQUENCE public.radio_episodes_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.radio_episodes_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3574 (class 0 OID 0)
--- Dependencies: 235
--- Name: radio_episodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: radio_episodes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.radio_episodes_id_seq OWNED BY public.radio_episodes.id;
 
 
 --
--- TOC entry 236 (class 1259 OID 41056)
--- Name: radio_navigation; Type: TABLE; Schema: public; Owner: -
+-- Name: radio_navigation; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.radio_navigation (
@@ -603,9 +608,10 @@ CREATE TABLE public.radio_navigation (
 );
 
 
+ALTER TABLE public.radio_navigation OWNER TO neondb_owner;
+
 --
--- TOC entry 237 (class 1259 OID 41065)
--- Name: radio_programs; Type: TABLE; Schema: public; Owner: -
+-- Name: radio_programs; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.radio_programs (
@@ -634,9 +640,10 @@ CREATE TABLE public.radio_programs (
 );
 
 
+ALTER TABLE public.radio_programs OWNER TO neondb_owner;
+
 --
--- TOC entry 238 (class 1259 OID 41077)
--- Name: radio_programs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: radio_programs_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.radio_programs_id_seq
@@ -648,18 +655,17 @@ CREATE SEQUENCE public.radio_programs_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.radio_programs_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3575 (class 0 OID 0)
--- Dependencies: 238
--- Name: radio_programs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: radio_programs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.radio_programs_id_seq OWNED BY public.radio_programs.id;
 
 
 --
--- TOC entry 239 (class 1259 OID 41078)
--- Name: tags; Type: TABLE; Schema: public; Owner: -
+-- Name: tags; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.tags (
@@ -670,9 +676,10 @@ CREATE TABLE public.tags (
 );
 
 
+ALTER TABLE public.tags OWNER TO neondb_owner;
+
 --
--- TOC entry 240 (class 1259 OID 41084)
--- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: tags_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.tags_id_seq
@@ -684,18 +691,17 @@ CREATE SEQUENCE public.tags_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.tags_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3576 (class 0 OID 0)
--- Dependencies: 240
--- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: tags_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
--- TOC entry 241 (class 1259 OID 41085)
--- Name: users; Type: TABLE; Schema: public; Owner: -
+-- Name: users; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.users (
@@ -709,9 +715,10 @@ CREATE TABLE public.users (
 );
 
 
+ALTER TABLE public.users OWNER TO neondb_owner;
+
 --
--- TOC entry 242 (class 1259 OID 41092)
--- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: users_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.users_id_seq
@@ -723,18 +730,17 @@ CREATE SEQUENCE public.users_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.users_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3577 (class 0 OID 0)
--- Dependencies: 242
--- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
--- TOC entry 243 (class 1259 OID 41093)
--- Name: video_news; Type: TABLE; Schema: public; Owner: -
+-- Name: video_news; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
 CREATE TABLE public.video_news (
@@ -753,9 +759,10 @@ CREATE TABLE public.video_news (
 );
 
 
+ALTER TABLE public.video_news OWNER TO neondb_owner;
+
 --
--- TOC entry 244 (class 1259 OID 41103)
--- Name: video_news_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: video_news_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
 --
 
 CREATE SEQUENCE public.video_news_id_seq
@@ -767,139 +774,136 @@ CREATE SEQUENCE public.video_news_id_seq
     CACHE 1;
 
 
+ALTER SEQUENCE public.video_news_id_seq OWNER TO neondb_owner;
+
 --
--- TOC entry 3578 (class 0 OID 0)
--- Dependencies: 244
--- Name: video_news_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: video_news_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
 --
 
 ALTER SEQUENCE public.video_news_id_seq OWNED BY public.video_news.id;
 
 
 --
--- TOC entry 3258 (class 2604 OID 41104)
--- Name: categories id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: categories id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.categories ALTER COLUMN id SET DEFAULT nextval('public.categories_id_seq'::regclass);
 
 
 --
--- TOC entry 3320 (class 2604 OID 49156)
--- Name: channel_config id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: channel_config id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.channel_config ALTER COLUMN id SET DEFAULT nextval('public.channel_config_id_seq'::regclass);
 
 
 --
--- TOC entry 3261 (class 2604 OID 41105)
--- Name: contact_messages id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: contact_messages id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.contact_messages ALTER COLUMN id SET DEFAULT nextval('public.contact_messages_id_seq'::regclass);
 
 
 --
--- TOC entry 3265 (class 2604 OID 41106)
--- Name: homepage_config id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: defensoria_content id; Type: DEFAULT; Schema: public; Owner: neondb_owner
+--
+
+ALTER TABLE ONLY public.defensoria_content ALTER COLUMN id SET DEFAULT nextval('public.defensoria_content_id_seq'::regclass);
+
+
+--
+-- Name: homepage_config id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.homepage_config ALTER COLUMN id SET DEFAULT nextval('public.homepage_config_id_seq'::regclass);
 
 
 --
--- TOC entry 3269 (class 2604 OID 41107)
--- Name: legislators id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: legislators id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.legislators ALTER COLUMN id SET DEFAULT nextval('public.legislators_id_seq'::regclass);
 
 
 --
--- TOC entry 3273 (class 2604 OID 41108)
--- Name: live_streams id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: live_streams id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.live_streams ALTER COLUMN id SET DEFAULT nextval('public.live_streams_id_seq'::regclass);
 
 
 --
--- TOC entry 3277 (class 2604 OID 41109)
--- Name: news id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: news id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.news ALTER COLUMN id SET DEFAULT nextval('public.news_id_seq'::regclass);
 
 
 --
--- TOC entry 3283 (class 2604 OID 41110)
--- Name: organs id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: organs id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.organs ALTER COLUMN id SET DEFAULT nextval('public.organs_id_seq'::regclass);
 
 
 --
--- TOC entry 3286 (class 2604 OID 41111)
--- Name: parliamentary_groups id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: parliamentary_groups id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.parliamentary_groups ALTER COLUMN id SET DEFAULT nextval('public.parliamentary_groups_id_seq'::regclass);
 
 
 --
--- TOC entry 3289 (class 2604 OID 41112)
--- Name: programs id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: programs id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.programs ALTER COLUMN id SET DEFAULT nextval('public.programs_id_seq'::regclass);
 
 
 --
--- TOC entry 3293 (class 2604 OID 41113)
--- Name: radio_episodes id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: radio_categories id; Type: DEFAULT; Schema: public; Owner: neondb_owner
+--
+
+ALTER TABLE ONLY public.radio_categories ALTER COLUMN id SET DEFAULT nextval('public.radio_categories_id_seq'::regclass);
+
+
+--
+-- Name: radio_episodes id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.radio_episodes ALTER COLUMN id SET DEFAULT nextval('public.radio_episodes_id_seq'::regclass);
 
 
 --
--- TOC entry 3301 (class 2604 OID 41114)
--- Name: radio_programs id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: radio_programs id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.radio_programs ALTER COLUMN id SET DEFAULT nextval('public.radio_programs_id_seq'::regclass);
 
 
 --
--- TOC entry 3308 (class 2604 OID 41115)
--- Name: tags id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: tags id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id_seq'::regclass);
 
 
 --
--- TOC entry 3310 (class 2604 OID 41116)
--- Name: users id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: users id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
 
 
 --
--- TOC entry 3315 (class 2604 OID 41117)
--- Name: video_news id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: video_news id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.video_news ALTER COLUMN id SET DEFAULT nextval('public.video_news_id_seq'::regclass);
 
 
 --
--- TOC entry 3526 (class 0 OID 40962)
--- Dependencies: 215
--- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: categories; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.categories (id, name, slug, description, parent_id, created_at, updated_at) FROM stdin;
@@ -913,9 +917,7 @@ COPY public.categories (id, name, slug, description, parent_id, created_at, upda
 
 
 --
--- TOC entry 3557 (class 0 OID 49153)
--- Dependencies: 246
--- Data for Name: channel_config; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: channel_config; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.channel_config (id, name, number, logo, background_color, text_color, transmisiones_link, is_active, order_position, created_at, updated_at) FROM stdin;
@@ -926,9 +928,7 @@ COPY public.channel_config (id, name, number, logo, background_color, text_color
 
 
 --
--- TOC entry 3528 (class 0 OID 40970)
--- Dependencies: 217
--- Data for Name: contact_messages; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: contact_messages; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.contact_messages (id, name, email, subject, message, status, created_at, updated_at) FROM stdin;
@@ -936,9 +936,15 @@ COPY public.contact_messages (id, name, email, subject, message, status, created
 
 
 --
--- TOC entry 3530 (class 0 OID 40980)
--- Dependencies: 219
--- Data for Name: homepage_config; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: defensoria_content; Type: TABLE DATA; Schema: public; Owner: neondb_owner
+--
+
+COPY public.defensoria_content (id, section, title, content, image_url, file_url, metadata, display_order, is_active, created_at, updated_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: homepage_config; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.homepage_config (id, section, title, description, background_image_url, hero_image_url, logo_url, additional_images, config_data, is_active, created_at, updated_at) FROM stdin;
@@ -949,9 +955,7 @@ COPY public.homepage_config (id, section, title, description, background_image_u
 
 
 --
--- TOC entry 3532 (class 0 OID 40989)
--- Dependencies: 221
--- Data for Name: legislators; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: legislators; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.legislators (id, name, parliamentary_group_id, legislature, state, type, gender, status, image_url, email, biography, created_at, updated_at) FROM stdin;
@@ -960,9 +964,7 @@ COPY public.legislators (id, name, parliamentary_group_id, legislature, state, t
 
 
 --
--- TOC entry 3534 (class 0 OID 41000)
--- Dependencies: 223
--- Data for Name: live_streams; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: live_streams; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.live_streams (id, title, thumbnail_url, stream_url, is_live, created_at, updated_at, channel) FROM stdin;
@@ -973,25 +975,22 @@ COPY public.live_streams (id, title, thumbnail_url, stream_url, is_live, created
 
 
 --
--- TOC entry 3536 (class 0 OID 41009)
--- Dependencies: 225
--- Data for Name: news; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: news; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.news (id, title, summary, content, image_url, category, published_at, created_at, updated_at, status, is_featured, featured_rank) FROM stdin;
 29	Noticia de Prueba - Borrador	Esta es una noticia guardada como borrador para testing	Contenido completo de la noticia en borrador	/images/test.jpg	Temas de actualidad	2025-09-18 18:26:22.143465	2025-09-18 18:26:22.143465	2025-09-18 18:26:22.143465	draft	t	1
-31	Noticia Publicada	Esta noticia ya está publicada	Contenido de noticia ya publicada	/images/test3.jpg	Relaciones Exteriores	2025-09-18 17:26:22.143465	2025-09-18 18:26:22.143465	2025-09-18 18:26:22.143465	published	t	0
-30	Noticia Programada	Esta noticia está programada para publicar en 2 minutos	Contenido de noticia programada	/images/test2.jpg	Trabajo en comisiones	2025-09-18 18:28:22.143465	2025-09-18 18:26:22.143465	2025-09-18 18:26:22.143465	published	t	1
 32	Noticia Destacada 3	Tercera noticia destacada	Contenido de la tercera noticia	/images/test1.jpg	Senado	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	published	t	2
 33	Noticia Destacada 4	Cuarta noticia destacada	Contenido de la cuarta noticia	/images/test4.jpg	Cámara de Diputados	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	published	t	3
-34	Noticia Destacada 5	Quinta noticia destacada	Contenido de la quinta noticia	/images/test5.jpg	Mesa Directiva	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	published	t	4
+31	Noticia Publicada Super Especial	Esta noticia ya está publicada	Contenido de noticia ya publicada	/uploads/news/fd70cb84-2e52-47b4-ac4f-dc7bd2b05dd4.png	Relaciones Exteriores	2025-09-15 23:26:00	2025-09-18 18:26:22.143465	2025-09-18 18:26:22.143465	published	t	0
+35	Noticia 23 Spt 10AM	Noticia del 23 de sept 10am	<h4>Noticia del 23 d<img src="/uploads/news/f059d64e-80f5-47f1-9fcc-122323761a39.png" alt="" class="mx-auto block">e sept 10am</h4>	/uploads/news/0d9b4ade-d110-46ab-bd38-3a1c5aab414d.jpeg	Temas de actualidad	2025-09-23 12:00:00	2025-09-23 19:25:11.793517	2025-09-23 19:25:11.793517	published	f	\N
+34	Noticia Destacada 5	Quinta noticia destacada	<div class="two-column-layout">\n<p>Contenido de la quinta noticia</p>\n<p>texto de prueba</p>\n<p></p>\n<p><img src="/uploads/news/4b3c3c9c-f4ff-47e1-952a-9e667dfff99e.png" width="191" height="191"></p>\n<p></p>\n<p>mas texto</p>\n</div>	/images/test5.jpg	Mesa Directiva	2025-09-18 17:33:00	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	published	t	4
+30	Noticia Programada	Esta noticia está programada para publicar en 2 minutos	<div class="two-column-layout">\n<p>Contenido de noticia programada Es</p>\n<p></p>\n<p></p>\n<p></p>\n<p></p>\n<p><img src="/uploads/news/a0862e97-e808-4a09-9402-f1f3291145c8.png" width="254" height="254"></p>\n<p>texto</p>\n</div>	/images/test2.jpg	Trabajo en comisiones	2025-09-24 15:41:00	2025-09-18 18:26:22.143465	2025-09-18 18:26:22.143465	published	t	1
 \.
 
 
 --
--- TOC entry 3538 (class 0 OID 41019)
--- Dependencies: 227
--- Data for Name: news_tags; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: news_tags; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.news_tags (news_id, tag_id) FROM stdin;
@@ -999,22 +998,18 @@ COPY public.news_tags (news_id, tag_id) FROM stdin;
 
 
 --
--- TOC entry 3539 (class 0 OID 41022)
--- Dependencies: 228
--- Data for Name: organs; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: organs; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.organs (id, title, description, image_url, created_at, updated_at, url) FROM stdin;
-3	Defensoría de Audiencias	Texto	/uploads/organs/67bff7fe-22c9-42c8-928e-18188363a562.png	2025-07-13 22:42:05.761747	2025-07-14 16:36:20.496356	https://www.canaldelcongreso.gob.mx/DefensorAudiencia/Defensor
 1	Comisión Bicamaral	Texto	/uploads/organs/7a2c3c15-9ca0-4651-b68b-c63311f84105.png	2025-07-13 22:37:44.091464	2025-07-14 16:36:51.695052	https://dev2025.canaldelcongreso.gob.mx/
 4	Consejo Consuntivo	Consejo Consuntivo	/uploads/organs/15ba68a6-ddd9-4fe6-b086-5a174df2e0e3.png	2025-07-14 16:30:01.747138	2025-07-14 16:38:28.861069	https://www.canaldelcongreso.gob.mx/ConsejoConsultivo/inicio
+3	Defensoría de Audiencias	Texto	/uploads/organs/67bff7fe-22c9-42c8-928e-18188363a562.png	2025-07-13 22:42:05.761747	2025-09-23 11:11:33.654662	https://full-congreso-23-sept-madelcarmencarb.replit.app/defensoria-audiencia
 \.
 
 
 --
--- TOC entry 3541 (class 0 OID 41030)
--- Dependencies: 230
--- Data for Name: parliamentary_groups; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: parliamentary_groups; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.parliamentary_groups (id, name, abbreviation, image_url, color_hex, description, created_at, updated_at) FROM stdin;
@@ -1027,9 +1022,7 @@ COPY public.parliamentary_groups (id, name, abbreviation, image_url, color_hex, 
 
 
 --
--- TOC entry 3543 (class 0 OID 41038)
--- Dependencies: 232
--- Data for Name: programs; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: programs; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.programs (id, title, description, image_url, order_index, created_at, updated_at, url) FROM stdin;
@@ -1046,9 +1039,19 @@ COPY public.programs (id, title, description, image_url, order_index, created_at
 
 
 --
--- TOC entry 3545 (class 0 OID 41047)
--- Dependencies: 234
--- Data for Name: radio_episodes; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: radio_categories; Type: TABLE DATA; Schema: public; Owner: neondb_owner
+--
+
+COPY public.radio_categories (id, name, slug, description, image_url, link_url, display_order, active, created_at, updated_at) FROM stdin;
+2	NOTICIAS CONGRESO	noticias-congreso	Noticias y actualizaciones del Congreso	/images/placeholder.jpg	/radio/noticias-del-congreso-radio/episodios	2	t	2025-09-23 23:50:36.492817	2025-09-23 23:50:36.492817
+3	PROGRAMAS	programas	Todos los programas de Radio Congreso	/images/placeholder.jpg	/radio/mi-radio	3	t	2025-09-23 23:50:36.492817	2025-09-23 23:50:36.492817
+1	ENTREVISTAS	entrevistas		/images/placeholder.jpg	/radio/entrevistas	1	t	2025-09-23 23:50:36.492817	2025-09-23 21:41:57.445779
+4	PREGUNTA AL CONGRESO	pregunta-al-congreso		/uploads/general/70b92bdc-c77a-4a02-b506-7a4dc8236185.jpg	/radio/pregunta-al-congreso/episodes	0	t	2025-09-23 21:43:09.064129	2025-09-24 00:10:30.122975
+\.
+
+
+--
+-- Data for Name: radio_episodes; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.radio_episodes (id, title, description, audio_url, duration, publish_date, image_url, program_id, published, created_at, updated_at) FROM stdin;
@@ -1061,9 +1064,7 @@ COPY public.radio_episodes (id, title, description, audio_url, duration, publish
 
 
 --
--- TOC entry 3547 (class 0 OID 41056)
--- Dependencies: 236
--- Data for Name: radio_navigation; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: radio_navigation; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.radio_navigation (id, name, href, display_order, active, created_at, updated_at) FROM stdin;
@@ -1076,9 +1077,7 @@ nav-1752357283395	Un programa	/radio	1	t	2025-07-12 21:55:01.17694	2025-07-12 22
 
 
 --
--- TOC entry 3548 (class 0 OID 41065)
--- Dependencies: 237
--- Data for Name: radio_programs; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: radio_programs; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.radio_programs (id, title, description, image_url, audio_url, duration, category, host, published_at, created_at, updated_at, status, latest_episode_title, latest_episode_date, latest_episode_duration, latest_episode_description, program_link, episodes_link, published, display_order, featured) FROM stdin;
@@ -1090,9 +1089,7 @@ COPY public.radio_programs (id, title, description, image_url, audio_url, durati
 
 
 --
--- TOC entry 3550 (class 0 OID 41078)
--- Dependencies: 239
--- Data for Name: tags; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: tags; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.tags (id, name, slug, created_at) FROM stdin;
@@ -1106,9 +1103,7 @@ COPY public.tags (id, name, slug, created_at) FROM stdin;
 
 
 --
--- TOC entry 3552 (class 0 OID 41085)
--- Dependencies: 241
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.users (id, username, password_hash, role, is_active, created_at, updated_at) FROM stdin;
@@ -1118,9 +1113,7 @@ COPY public.users (id, username, password_hash, role, is_active, created_at, upd
 
 
 --
--- TOC entry 3554 (class 0 OID 41093)
--- Dependencies: 243
--- Data for Name: video_news; Type: TABLE DATA; Schema: public; Owner: -
+-- Data for Name: video_news; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
 COPY public.video_news (id, title, description, video_url, thumbnail_url, category, duration, published_at, status, created_at, updated_at) FROM stdin;
@@ -1136,143 +1129,126 @@ COPY public.video_news (id, title, description, video_url, thumbnail_url, catego
 
 
 --
--- TOC entry 3579 (class 0 OID 0)
--- Dependencies: 216
--- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.categories_id_seq', 6, true);
 
 
 --
--- TOC entry 3580 (class 0 OID 0)
--- Dependencies: 245
--- Name: channel_config_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: channel_config_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.channel_config_id_seq', 3, true);
 
 
 --
--- TOC entry 3581 (class 0 OID 0)
--- Dependencies: 218
--- Name: contact_messages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: contact_messages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.contact_messages_id_seq', 1, false);
 
 
 --
--- TOC entry 3582 (class 0 OID 0)
--- Dependencies: 220
--- Name: homepage_config_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: defensoria_content_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
+--
+
+SELECT pg_catalog.setval('public.defensoria_content_id_seq', 1, false);
+
+
+--
+-- Name: homepage_config_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.homepage_config_id_seq', 17, true);
 
 
 --
--- TOC entry 3583 (class 0 OID 0)
--- Dependencies: 222
--- Name: legislators_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: legislators_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.legislators_id_seq', 1, true);
 
 
 --
--- TOC entry 3584 (class 0 OID 0)
--- Dependencies: 224
--- Name: live_streams_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: live_streams_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.live_streams_id_seq', 14, true);
 
 
 --
--- TOC entry 3585 (class 0 OID 0)
--- Dependencies: 226
--- Name: news_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: news_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.news_id_seq', 34, true);
+SELECT pg_catalog.setval('public.news_id_seq', 35, true);
 
 
 --
--- TOC entry 3586 (class 0 OID 0)
--- Dependencies: 229
--- Name: organs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: organs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.organs_id_seq', 4, true);
 
 
 --
--- TOC entry 3587 (class 0 OID 0)
--- Dependencies: 231
--- Name: parliamentary_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: parliamentary_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.parliamentary_groups_id_seq', 5, true);
 
 
 --
--- TOC entry 3588 (class 0 OID 0)
--- Dependencies: 233
--- Name: programs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: programs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.programs_id_seq', 9, true);
 
 
 --
--- TOC entry 3589 (class 0 OID 0)
--- Dependencies: 235
--- Name: radio_episodes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: radio_categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
+--
+
+SELECT pg_catalog.setval('public.radio_categories_id_seq', 4, true);
+
+
+--
+-- Name: radio_episodes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.radio_episodes_id_seq', 8, true);
 
 
 --
--- TOC entry 3590 (class 0 OID 0)
--- Dependencies: 238
--- Name: radio_programs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: radio_programs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.radio_programs_id_seq', 5, true);
 
 
 --
--- TOC entry 3591 (class 0 OID 0)
--- Dependencies: 240
--- Name: tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.tags_id_seq', 6, true);
 
 
 --
--- TOC entry 3592 (class 0 OID 0)
--- Dependencies: 242
--- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.users_id_seq', 2, true);
 
 
 --
--- TOC entry 3593 (class 0 OID 0)
--- Dependencies: 244
--- Name: video_news_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+-- Name: video_news_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
 SELECT pg_catalog.setval('public.video_news_id_seq', 14, true);
 
 
 --
--- TOC entry 3332 (class 2606 OID 41119)
--- Name: categories categories_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: categories categories_name_key; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.categories
@@ -1280,8 +1256,7 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- TOC entry 3334 (class 2606 OID 41121)
--- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: categories categories_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.categories
@@ -1289,8 +1264,7 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- TOC entry 3336 (class 2606 OID 41123)
--- Name: categories categories_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: categories categories_slug_key; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.categories
@@ -1298,8 +1272,7 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- TOC entry 3377 (class 2606 OID 49165)
--- Name: channel_config channel_config_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: channel_config channel_config_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.channel_config
@@ -1307,8 +1280,7 @@ ALTER TABLE ONLY public.channel_config
 
 
 --
--- TOC entry 3338 (class 2606 OID 41125)
--- Name: contact_messages contact_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: contact_messages contact_messages_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.contact_messages
@@ -1316,8 +1288,15 @@ ALTER TABLE ONLY public.contact_messages
 
 
 --
--- TOC entry 3340 (class 2606 OID 41127)
--- Name: homepage_config homepage_config_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: defensoria_content defensoria_content_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+--
+
+ALTER TABLE ONLY public.defensoria_content
+    ADD CONSTRAINT defensoria_content_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: homepage_config homepage_config_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.homepage_config
@@ -1325,8 +1304,7 @@ ALTER TABLE ONLY public.homepage_config
 
 
 --
--- TOC entry 3342 (class 2606 OID 41129)
--- Name: homepage_config homepage_config_section_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: homepage_config homepage_config_section_key; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.homepage_config
@@ -1334,8 +1312,7 @@ ALTER TABLE ONLY public.homepage_config
 
 
 --
--- TOC entry 3344 (class 2606 OID 41131)
--- Name: legislators legislators_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: legislators legislators_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.legislators
@@ -1343,8 +1320,7 @@ ALTER TABLE ONLY public.legislators
 
 
 --
--- TOC entry 3346 (class 2606 OID 41133)
--- Name: live_streams live_streams_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: live_streams live_streams_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.live_streams
@@ -1352,8 +1328,7 @@ ALTER TABLE ONLY public.live_streams
 
 
 --
--- TOC entry 3348 (class 2606 OID 41135)
--- Name: news news_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: news news_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.news
@@ -1361,8 +1336,7 @@ ALTER TABLE ONLY public.news
 
 
 --
--- TOC entry 3350 (class 2606 OID 41137)
--- Name: news_tags news_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: news_tags news_tags_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.news_tags
@@ -1370,8 +1344,7 @@ ALTER TABLE ONLY public.news_tags
 
 
 --
--- TOC entry 3352 (class 2606 OID 41139)
--- Name: organs organs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: organs organs_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.organs
@@ -1379,8 +1352,7 @@ ALTER TABLE ONLY public.organs
 
 
 --
--- TOC entry 3354 (class 2606 OID 41141)
--- Name: parliamentary_groups parliamentary_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: parliamentary_groups parliamentary_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.parliamentary_groups
@@ -1388,8 +1360,7 @@ ALTER TABLE ONLY public.parliamentary_groups
 
 
 --
--- TOC entry 3356 (class 2606 OID 41143)
--- Name: programs programs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: programs programs_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.programs
@@ -1397,8 +1368,31 @@ ALTER TABLE ONLY public.programs
 
 
 --
--- TOC entry 3358 (class 2606 OID 41145)
--- Name: radio_episodes radio_episodes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: radio_categories radio_categories_name_key; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+--
+
+ALTER TABLE ONLY public.radio_categories
+    ADD CONSTRAINT radio_categories_name_key UNIQUE (name);
+
+
+--
+-- Name: radio_categories radio_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+--
+
+ALTER TABLE ONLY public.radio_categories
+    ADD CONSTRAINT radio_categories_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: radio_categories radio_categories_slug_key; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+--
+
+ALTER TABLE ONLY public.radio_categories
+    ADD CONSTRAINT radio_categories_slug_key UNIQUE (slug);
+
+
+--
+-- Name: radio_episodes radio_episodes_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.radio_episodes
@@ -1406,8 +1400,7 @@ ALTER TABLE ONLY public.radio_episodes
 
 
 --
--- TOC entry 3361 (class 2606 OID 41147)
--- Name: radio_navigation radio_navigation_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: radio_navigation radio_navigation_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.radio_navigation
@@ -1415,8 +1408,7 @@ ALTER TABLE ONLY public.radio_navigation
 
 
 --
--- TOC entry 3363 (class 2606 OID 41149)
--- Name: radio_programs radio_programs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: radio_programs radio_programs_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.radio_programs
@@ -1424,8 +1416,7 @@ ALTER TABLE ONLY public.radio_programs
 
 
 --
--- TOC entry 3365 (class 2606 OID 41151)
--- Name: tags tags_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: tags tags_name_key; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.tags
@@ -1433,8 +1424,7 @@ ALTER TABLE ONLY public.tags
 
 
 --
--- TOC entry 3367 (class 2606 OID 41153)
--- Name: tags tags_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: tags tags_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.tags
@@ -1442,8 +1432,7 @@ ALTER TABLE ONLY public.tags
 
 
 --
--- TOC entry 3369 (class 2606 OID 41155)
--- Name: tags tags_slug_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: tags tags_slug_key; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.tags
@@ -1451,8 +1440,7 @@ ALTER TABLE ONLY public.tags
 
 
 --
--- TOC entry 3371 (class 2606 OID 41157)
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.users
@@ -1460,8 +1448,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 3373 (class 2606 OID 41159)
--- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.users
@@ -1469,8 +1456,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- TOC entry 3375 (class 2606 OID 41161)
--- Name: video_news video_news_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: video_news video_news_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.video_news
@@ -1478,16 +1464,14 @@ ALTER TABLE ONLY public.video_news
 
 
 --
--- TOC entry 3359 (class 1259 OID 41162)
--- Name: idx_radio_navigation_active_order; Type: INDEX; Schema: public; Owner: -
+-- Name: idx_radio_navigation_active_order; Type: INDEX; Schema: public; Owner: neondb_owner
 --
 
 CREATE INDEX idx_radio_navigation_active_order ON public.radio_navigation USING btree (active, display_order);
 
 
 --
--- TOC entry 3378 (class 2606 OID 41163)
--- Name: categories categories_parent_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: categories categories_parent_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.categories
@@ -1495,8 +1479,7 @@ ALTER TABLE ONLY public.categories
 
 
 --
--- TOC entry 3379 (class 2606 OID 41168)
--- Name: legislators legislators_parliamentary_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: legislators legislators_parliamentary_group_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.legislators
@@ -1504,8 +1487,7 @@ ALTER TABLE ONLY public.legislators
 
 
 --
--- TOC entry 3380 (class 2606 OID 41173)
--- Name: news_tags news_tags_news_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: news_tags news_tags_news_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.news_tags
@@ -1513,8 +1495,7 @@ ALTER TABLE ONLY public.news_tags
 
 
 --
--- TOC entry 3381 (class 2606 OID 41178)
--- Name: news_tags news_tags_tag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: news_tags news_tags_tag_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.news_tags
@@ -1522,15 +1503,34 @@ ALTER TABLE ONLY public.news_tags
 
 
 --
--- TOC entry 3382 (class 2606 OID 41183)
--- Name: radio_episodes radio_episodes_program_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: radio_episodes radio_episodes_program_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: neondb_owner
 --
 
 ALTER TABLE ONLY public.radio_episodes
     ADD CONSTRAINT radio_episodes_program_id_fkey FOREIGN KEY (program_id) REFERENCES public.radio_programs(id) ON DELETE CASCADE;
 
 
--- Completed on 2025-09-23 00:24:42 UTC
+--
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: neondb_owner
+--
+
+REVOKE USAGE ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO PUBLIC;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR SEQUENCES; Type: DEFAULT ACL; Schema: public; Owner: cloud_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE cloud_admin IN SCHEMA public GRANT ALL ON SEQUENCES TO neon_superuser WITH GRANT OPTION;
+
+
+--
+-- Name: DEFAULT PRIVILEGES FOR TABLES; Type: DEFAULT ACL; Schema: public; Owner: cloud_admin
+--
+
+ALTER DEFAULT PRIVILEGES FOR ROLE cloud_admin IN SCHEMA public GRANT ALL ON TABLES TO neon_superuser WITH GRANT OPTION;
+
 
 --
 -- PostgreSQL database dump complete
