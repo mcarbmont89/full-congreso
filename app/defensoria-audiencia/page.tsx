@@ -50,7 +50,8 @@ export default function DefensoriaAudienciaPage() {
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  className="w-[180px] h-[50px] rounded-full bg-[#b47bc7] hover:bg-[#a569b8] text-white text-[16px] font-bold shadow-lg transition-all duration-200"
+                  className="w-[180px] h-[50px] rounded-full bg-purple-400 hover:bg-purple-500 text-white text-[16px] font-bold shadow-lg transition-all duration-200"
+                  style={{backgroundColor: '#b47bc7'}}
                 >
                   Quejas
                 </button>
@@ -59,7 +60,8 @@ export default function DefensoriaAudienciaPage() {
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  className="w-[180px] h-[50px] rounded-full bg-[#b47bc7] hover:bg-[#a569b8] text-white text-[16px] font-bold shadow-lg transition-all duration-200"
+                  className="w-[180px] h-[50px] rounded-full bg-purple-400 hover:bg-purple-500 text-white text-[16px] font-bold shadow-lg transition-all duration-200"
+                  style={{backgroundColor: '#b47bc7'}}
                 >
                   Sugerencias
                 </button>
@@ -68,7 +70,8 @@ export default function DefensoriaAudienciaPage() {
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  className="w-[180px] h-[50px] rounded-full bg-[#b47bc7] hover:bg-[#a569b8] text-white text-[16px] font-bold shadow-lg transition-all duration-200"
+                  className="w-[180px] h-[50px] rounded-full bg-purple-400 hover:bg-purple-500 text-white text-[16px] font-bold shadow-lg transition-all duration-200"
+                  style={{backgroundColor: '#b47bc7'}}
                 >
                   Felicitaciones
                 </button>
