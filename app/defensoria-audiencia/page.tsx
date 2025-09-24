@@ -50,7 +50,7 @@ export default function DefensoriaAudienciaPage() {
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition"
+                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition border-2 border-white/90 hover:border-white"
                 >
                   Quejas
                 </button>
@@ -59,7 +59,7 @@ export default function DefensoriaAudienciaPage() {
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition"
+                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition border-2 border-white/90 hover:border-white"
                 >
                   Sugerencias
                 </button>
@@ -68,7 +68,7 @@ export default function DefensoriaAudienciaPage() {
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition"
+                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition border-2 border-white/90 hover:border-white"
                 >
                   Felicitaciones
                 </button>
