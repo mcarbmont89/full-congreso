@@ -45,12 +45,12 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Botones (píldora 160×44) */}
-            <div className="mt-5 md:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-5">
+            <div className="mt-6 md:mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6">
               <ContactModal type="Queja">
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition border-2 border-white/90 hover:border-white"
+                  className="w-[180px] h-[50px] rounded-full bg-[#8b5fbf] hover:bg-[#7a4fb5] text-white text-[16px] font-bold shadow-lg transition-all duration-200"
                 >
                   Quejas
                 </button>
@@ -59,7 +59,7 @@ export default function DefensoriaAudienciaPage() {
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition border-2 border-white/90 hover:border-white"
+                  className="w-[180px] h-[50px] rounded-full bg-[#8b5fbf] hover:bg-[#7a4fb5] text-white text-[16px] font-bold shadow-lg transition-all duration-200"
                 >
                   Sugerencias
                 </button>
@@ -68,7 +68,7 @@ export default function DefensoriaAudienciaPage() {
                 <button
                   type="button"
                   aria-haspopup="dialog"
-                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition border-2 border-white/90 hover:border-white"
+                  className="w-[180px] h-[50px] rounded-full bg-[#8b5fbf] hover:bg-[#7a4fb5] text-white text-[16px] font-bold shadow-lg transition-all duration-200"
                 >
                   Felicitaciones
                 </button>
