@@ -120,14 +120,6 @@ export default function RadioCategoriesPage() {
             throw new Error('Categoría no encontrada')
           }
 
-          // Update the category images state immediately for instant preview
-          const updatedImages = {
-            ...categoryImages,
-            [categoryTitle]: imageUrl
-          }
-          console.log('Updated category images:', updatedImages)
-          setCategoryImages(updatedImages)
-
           // Update the categories state to reflect the new image immediately
           setCategories(prevCategories => 
             prevCategories.map(cat => 
@@ -135,24 +127,28 @@ export default function RadioCategoriesPage() {
             )
           )
 
-          // Save to config and update the category in the database
-          try {
-            await saveConfigImages(updatedImages)
+          // Update the category directly in the database
+          const category = categories.find(cat => cat.title === categoryTitle)
+          if (category) {
+            try {
+              await handleCategoryUpdate(category.id, {
+                title: categoryTitle,
+                image: imageUrl,
+                link: category.link
+              })
 
-            toast({
-              title: "Éxito",
-              description: "Imagen actualizada correctamente"
-            })
-
-            // The image will be used automatically in the next save operation
-            // No need to call handleCategoryUpdate here since the image is already in state
-          } catch (configError) {
-            console.error('Error saving to config:', configError)
-            toast({
-              title: "Advertencia",
-              description: "Imagen subida pero hubo un problema al guardar la configuración",
-              variant: "destructive"
-            })
+              toast({
+                title: "Éxito",
+                description: "Imagen actualizada correctamente"
+              })
+            } catch (updateError) {
+              console.error('Error updating category in database:', updateError)
+              toast({
+                title: "Error",
+                description: "No se pudo actualizar la categoría en la base de datos",
+                variant: "destructive"
+              })
+            }
           }
         } else {
           throw new Error('No se recibió URL de imagen del servidor')

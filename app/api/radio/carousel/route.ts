@@ -10,68 +10,25 @@ export async function GET() {
       try {
         const result = await pool.query(`
           SELECT id, name as title, slug, image_url as image, 
-                 CONCAT('/radio/', slug) as link, display_order
+                 CONCAT('/radio/', slug) as link, display_order, updated_at
           FROM radio_categories 
           WHERE active = true 
           ORDER BY display_order ASC, name ASC
         `)
 
         if (result.rows && result.rows.length > 0) {
-          // Get category images from config to override database static paths
-          let configImages = {}
-          try {
-            const configResult = await pool.query(`
-              SELECT config_data 
-              FROM radio_config 
-              WHERE config_key = 'general'
-              ORDER BY created_at DESC 
-              LIMIT 1
-            `)
+          // Use database images directly - they should be up to date from the CMS
+          const carouselData = result.rows.map(row => ({
+            id: row.slug,
+            title: row.title.toUpperCase(),
+            image: row.image && row.image !== '/images/placeholder.jpg' 
+              ? `${row.image}?t=${new Date(row.updated_at).getTime()}` // Add timestamp to prevent caching
+              : '/images/placeholder.jpg',
+            link: row.link,
+            displayOrder: row.display_order
+          }))
 
-            if (configResult.rows && configResult.rows.length > 0) {
-              const generalConfig = configResult.rows[0].config_data || {}
-              configImages = generalConfig.categoryImages || {}
-              console.log('Found category images in config:', configImages)
-            } else {
-              console.log('No general config found, checking for categoryImages key')
-              // Try the old way as fallback
-              const oldConfigResult = await pool.query(`
-                SELECT config_data 
-                FROM radio_config 
-                WHERE config_key = 'categoryImages'
-                ORDER BY created_at DESC 
-                LIMIT 1
-              `)
-              
-              if (oldConfigResult.rows && oldConfigResult.rows.length > 0) {
-                configImages = oldConfigResult.rows[0].config_data || {}
-                console.log('Found category images in old config:', configImages)
-              }
-            }
-          } catch (configError) {
-            console.log('No config data found, using database images:', configError)
-          }
-
-          // Merge database data with config images
-          const carouselData = result.rows.map(row => {
-            // Try to find uploaded image by title (case insensitive)
-            let uploadedImage = null
-            for (const [configTitle, imageUrl] of Object.entries(configImages)) {
-              if (configTitle.toLowerCase() === row.title.toLowerCase()) {
-                uploadedImage = imageUrl
-                break
-              }
-            }
-            
-            return {
-              ...row,
-              // Priority: uploaded image from config > database image if it starts with /uploads/ > placeholder
-              image: uploadedImage || 
-                     (row.image && row.image.startsWith('/uploads/') ? row.image : '/images/placeholder.jpg')
-            }
-          })
-
-          console.log('Using database carousel data with config images:', carouselData)
+          console.log('Using database carousel data:', carouselData)
           return NextResponse.json(carouselData)
         }
       } catch (dbError) {
