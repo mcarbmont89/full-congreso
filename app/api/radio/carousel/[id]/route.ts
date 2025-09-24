@@ -3,10 +3,12 @@ import { createDatabaseConnectionFromEnv } from '@/lib/database-env'
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    console.log('Carousel API: Updating category with ID:', params.id)
+    const resolvedParams = await params
+    const categoryId = resolvedParams.id
+    console.log('Carousel API: Updating category with ID:', categoryId)
     const data = await request.json()
     console.log('Carousel API: Update data received:', data)
 
@@ -28,7 +30,7 @@ export async function PUT(
         // First check if the category exists
         const existingResult = await pool.query(`
           SELECT * FROM radio_categories WHERE slug = $1
-        `, [params.id])
+        `, [categoryId])
 
         if (existingResult.rows && existingResult.rows.length > 0) {
           // Update the existing category with the new image URL
@@ -44,7 +46,7 @@ export async function PUT(
           `, [
             data.title,
             imageUrl,
-            params.id
+            categoryId
           ])
 
           if (updateResult.rows && updateResult.rows.length > 0) {
@@ -66,7 +68,7 @@ export async function PUT(
             RETURNING *
           `, [
             data.title,
-            params.id,
+            categoryId,
             '',
             data.image || '/images/placeholder.jpg',
             0,
@@ -106,7 +108,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const resolvedParams = await params
