@@ -166,7 +166,7 @@ export default function DefensoriaAudienciaPage() {
         </section>
 
         {/* ===================== CONOCE A TU DEFENSORA ===================== */}
-        <section className="relative py-12 md:py-16 bg-gradient-to-br from-[#5b199a] to-[#3c0f66] text-white">
+        <section className="relative py-12 md:py-16 text-white" style={{ backgroundImage: "url('/images/defensora-background.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
           <div className="container mx-auto px-4 md:px-6 max-w-6xl">
             <h2 className="text-center text-2xl md:text-3xl lg:text-4xl font-black tracking-tight uppercase mb-8 md:mb-12">
               CONOCE A TU DEFENSORA<br />DE AUDIENCIA
