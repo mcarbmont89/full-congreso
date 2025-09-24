@@ -236,9 +236,9 @@ export default function DefensoriaAudienciaPage() {
         </section>
 
         {/* ===================== INFORMES Y REPORTES ===================== */}
-        <section className="py-12 md:py-16 bg-gradient-to-br from-[#5b199a] to-[#3c0f66] text-white" style={{ backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')" }}>
+        <section className="py-12 md:py-16 bg-gray-50" style={{ backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')" }}>
           <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-            <h2 className="text-center font-black uppercase text-[22px] md:text-[28px] mb-8">
+            <h2 className="text-center font-black uppercase text-[22px] md:text-[28px] mb-8 text-gray-800">
               INFORMES Y REPORTES
             </h2>
 
@@ -263,21 +263,21 @@ export default function DefensoriaAudienciaPage() {
                   archivo: "/files/estadisticas-audiencia.pdf"
                 }
               ].map((informe, i) => (
-                <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-colors">
-                  <h3 className="font-extrabold text-lg mb-2">
+                <div key={i} className="bg-white rounded-xl p-6 hover:bg-gray-50 transition-colors shadow-md border border-gray-200">
+                  <h3 className="font-extrabold text-lg mb-2 text-gray-800">
                     {informe.titulo}
                   </h3>
-                  <p className="text-white/90 text-sm mb-4 leading-5">
+                  <p className="text-gray-600 text-sm mb-4 leading-5">
                     {informe.descripcion}
                   </p>
                   <div className="flex justify-between items-center">
-                    <span className="text-xs text-white/70">
+                    <span className="text-xs text-gray-500">
                       {informe.fecha}
                     </span>
                     <a 
                       href={informe.archivo}
                       download
-                      className="inline-flex items-center px-3 py-1.5 bg-white text-purple-700 text-xs font-semibold rounded-full hover:bg-purple-50 transition-colors"
+                      className="inline-flex items-center px-3 py-1.5 bg-purple-600 text-white text-xs font-semibold rounded-full hover:bg-purple-700 transition-colors"
                     >
                       Descargar PDF
                     </a>
