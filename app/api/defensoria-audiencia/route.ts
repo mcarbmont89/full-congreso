@@ -16,7 +16,7 @@ async function verifyAuth(request: NextRequest): Promise<{ success: boolean; err
 
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET)
-    
+
     // Additional security check: ensure the token has required fields
     if (!payload.username || !payload.role) {
       return { success: false, error: 'Invalid token payload' }
@@ -38,7 +38,7 @@ async function verifyAdminAuth(request: NextRequest): Promise<{ success: boolean
 
   try {
     const { payload } = await jwtVerify(token, JWT_SECRET)
-    
+
     // Additional security check: ensure the token has required fields and admin role
     if (!payload.username || !payload.role) {
       return { success: false, error: 'Invalid token payload' }
@@ -60,7 +60,7 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const section = searchParams.get('section')
     const includeInactive = searchParams.get('admin') === 'true' // Admin can see all
-    
+
     // Check if admin access is requested
     let isAdminRequest = false
     if (includeInactive) {
@@ -74,19 +74,19 @@ export async function GET(request: NextRequest) {
       }
       isAdminRequest = true // Admin authenticated successfully
     }
-    
+
     let query = `
       SELECT id, section, title, content, image_url, file_url, metadata, display_order, is_active, created_at, updated_at
       FROM defensoria_content
     `
     const params: any[] = []
     let whereClause = ''
-    
+
     // If not admin request, filter only active content
     if (!isAdminRequest) {
       whereClause = 'WHERE is_active = true'
     }
-    
+
     if (section) {
       if (whereClause) {
         whereClause += ` AND section = $${params.length + 1}`
@@ -95,15 +95,15 @@ export async function GET(request: NextRequest) {
       }
       params.push(section)
     }
-    
+
     query += whereClause
     query += ` ORDER BY display_order ASC, created_at DESC`
-    
+
     console.log('Querying defensoria content from database...', { section })
     const result = await db.query(query, params)
-    
+
     console.log('Defensoria content fetched from DB:', result.rows.length, 'items')
-    
+
     return NextResponse.json(result.rows)
   } catch (error) {
     console.error('Error fetching defensoria content:', error)
@@ -127,7 +127,7 @@ export async function POST(request: NextRequest) {
   try {
     const db = getDB()
     const body = await request.json()
-    
+
     const {
       section,
       title,
@@ -138,24 +138,24 @@ export async function POST(request: NextRequest) {
       display_order = 0,
       is_active = true
     } = body
-    
+
     if (!section) {
       return NextResponse.json(
         { error: 'Section is required' },
         { status: 400 }
       )
     }
-    
+
     console.log('Creating defensoria content:', { section, title })
-    
+
     const result = await db.query(`
       INSERT INTO defensoria_content (section, title, content, image_url, file_url, metadata, display_order, is_active, updated_at)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP)
       RETURNING *
     `, [section, title, content, image_url, file_url, JSON.stringify(metadata), display_order, is_active])
-    
+
     console.log('Defensoria content created:', result.rows[0])
-    
+
     return NextResponse.json(result.rows[0])
   } catch (error) {
     console.error('Error creating defensoria content:', error)
@@ -179,7 +179,7 @@ export async function PUT(request: NextRequest) {
   try {
     const db = getDB()
     const body = await request.json()
-    
+
     const {
       id,
       section,
@@ -191,16 +191,16 @@ export async function PUT(request: NextRequest) {
       display_order,
       is_active
     } = body
-    
+
     if (!id) {
       return NextResponse.json(
         { error: 'ID is required' },
         { status: 400 }
       )
     }
-    
+
     console.log('Updating defensoria content:', { id, section, title })
-    
+
     const result = await db.query(`
       UPDATE defensoria_content 
       SET section = COALESCE($2, section),
@@ -215,16 +215,16 @@ export async function PUT(request: NextRequest) {
       WHERE id = $1
       RETURNING *
     `, [id, section, title, content, image_url, file_url, JSON.stringify(metadata), display_order, is_active])
-    
+
     if (result.rows.length === 0) {
       return NextResponse.json(
         { error: 'Defensoria content not found' },
         { status: 404 }
       )
     }
-    
+
     console.log('Defensoria content updated:', result.rows[0])
-    
+
     return NextResponse.json(result.rows[0])
   } catch (error) {
     console.error('Error updating defensoria content:', error)
@@ -249,31 +249,31 @@ export async function DELETE(request: NextRequest) {
     const db = getDB()
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
-    
+
     if (!id) {
       return NextResponse.json(
         { error: 'ID is required' },
         { status: 400 }
       )
     }
-    
+
     console.log('Deleting defensoria content:', { id })
-    
+
     const result = await db.query(`
       DELETE FROM defensoria_content 
       WHERE id = $1
       RETURNING *
     `, [id])
-    
+
     if (result.rows.length === 0) {
       return NextResponse.json(
         { error: 'Defensoria content not found' },
         { status: 404 }
       )
     }
-    
+
     console.log('Defensoria content deleted:', result.rows[0])
-    
+
     return NextResponse.json({ message: 'Defensoria content deleted successfully' })
   } catch (error) {
     console.error('Error deleting defensoria content:', error)

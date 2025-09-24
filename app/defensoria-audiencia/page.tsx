@@ -4,6 +4,10 @@ import Image from "next/image"
 import Footer from "@/components/footer"
 import ContactModal from "@/components/defensoria/contact-modal"
 import SolicitudesCarousel from "@/components/SolicitudesCarousel"
+import DefensoraProfileSection from "@/components/defensoria/defensora-profile-section"
+import RecentRequestsSection from "@/components/defensoria/recent-requests-section"
+import AnnualReportsSection from "@/components/defensoria/annual-reports-section"
+import ConoceLaLeyButton from "@/components/defensoria/conoce-la-ley-button"
 
 export default function DefensoriaAudienciaPage() {
   return (
@@ -155,136 +159,19 @@ export default function DefensoriaAudienciaPage() {
 
             {/* Botón Conoce la Ley (chico) */}
             <div className="text-center mt-10">
-              <a
-                href="/files/ConoceTuLey.pdf"
-                download
-                className="inline-flex h-8 items-center px-5 rounded-full bg-purple-600 hover:bg-purple-700 text-white text-[13px] font-semibold transition shadow-md"
-              >
-                Conoce la Ley
-              </a>
+              <ConoceLaLeyButton />
             </div>
           </div>
         </section>
 
         {/* ===================== CONOCE A TU DEFENSORA ===================== */}
-        <section className="relative py-12 md:py-16 text-white" style={{ backgroundImage: "url('/images/defensora-background.png')", backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat" }}>
-          <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-            <h2 className="text-center text-2xl md:text-3xl lg:text-4xl font-black tracking-tight uppercase mb-8 md:mb-12">
-              CONOCE A TU DEFENSORA<br />DE AUDIENCIA
-            </h2>
-
-            <div className="flex flex-col md:flex-row gap-8">
-              <div className="md:basis-1/4 md:shrink-0">
-                <div className="relative h-[1220px] md:h-[420px] rounded-lg overflow-hidden shadow-xl bg-purple-300 flex items-center justify-center">
-                  <div className="text-center text-purple-800 font-bold">
-                    <div className="text-6xl mb-2">👤</div>
-                    <div>Defensora Photo</div>
-                  </div>
-                  <Image
-                    src="/images/defensora-photo.jpg"
-                    alt="Defensora de Audiencia"
-                    fill
-                    className="object-cover z-10"
-                    priority
-                  />
-                </div>
-              </div>
-
-              <div className="md:basis-3/4 md:min-w-0 space-y-4">
-                <h3 className="text-xl md:text-2xl font-extrabold text-white mb-4">
-                  Mtra. María Gabriela Ortiz Portilla
-                </h3>
-                <div className="space-y-4 text-sm md:text-[15px] leading-6 text-white/95">
-                  <p>
-                    Es Licenciada en Relaciones Internacionales por la Universidad Iberoamericana donde
-                    realizó un Diplomado en Derecho Internacional en la Université Jean Moulin Lyon en
-                    Francia, además, cuenta con una maestría en Derecho por la Universidad Anáhuac y un
-                    Máster en Comunicación Política y Gobernanza por The George Washington University,
-                    donde realizó un trabajo de investigación sobre perspectiva de género y su utilidad en las
-                    instituciones de gobierno.
-                  </p>
-                  <p>
-                    El 26 de abril de 2022 fue designada como Defensora de la Audiencia del Canal del
-                    Congreso por el H. Comité de Información del Canal de Televisión del Congreso General de los
-                    Estados Unidos Mexicanos.
-                  </p>
-                  <p>
-                    Desde la Defensoría de Audiencia del Canal del Congreso ha trabajado por la igualdad de
-                    género, en octubre 2023, organizó y moderó un foro virtual de mujeres especialistas en
-                    violencia de género y violencia mediática. Durante este enriquecedor proyecto, trabajó
-                    directamente con lideresas de espacios sociales de gran relevancia social y de actualidad de
-                    igualdad de género se sean reflejados en la programación del Canal del Congreso.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        <DefensoraProfileSection />
 
         {/* ===================== RECIENTES SOLICITUDES ===================== */}
-        <section className="py-12 md:py-16" style={{ backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')" }}>
-          <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-            <h2 className="text-center font-black uppercase text-[22px] md:text-[28px] mb-6">
-              RECIENTES SOLICITUDES ATENDIDAS
-            </h2>
-
-            {/* Carousel de solicitudes */}
-            <SolicitudesCarousel />
-          </div>
-        </section>
+        <RecentRequestsSection />
 
         {/* ===================== INFORMES Y REPORTES ===================== */}
-        <section className="py-12 md:py-16 bg-gray-50" style={{ backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')" }}>
-          <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-            <h2 className="text-center font-black uppercase text-[22px] md:text-[28px] mb-8 text-gray-800">
-              INFORMES Y REPORTES
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[
-                {
-                  titulo: "Informe Trimestral Q2 2024",
-                  descripcion: "Análisis de quejas, sugerencias y solicitudes del segundo trimestre del año.",
-                  fecha: "Julio 2024",
-                  archivo: "/files/informe-q2-2024.pdf"
-                },
-                {
-                  titulo: "Reporte de Transparencia 2024",
-                  descripcion: "Detalle de las acciones implementadas para garantizar la transparencia informativa.",
-                  fecha: "Agosto 2024", 
-                  archivo: "/files/transparencia-2024.pdf"
-                },
-                {
-                  titulo: "Estadísticas de Audiencia",
-                  descripcion: "Métricas y análisis del alcance de nuestras transmisiones legislativas.",
-                  fecha: "Septiembre 2024",
-                  archivo: "/files/estadisticas-audiencia.pdf"
-                }
-              ].map((informe, i) => (
-                <div key={i} className="bg-white rounded-xl p-6 hover:bg-gray-50 transition-colors shadow-md border border-gray-200">
-                  <h3 className="font-extrabold text-lg mb-2 text-gray-800">
-                    {informe.titulo}
-                  </h3>
-                  <p className="text-gray-600 text-sm mb-4 leading-5">
-                    {informe.descripcion}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">
-                      {informe.fecha}
-                    </span>
-                    <a 
-                      href={informe.archivo}
-                      download
-                      className="inline-flex items-center px-3 py-1.5 bg-purple-600 text-white text-xs font-semibold rounded-full hover:bg-purple-700 transition-colors"
-                    >
-                      Descargar PDF
-                    </a>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <AnnualReportsSection />
       </main>
       <Footer />
     </>
