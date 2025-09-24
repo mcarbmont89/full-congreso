@@ -10,7 +10,7 @@ export async function GET() {
       try {
         const result = await pool.query(`
           SELECT id, name as title, slug, image_url as image, 
-                 CONCAT('/radio/', slug) as link, display_order, updated_at
+                 COALESCE(link_url, CONCAT('/radio/', slug)) as link, display_order, updated_at
           FROM radio_categories 
           WHERE active = true 
           ORDER BY display_order ASC, name ASC

@@ -540,7 +540,7 @@ export default function RadioCategoriesPage() {
                         )
                       )
                     }}
-                    placeholder="Ej: /radio/noticias-congreso"
+                    placeholder=""
                   />
                 </div>
               </div>
