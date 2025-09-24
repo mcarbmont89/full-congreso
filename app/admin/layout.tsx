@@ -19,6 +19,16 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
 
+  // Function to determine link class based on active path
+  const linkClassName = (href: string) => {
+    const isActive = pathname === href;
+    return `flex items-center gap-3 px-3 py-2 rounded-lg min-h-[44px] touch-manipulation ${
+      isActive
+        ? "bg-blue-500 text-white font-semibold"
+        : "text-gray-700 hover:bg-gray-100"
+    }`;
+  };
+
   // Close sidebar on route change
   useEffect(() => {
     setSidebarOpen(false)
@@ -57,8 +67,7 @@ export default function AdminLayout({
           <div className="px-3 sm:px-4 space-y-1 sm:space-y-2">
             <Link 
               href="/admin" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin")}
             >
               <Home className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Dashboard</span>
@@ -67,16 +76,14 @@ export default function AdminLayout({
 
             <Link 
               href="/admin/live-streams" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/live-streams")}
             >
               <Monitor className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Transmisiones</span>
             </Link>
             <Link
               href="/admin/homepage-config"
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/homepage-config")}
             >
               <Settings className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Config Homepage</span>
@@ -84,8 +91,7 @@ export default function AdminLayout({
 
             <Link 
               href="/admin/programs" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/programs")}
             >
               <BarChart3 className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Programas TV</span>
@@ -93,8 +99,7 @@ export default function AdminLayout({
 
             <Link 
               href="/admin/programacion" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/programacion")}
             >
               <Monitor className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Programación</span>
@@ -102,8 +107,7 @@ export default function AdminLayout({
 
             <Link 
               href="/admin/news" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/news")}
             >
               <Newspaper className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Noticias</span>
@@ -111,17 +115,23 @@ export default function AdminLayout({
 
             <Link 
               href="/admin/video-news" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/video-news")}
             >
               <Video className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Video Noticias</span>
             </Link>
 
             <Link 
+              href="/admin/documents" 
+              className={linkClassName("/admin/documents")}
+            >
+              <Globe className="h-4 w-4 flex-shrink-0" />
+              <span className="text-sm sm:text-base">Documentos</span>
+            </Link>
+
+            <Link 
               href="/admin/users" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/users")}
             >
               <Users className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Usuarios</span>
@@ -129,8 +139,7 @@ export default function AdminLayout({
 
             <Link 
               href="/admin/database-config" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/database-config")}
             >
               <Settings className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Base de Datos</span>
@@ -138,8 +147,7 @@ export default function AdminLayout({
 
              <Link 
                href="/admin/smtp-config" 
-               className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-               onClick={() => setSidebarOpen(false)}
+               className={linkClassName("/admin/smtp-config")}
              >
               <Mail className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">SMTP Config</span>
@@ -147,8 +155,7 @@ export default function AdminLayout({
 
             <Link 
               href="/admin/radio-programs" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/radio-programs")}
             >
               <Radio className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Radio Programas</span>
@@ -156,8 +163,7 @@ export default function AdminLayout({
 
             <Link 
               href="/admin/organs" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/organs")}
             >
               <Building className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Órganos</span>
@@ -165,8 +171,7 @@ export default function AdminLayout({
 
             <Link 
               href="/admin/pages" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/pages")}
             >
               <LayoutDashboard className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Páginas</span>
@@ -174,8 +179,7 @@ export default function AdminLayout({
 
             <Link 
               href="/admin/channels" 
-              className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-              onClick={() => setSidebarOpen(false)}
+              className={linkClassName("/admin/channels")}
             >
               <Monitor className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Canales</span>
@@ -183,8 +187,7 @@ export default function AdminLayout({
 
              <Link 
                href="/admin/featured-programs" 
-               className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-               onClick={() => setSidebarOpen(false)}
+               className={linkClassName("/admin/featured-programs")}
              >
               <Eye className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Programas Destacados</span>
@@ -193,8 +196,7 @@ export default function AdminLayout({
             <div className="mt-4 pt-4 border-t border-gray-200">
               <Link 
                 href="/" 
-                className="flex items-center gap-3 px-3 py-2 text-gray-700 rounded-lg hover:bg-gray-100 min-h-[44px] touch-manipulation"
-                onClick={() => setSidebarOpen(false)}
+                className={linkClassName("/")}
               >
                 <LogOut className="h-4 w-4 flex-shrink-0" />
                 <span className="text-sm sm:text-base">Salir al Sitio</span>

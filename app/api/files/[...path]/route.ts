@@ -191,7 +191,9 @@ export async function GET(
       
       // Force download for documents in range requests too
       if (contentType.includes('pdf') || contentType.includes('word') || contentType.includes('msword')) {
-        rangeHeaders['Content-Disposition'] = `attachment; filename="${filePath.split('/').pop()}"`
+        const fileName = filePath.split('/').pop() || 'document'
+        rangeHeaders['Content-Disposition'] = `attachment; filename="${fileName}"`
+        rangeHeaders['Content-Transfer-Encoding'] = 'binary'
       }
 
       return new NextResponse(new Uint8Array(chunk), {
@@ -215,7 +217,9 @@ export async function GET(
     
     // Force download for documents
     if (contentType.includes('pdf') || contentType.includes('word') || contentType.includes('msword')) {
-      headers['Content-Disposition'] = `attachment; filename="${filePath.split('/').pop()}"`
+      const fileName = filePath.split('/').pop() || 'document'
+      headers['Content-Disposition'] = `attachment; filename="${fileName}"`
+      headers['Content-Transfer-Encoding'] = 'binary'
     }
 
     return new NextResponse(new Uint8Array(fileBuffer), {
