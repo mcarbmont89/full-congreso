@@ -68,10 +68,10 @@ export default function DefensoraProfileSection() {
               
               {/* Contenido */}
               <div className="p-8 lg:p-10 flex flex-col justify-center">
-                <h3 className="text-[20px] md:text-[24px] font-black text-[#7746d6] mb-4">
+                <h3 className="text-[20px] md:text-[24px] font-black text-white mb-4">
                   {defensoraName}
                 </h3>
-                <p className="text-[15px] md:text-[16px] text-[#4a5568] leading-relaxed">
+                <p className="text-[15px] md:text-[16px] text-white leading-relaxed">
                   {defensoraBio}
                 </p>
               </div>
