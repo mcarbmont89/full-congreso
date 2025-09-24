@@ -229,48 +229,8 @@ export default function DefensoriaAudienciaPage() {
               RECIENTES SOLICITUDES ATENDIDAS
             </h2>
 
-            {/* Tres tarjetas de ejemplo */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  pregunta: "¿Por qué no transmiten las sesiones completas del Senado?",
-                  respuesta: "Le informamos que el Canal del Congreso transmite íntegramente todas las sesiones ordinarias y extraordinarias del Senado conforme a la programación oficial.",
-                  fecha: "15 de agosto, 2024"
-                },
-                {
-                  pregunta: "¿Pueden mejorar la calidad del audio en las transmisiones?",
-                  respuesta: "Agradecemos su observación. Hemos implementado mejoras técnicas en nuestro sistema de audio para brindar una mejor experiencia a nuestra audiencia.",
-                  fecha: "22 de agosto, 2024"
-                },
-                {
-                  pregunta: "¿Por qué no hay subtítulos en las transmisiones?",
-                  respuesta: "Estamos trabajando en implementar subtítulos automáticos para hacer más accesible nuestro contenido a personas con discapacidad auditiva.",
-                  fecha: "1 de septiembre, 2024"
-                }
-              ].map((item, i) => (
-                <div key={i} className="rounded-xl bg-white shadow-md p-0 overflow-hidden">
-                  <div className="bg-[#5b199a] text-white px-6 py-3 text-sm font-extrabold tracking-wide">
-                    PREGUNTA:
-                  </div>
-                  <div className="p-6">
-                    <p className="text-[14px] font-semibold text-gray-700 mb-3">
-                      {item.pregunta}
-                    </p>
-                    <div className="bg-gray-100 text-white px-4 py-2 text-xs font-extrabold tracking-wide mb-3">
-                      <span className="text-gray-600">RESPUESTA:</span>
-                    </div>
-                    <p className="text-[13px] text-gray-600 leading-5 mb-4">
-                      {item.respuesta}
-                    </p>
-                    <div className="text-right">
-                      <span className="text-xs text-gray-500 font-medium">
-                        {item.fecha}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+            {/* Carousel de solicitudes */}
+            <SolicitudesCarousel />
           </div>
         </section>
 
