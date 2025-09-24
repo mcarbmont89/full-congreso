@@ -120,35 +120,71 @@ export default function RadioCategoriesPage() {
             throw new Error('Categoría no encontrada')
           }
 
-          // Update the categories state to reflect the new image immediately
+          // Update both local state and database immediately
           setCategories(prevCategories => 
             prevCategories.map(cat => 
               cat.title === categoryTitle ? { ...cat, image: imageUrl } : cat
             )
           )
 
-          // Update the category directly in the database
-          const categoryToUpdate = categories.find(cat => cat.title === categoryTitle)
-          if (categoryToUpdate) {
-            try {
-              await handleCategoryUpdate(categoryToUpdate.id, {
+          // Update category images config
+          setCategoryImages(prev => ({
+            ...prev,
+            [categoryTitle]: imageUrl
+          }))
+
+          // Update the category in the database with the new image
+          try {
+            const updateResponse = await fetch(`/api/radio/carousel/${foundCategory.id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                id: foundCategory.id,
                 title: categoryTitle,
                 image: imageUrl,
-                link: categoryToUpdate.link
+                link: foundCategory.link
               })
+            })
 
-              toast({
-                title: "Éxito",
-                description: "Imagen actualizada correctamente"
-              })
-            } catch (updateError) {
-              console.error('Error updating category in database:', updateError)
-              toast({
-                title: "Error",
-                description: "No se pudo actualizar la categoría en la base de datos",
-                variant: "destructive"
-              })
+            if (!updateResponse.ok) {
+              const errorText = await updateResponse.text()
+              throw new Error(`Error updating database: ${errorText}`)
             }
+
+            // Also update the config to maintain consistency
+            await fetch('/api/radio/config', {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                categoryImages: {
+                  ...categoryImages,
+                  [categoryTitle]: imageUrl
+                }
+              })
+            })
+
+            toast({
+              title: "Éxito",
+              description: "Imagen actualizada correctamente"
+            })
+
+            // Refresh data to ensure consistency
+            setTimeout(() => {
+              fetchCategories()
+              fetchCategoryImages()
+            }, 1000)
+
+          } catch (updateError) {
+            console.error('Error updating category in database:', updateError)
+            toast({
+              title: "Error",
+              description: "No se pudo actualizar la categoría en la base de datos",
+              variant: "destructive"
+            })
           }
         } else {
           throw new Error('No se recibió URL de imagen del servidor')
