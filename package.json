@@ -38,6 +38,7 @@
     "@radix-ui/react-toggle": "latest",
     "@radix-ui/react-toggle-group": "latest",
     "@radix-ui/react-tooltip": "latest",
+    "@tinymce/tinymce-react": "^6.3.0",
     "@types/bcryptjs": "^3.0.0",
     "@types/hls.js": "^1.0.0",
     "@types/jsonwebtoken": "^9.0.10",
