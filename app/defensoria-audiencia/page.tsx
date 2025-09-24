@@ -158,7 +158,7 @@ export default function DefensoriaAudienciaPage() {
               <a
                 href="/files/ConoceTuLey.pdf"
                 download
-                className="inline-flex h-8 items-center px-5 rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[13px] font-semibold transition"
+                className="inline-flex h-8 items-center px-5 rounded-full bg-purple-600 hover:bg-purple-700 text-white text-[13px] font-semibold transition shadow-md"
               >
                 Conoce la Ley
               </a>
