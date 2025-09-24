@@ -9,10 +9,7 @@ export default function DefensoriaAudienciaPage() {
     <>
       <main className="min-h-screen">
         {/* ===================== HERO ===================== */}
-        <section className="relative w-full overflow-hidden">
-          {/* Altura idéntica al mockup */}
-          <div className="w-full min-h-[560px] md:min-h-[600px]" />
-
+        <section className="relative w-full h-[560px] md:h-[600px] overflow-hidden">
           {/* Fondo + overlay */}
           <Image
             src="/images/defensoria-fondo-header.png"
@@ -39,10 +36,10 @@ export default function DefensoriaAudienciaPage() {
 
             {/* Título + subtítulo */}
             <div className="text-center">
-              <h1 className="font-extrabold tracking-tight drop-shadow-xl text-[42px] sm:text-[48px] md:text-[58px] lg:text-[66px] leading-[1.05]">
+              <h1 className="font-black tracking-tight drop-shadow-xl text-[56px] sm:text-[68px] md:text-[80px] lg:text-[96px] xl:text-[108px] leading-[0.9]">
                 ¡TU VOZ IMPORTA!
               </h1>
-              <p className="mt-1 md:mt-2 text-[18px] sm:text-[20px] md:text-[22px] font-medium">
+              <p className="mt-3 md:mt-4 text-[22px] sm:text-[26px] md:text-[30px] lg:text-[34px] font-semibold drop-shadow-lg">
                 Comparte con nosotros tus comentarios
               </p>
             </div>
