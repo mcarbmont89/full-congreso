@@ -54,7 +54,7 @@ export default function DefensoraProfileSection() {
         </h2>
 
         <div className="mx-auto max-w-5xl">
-          <div className="bg-white rounded-2xl shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd]/20 overflow-hidden">
+          <div className="bg-transparent rounded-2xl shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-white/20 overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
               {/* Imagen */}
               <div className="relative h-[300px] lg:h-[400px]">
