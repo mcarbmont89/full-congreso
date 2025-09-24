@@ -40,12 +40,13 @@ export async function PUT(
 
           const updateResult = await pool.query(`
             UPDATE radio_categories 
-            SET name = $1, image_url = $2, updated_at = NOW()
-            WHERE slug = $3
+            SET name = $1, image_url = $2, link_url = $3, updated_at = NOW()
+            WHERE slug = $4
             RETURNING *
           `, [
             data.title,
             imageUrl,
+            data.link || `/radio/${categoryId}`,
             categoryId
           ])
 
@@ -54,7 +55,7 @@ export async function PUT(
               id: updateResult.rows[0].slug,
               title: updateResult.rows[0].name.toUpperCase(),
               image: updateResult.rows[0].image_url,
-              link: data.link || `/radio/${updateResult.rows[0].slug}`
+              link: updateResult.rows[0].link_url || `/radio/${updateResult.rows[0].slug}`
             }
             console.log('Carousel API: Category updated in database:', updatedCategory)
             return NextResponse.json(updatedCategory)
@@ -63,14 +64,15 @@ export async function PUT(
           console.log('Carousel API: Category not found in database, creating new one')
           // Create new category if it doesn't exist
           const createResult = await pool.query(`
-            INSERT INTO radio_categories (name, slug, description, image_url, display_order, active)
-            VALUES ($1, $2, $3, $4, $5, $6)
+            INSERT INTO radio_categories (name, slug, description, image_url, link_url, display_order, active)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
             RETURNING *
           `, [
             data.title,
             categoryId,
             '',
             data.image || '/images/placeholder.jpg',
+            data.link || `/radio/${categoryId}`,
             0,
             true
           ])
@@ -80,7 +82,7 @@ export async function PUT(
               id: createResult.rows[0].slug,
               title: createResult.rows[0].name.toUpperCase(),
               image: createResult.rows[0].image_url,
-              link: data.link || `/radio/${createResult.rows[0].slug}`
+              link: createResult.rows[0].link_url || `/radio/${createResult.rows[0].slug}`
             }
             console.log('Carousel API: Category created in database:', newCategory)
             return NextResponse.json(newCategory)
