@@ -1,62 +1,161 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
+import { join, normalize, sep } from 'path'
 import { randomUUID } from 'crypto'
+
+// Simple magic byte detection for common file types
+function detectFileType(buffer: Buffer): string | null {
+  // Check magic bytes for common file types
+  if (buffer.length >= 4) {
+    // PDF
+    if (buffer.subarray(0, 4).toString() === '%PDF') {
+      return 'application/pdf'
+    }
+    
+    // PNG
+    if (buffer.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]))) {
+      return 'image/png'
+    }
+    
+    // JPEG
+    if (buffer.subarray(0, 3).equals(Buffer.from([0xFF, 0xD8, 0xFF]))) {
+      return 'image/jpeg'
+    }
+    
+    // GIF
+    if (buffer.subarray(0, 6).toString() === 'GIF87a' || buffer.subarray(0, 6).toString() === 'GIF89a') {
+      return 'image/gif'
+    }
+    
+    // WebP
+    if (buffer.subarray(0, 4).toString() === 'RIFF' && buffer.subarray(8, 12).toString() === 'WEBP') {
+      return 'image/webp'
+    }
+    
+    // MP3
+    if (buffer.subarray(0, 3).equals(Buffer.from([0xFF, 0xFB, 0x90])) || 
+        buffer.subarray(0, 3).toString() === 'ID3') {
+      return 'audio/mpeg'
+    }
+    
+    // DOCX (ZIP format with specific content)
+    if (buffer.subarray(0, 4).equals(Buffer.from([0x50, 0x4B, 0x03, 0x04]))) {
+      // This is a ZIP file, could be DOCX - need deeper inspection
+      const content = buffer.toString('utf8', 30, 200)
+      if (content.includes('word/') || content.includes('docProps/')) {
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      }
+    }
+    
+    // DOC (older format)
+    if (buffer.subarray(0, 8).equals(Buffer.from([0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1]))) {
+      return 'application/msword'
+    }
+  }
+  
+  return null
+}
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
     const file = formData.get('file') as File
-    const type = formData.get('type') as string || 'general'
+    const rawType = formData.get('type') as string || 'general'
 
     if (!file) {
       return NextResponse.json({ error: 'No file provided' }, { status: 400 })
     }
 
-    // Validate file size (max 10MB for images, 500MB for audio)
-    const maxSize = (file.type.startsWith('audio/') || file.name.toLowerCase().endsWith('.mp3')) ? 500 * 1024 * 1024 : 10 * 1024 * 1024
+    // Whitelist allowed upload types to prevent path injection
+    const allowedUploadTypes = ['general', 'news', 'radio', 'programs', 'organs', 'defensoria', 'documents']
+    const type = allowedUploadTypes.includes(rawType) ? rawType : 'general'
+
+    // Server-side file type detection based on file content (magic bytes)
+    const fileBuffer = Buffer.from(await file.arrayBuffer())
+    const detectedType = detectFileType(fileBuffer)
+    
+    if (!detectedType) {
+      return NextResponse.json({ error: 'Unable to determine file type' }, { status: 400 })
+    }
+
+    const isAudio = detectedType.startsWith('audio/')
+    const isDocument = detectedType === 'application/pdf' || 
+                      detectedType === 'application/msword' ||
+                      detectedType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    const isImage = detectedType.startsWith('image/')
+    
+    let maxSize: number
+    if (isAudio) {
+      maxSize = 500 * 1024 * 1024 // 500MB for audio
+    } else if (isDocument) {
+      maxSize = 50 * 1024 * 1024 // 50MB for documents
+    } else {
+      maxSize = 10 * 1024 * 1024 // 10MB for images
+    }
+    
     if (file.size > maxSize) {
       return NextResponse.json({ 
         error: `File too large. Maximum size is ${maxSize / 1024 / 1024}MB` 
       }, { status: 400 })
     }
 
-    // Validate file type - be more flexible with MP3 detection
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'audio/mpeg', 'audio/mp3', 'audio/mpeg3']
-    const isAudio = file.type.startsWith('audio/') || file.name.toLowerCase().endsWith('.mp3')
-    const isImage = file.type.startsWith('image/')
+    // Validate detected file type against whitelist
+    const allowedTypes = [
+      'image/jpeg', 'image/png', 'image/gif', 'image/webp',
+      'audio/mpeg', 'audio/mp3', 'audio/mpeg3',
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ]
 
-    if (!isAudio && !isImage && !allowedTypes.includes(file.type)) {
+    if (!allowedTypes.includes(detectedType)) {
       return NextResponse.json({ 
-        error: 'Invalid file type. Allowed: JPEG, PNG, GIF, WebP, MP3' 
+        error: 'Invalid file type detected. Allowed: JPEG, PNG, GIF, WebP, MP3, PDF, DOC, DOCX' 
       }, { status: 400 })
     }
 
-    // Generate unique filename with proper extension handling
-    const fileExtension = file.name.split('.').pop()?.toLowerCase() || ''
+    // Generate unique filename with extension based on detected type
+    const extensionMap: Record<string, string> = {
+      'image/jpeg': 'jpg',
+      'image/png': 'png',
+      'image/gif': 'gif',
+      'image/webp': 'webp',
+      'audio/mpeg': 'mp3',
+      'audio/mp3': 'mp3',
+      'audio/mpeg3': 'mp3',
+      'application/pdf': 'pdf',
+      'application/msword': 'doc',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx'
+    }
+    
+    const fileExtension = extensionMap[detectedType] || 'bin'
     const uniqueFilename = `${randomUUID()}.${fileExtension}`
 
-    // Define upload path based on type - handle audio files specifically
+    // Define upload path based on type with security bounds checking
+    const baseUploadDir = join(process.cwd(), 'public', 'uploads')
     let uploadDir: string
+    
     if (isAudio || file.name.toLowerCase().endsWith('.mp3')) {
-      uploadDir = join(process.cwd(), 'public', 'uploads', 'audio')
-    } else if (type === 'radio') {
-      uploadDir = join(process.cwd(), 'public', 'uploads', 'radio')
+      uploadDir = join(baseUploadDir, 'audio')
+    } else if (isDocument) {
+      uploadDir = join(baseUploadDir, 'documents')
     } else {
-      uploadDir = join(process.cwd(), 'public', 'uploads', type)
+      uploadDir = join(baseUploadDir, type)
     }
 
-    const filePath = join(uploadDir, uniqueFilename)
+    // Ensure the upload directory is within the expected bounds
+    const normalizedUploadDir = normalize(uploadDir)
+    if (!normalizedUploadDir.startsWith(baseUploadDir + sep) && normalizedUploadDir !== baseUploadDir) {
+      return NextResponse.json({ error: 'Invalid upload type' }, { status: 400 })
+    }
+
+    const filePath = join(normalizedUploadDir, uniqueFilename)
 
     // Create directory if it doesn't exist
     await mkdir(uploadDir, { recursive: true })
 
-    // Convert file to buffer
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-
-    // Write file to local storage
-    await writeFile(filePath, buffer)
+    // Write file to local storage (using already read buffer)
+    await writeFile(filePath, fileBuffer)
 
     // Return the public URL path with proper response format
     if (isAudio || file.name.toLowerCase().endsWith('.mp3')) {
@@ -67,6 +166,15 @@ export async function POST(request: NextRequest) {
         fileName: file.name,
         fileSize: file.size,
         type: 'audio'
+      })
+    } else if (isDocument) {
+      return NextResponse.json({
+        url: `/uploads/documents/${uniqueFilename}`,
+        documentUrl: `/uploads/documents/${uniqueFilename}`,
+        fileUrl: `/uploads/documents/${uniqueFilename}`,
+        fileName: file.name,
+        fileSize: file.size,
+        type: 'document'
       })
     } else {
       return NextResponse.json({

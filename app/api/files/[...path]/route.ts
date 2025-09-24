@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { readFile, stat } from 'fs/promises'
-import { join } from 'path'
+import { join, normalize, sep } from 'path'
 import { existsSync } from 'fs'
 
 export async function OPTIONS() {
@@ -21,7 +21,19 @@ export async function GET(
   try {
     const params = await context.params
     const filePath = params.path.join('/')
-    const fullPath = join(process.cwd(), 'public', filePath)
+    
+    // Prevent directory traversal attacks
+    if (filePath.includes('..') || params.path.some(segment => segment === '..')) {
+      return new NextResponse('Invalid path', { status: 400 })
+    }
+    
+    const baseDir = join(process.cwd(), 'public')
+    const fullPath = normalize(join(baseDir, filePath))
+    
+    // Ensure the resolved path is within the public directory
+    if (!fullPath.startsWith(baseDir + sep) && fullPath !== baseDir) {
+      return new NextResponse('Invalid path', { status: 400 })
+    }
 
     console.log('Serving file:', filePath)
     console.log('Full path:', fullPath)
@@ -66,19 +78,36 @@ export async function GET(
             case 'svg':
               similarContentType = 'image/svg+xml'
               break
+            case 'pdf':
+              similarContentType = 'application/pdf'
+              break
+            case 'doc':
+              similarContentType = 'application/msword'
+              break
+            case 'docx':
+              similarContentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+              break
+          }
+          
+          const headers: Record<string, string> = {
+            'Content-Type': similarContentType,
+            'Content-Length': stats.size.toString(),
+            'Accept-Ranges': 'bytes',
+            'Cache-Control': 'public, max-age=31536000',
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+            'Access-Control-Allow-Headers': 'Range',
+            'X-Content-Type-Options': 'nosniff',
+          }
+          
+          // Force download for documents
+          if (similarContentType.includes('pdf') || similarContentType.includes('word') || similarContentType.includes('msword')) {
+            headers['Content-Disposition'] = `attachment; filename="${similarFile}"`
           }
           
           return new NextResponse(new Uint8Array(fileBuffer), {
             status: 200,
-            headers: {
-              'Content-Type': similarContentType,
-              'Content-Length': stats.size.toString(),
-              'Accept-Ranges': 'bytes',
-              'Cache-Control': 'public, max-age=31536000',
-              'Access-Control-Allow-Origin': '*',
-              'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
-              'Access-Control-Allow-Headers': 'Range',
-            },
+            headers,
           })
         }
       }
@@ -112,6 +141,12 @@ export async function GET(
       case 'pdf':
         contentType = 'application/pdf'
         break
+      case 'doc':
+        contentType = 'application/msword'
+        break
+      case 'docx':
+        contentType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        break
       case 'mp3':
         contentType = 'audio/mpeg'
         break
@@ -143,33 +178,49 @@ export async function GET(
       const fileBuffer = await readFile(fullPath)
       const chunk = fileBuffer.slice(start, end + 1)
 
+      const rangeHeaders: Record<string, string> = {
+        'Content-Range': `bytes ${start}-${end}/${stats.size}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunksize.toString(),
+        'Content-Type': contentType,
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+        'Access-Control-Allow-Headers': 'Range',
+        'X-Content-Type-Options': 'nosniff',
+      }
+      
+      // Force download for documents in range requests too
+      if (contentType.includes('pdf') || contentType.includes('word') || contentType.includes('msword')) {
+        rangeHeaders['Content-Disposition'] = `attachment; filename="${filePath.split('/').pop()}"`
+      }
+
       return new NextResponse(new Uint8Array(chunk), {
         status: 206,
-        headers: {
-          'Content-Range': `bytes ${start}-${end}/${stats.size}`,
-          'Accept-Ranges': 'bytes',
-          'Content-Length': chunksize.toString(),
-          'Content-Type': contentType,
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
-          'Access-Control-Allow-Headers': 'Range',
-        },
+        headers: rangeHeaders,
       })
     }
 
     const fileBuffer = await readFile(fullPath)
 
+    const headers: Record<string, string> = {
+      'Content-Type': contentType,
+      'Content-Length': stats.size.toString(),
+      'Accept-Ranges': 'bytes',
+      'Cache-Control': 'public, max-age=31536000',
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
+      'Access-Control-Allow-Headers': 'Range',
+      'X-Content-Type-Options': 'nosniff',
+    }
+    
+    // Force download for documents
+    if (contentType.includes('pdf') || contentType.includes('word') || contentType.includes('msword')) {
+      headers['Content-Disposition'] = `attachment; filename="${filePath.split('/').pop()}"`
+    }
+
     return new NextResponse(new Uint8Array(fileBuffer), {
       status: 200,
-      headers: {
-        'Content-Type': contentType,
-        'Content-Length': stats.size.toString(),
-        'Accept-Ranges': 'bytes',
-        'Cache-Control': 'public, max-age=31536000',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, HEAD, OPTIONS',
-        'Access-Control-Allow-Headers': 'Range',
-      },
+      headers,
     })
   } catch (error) {
     console.error('Error serving file:', error)
