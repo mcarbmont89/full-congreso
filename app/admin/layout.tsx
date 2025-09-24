@@ -130,6 +130,14 @@ export default function AdminLayout({
             </Link>
 
             <Link 
+              href="/admin/defensoria" 
+              className={linkClassName("/admin/defensoria")}
+            >
+              <Mic className="h-4 w-4 flex-shrink-0" />
+              <span className="text-sm sm:text-base">Defensoría</span>
+            </Link>
+
+            <Link 
               href="/admin/users" 
               className={linkClassName("/admin/users")}
             >
