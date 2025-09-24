@@ -1,0 +1,45 @@
+Error: ./app/defensoria-audiencia/page.tsx
+Error:   [31m×[0m Expression expected
+    ╭─[[36;1;4m/home/runner/workspace/app/defensoria-audiencia/page.tsx[0m:13:1]
+ [2m10[0m │ 
+ [2m11[0m │ export default function DefensoriaAudienciaPage() {
+ [2m12[0m │   return (
+ [2m13[0m │     <>
+    · [35;1m     ─[0m
+ [2m14[0m │       <main className="min-h-screen">
+ [2m15[0m │         {/* HERO */}
+ [2m16[0m │         <section className="relative w-full min-h-[70vh] md:min-h-[78vh] flex flex-col items-center justify-center overflow-hidden py-12 md:py-16">
+    ╰────
+  [31m×[0m Unterminated string constant
+     ╭─[[36;1;4m/home/runner/workspace/app/defensoria-audiencia/page.tsx[0m:143:1]
+ [2m140[0m │                 className="p-1.5 hover:text-purple-200 transition-colors"
+ [2m141[0m │               >
+ [2m142[0m │                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+ [2m143[0m │                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.01
+     · [35;1m                          ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────[0m
+     ╰────
+  [31m×[0m Unexpected eof
+     ╭─[[36;1;4m/home/runner/workspace/app/defensoria-audiencia/page.tsx[0m:143:140]
+ [2m141[0m │               >
+ [2m142[0m │                 <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+ [2m143[0m │                   <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.01
+     ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/defensoria-audiencia/page.tsx
+    at BuildError (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/ui/container/build-error.js:43:41)
+    at react-stack-bottom-frame (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:23950:20)
+    at renderWithHooksAgain (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:5179:20)
+    at renderWithHooks (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:5091:22)
+    at updateFunctionComponent (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:8328:19)
+    at beginWork (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:9945:18)
+    at runWithFiberInDEV (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:1511:30)
+    at performUnitOfWork (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:15120:22)
+    at workLoopSync (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:14944:41)
+    at renderRootSync (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:14924:11)
+    at performWorkOnRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:14411:13)
+    at performWorkOnRootViaSchedulerTask (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:16275:7)
+    at MessagePort.performWorkUntilDeadline (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js:45:48)
