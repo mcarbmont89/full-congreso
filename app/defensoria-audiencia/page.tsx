@@ -35,11 +35,11 @@ export default function DefensoriaAudienciaPage() {
             </div>
 
             {/* Título + subtítulo */}
-            <div className="text-center">
-              <h1 className="font-black tracking-tight drop-shadow-xl text-[56px] sm:text-[68px] md:text-[80px] lg:text-[96px] xl:text-[108px] leading-[0.9]">
+            <div className="text-center px-4">
+              <h1 className="font-black tracking-tight drop-shadow-xl text-[80px] sm:text-[100px] md:text-[130px] lg:text-[160px] xl:text-[180px] leading-[0.85] mb-2">
                 ¡TU VOZ IMPORTA!
               </h1>
-              <p className="mt-3 md:mt-4 text-[22px] sm:text-[26px] md:text-[30px] lg:text-[34px] font-semibold drop-shadow-lg">
+              <p className="text-[24px] sm:text-[26px] md:text-[28px] lg:text-[30px] font-normal drop-shadow-lg opacity-95">
                 Comparte con nosotros tus comentarios
               </p>
             </div>
