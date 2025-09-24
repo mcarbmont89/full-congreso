@@ -3,6 +3,7 @@
 import Image from "next/image"
 import Footer from "@/components/footer"
 import ContactModal from "@/components/defensoria/contact-modal"
+import SolicitudesCarousel from "@/components/SolicitudesCarousel"
 
 export default function DefensoriaAudienciaPage() {
   return (
