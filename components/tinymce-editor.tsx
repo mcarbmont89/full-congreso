@@ -52,7 +52,7 @@ export default function TinyMCEEditor({
   return (
     <div className="w-full">
       <Editor
-        apiKey="no-api-key" // Using free/self-hosted version
+        apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY || "no-api-key"}
         onInit={(evt, editor) => editorRef.current = editor}
         value={value}
         onEditorChange={handleEditorChange}
