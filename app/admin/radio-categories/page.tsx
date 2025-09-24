@@ -115,8 +115,8 @@ export default function RadioCategoriesPage() {
 
         if (imageUrl) {
           // Find the category by title
-          const category = categories.find(cat => cat.title === categoryTitle)
-          if (!category) {
+          const foundCategory = categories.find(cat => cat.title === categoryTitle)
+          if (!foundCategory) {
             throw new Error('Categoría no encontrada')
           }
 
@@ -128,13 +128,13 @@ export default function RadioCategoriesPage() {
           )
 
           // Update the category directly in the database
-          const category = categories.find(cat => cat.title === categoryTitle)
-          if (category) {
+          const categoryToUpdate = categories.find(cat => cat.title === categoryTitle)
+          if (categoryToUpdate) {
             try {
-              await handleCategoryUpdate(category.id, {
+              await handleCategoryUpdate(categoryToUpdate.id, {
                 title: categoryTitle,
                 image: imageUrl,
-                link: category.link
+                link: categoryToUpdate.link
               })
 
               toast({
