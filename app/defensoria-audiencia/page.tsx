@@ -174,7 +174,7 @@ export default function DefensoriaAudienciaPage() {
 
             <div className="flex flex-col md:flex-row gap-8">
               <div className="md:basis-1/4 md:shrink-0">
-                <div className="relative h-[480px] md:h-[560px] rounded-lg overflow-hidden shadow-xl bg-purple-300 flex items-center justify-center">
+                <div className="relative h-[1920px] md:h-[2240px] rounded-lg overflow-hidden shadow-xl bg-purple-300 flex items-center justify-center">
                   <div className="text-center text-purple-800 font-bold">
                     <div className="text-6xl mb-2">👤</div>
                     <div>Defensora Photo</div>
