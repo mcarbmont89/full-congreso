@@ -1,191 +1,106 @@
-import { Suspense } from "react"
+"use client"
+
 import Image from "next/image"
-import Link from "next/link"
 import Footer from "@/components/footer"
 import ContactModal from "@/components/defensoria/contact-modal"
-import DefensoraProfile from "@/components/defensoria/defensora-profile"
-import RecentRequests from "@/components/defensoria/recent-requests"
-import ReportsSection from "@/components/defensoria/reports-section"
-import ConoceTuLeyButton from "@/components/defensoria/conoce-tu-ley-button"
 
 export default function DefensoriaAudienciaPage() {
   return (
     <>
       <main className="min-h-screen">
-        {/* HERO */}
-        <section className="relative w-full min-h-[70vh] md:min-h-[78vh] flex flex-col items-center justify-center overflow-hidden py-12 md:py-16">
-          {/* Fondo */}
-          <div className="absolute inset-0 -z-10">
-            <Image
-              src="/images/defensoria-fondo-header.png"
-              alt="Fondo Defensoría de Audiencia"
-              fill
-              className="object-cover"
-              priority
-            />
-            {/* Overlay morado como en mockup */}
-            <div className="absolute inset-0 bg-gradient-to-b from-[#3c0f66]/85 via-[#5b199a]/80 to-[#5b199a]/80" />
-          </div>
+        {/* ===================== HERO ===================== */}
+        <section className="relative w-full overflow-hidden">
+          {/* Altura idéntica al mockup */}
+          <div className="w-full min-h-[560px] md:min-h-[600px]" />
+
+          {/* Fondo + overlay */}
+          <Image
+            src="/images/defensoria-fondo-header.png"
+            alt="Fondo Defensoría de Audiencia"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-[#4f148c]/88" />
 
           {/* Contenido */}
-          <div className="relative z-10 w-full max-w-6xl mx-auto px-4 md:px-6 text-center text-white">
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white px-4">
             {/* Logo */}
-            <div className="flex justify-center mb-6 md:mb-8">
+            <div className="mb-4 md:mb-6">
               <Image
                 src="/images/defensoria-logo.png"
                 alt="Defensoría de Audiencia"
-                width={320}
-                height={160}
-                className="w-[220px] md:w-[280px] lg:w-[320px] h-auto"
+                width={220}
+                height={110}
+                className="w-[160px] md:w-[200px] lg:w-[220px] h-auto"
                 priority
               />
             </div>
 
-            {/* Slogan */}
-            <div className="mb-6 md:mb-8">
-              <h1 className="font-bold tracking-tight drop-shadow-xl text-[34px] sm:text-[42px] md:text-[54px] lg:text-[64px] leading-[1.05]">
+            {/* Título + subtítulo */}
+            <div className="text-center">
+              <h1 className="font-extrabold tracking-tight drop-shadow-xl text-[42px] sm:text-[48px] md:text-[58px] lg:text-[66px] leading-[1.05]">
                 ¡TU VOZ IMPORTA!
               </h1>
-              <p className="mt-2 md:mt-3 text-lg sm:text-xl md:text-2xl font-medium drop-shadow">
+              <p className="mt-1 md:mt-2 text-[18px] sm:text-[20px] md:text-[22px] font-medium">
                 Comparte con nosotros tus comentarios
               </p>
             </div>
 
-            {/* Botones de acción (imágenes como en mockup) */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 mb-8 md:mb-10">
+            {/* Botones (píldora 160×44) */}
+            <div className="mt-5 md:mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 md:gap-5">
               <ContactModal type="Queja">
                 <button
                   type="button"
-                  aria-label="Abrir formulario de Quejas"
                   aria-haspopup="dialog"
-                  className="transition-transform hover:scale-105 active:scale-95"
+                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition"
                 >
-                  <Image
-                    src="/images/boton-quejas.png"
-                    alt=""
-                    width={220}
-                    height={66}
-                    className="w-[170px] md:w-[200px] lg:w-[220px] h-auto"
-                  />
+                  Quejas
                 </button>
               </ContactModal>
-
               <ContactModal type="Sugerencia">
                 <button
                   type="button"
-                  aria-label="Abrir formulario de Sugerencias"
                   aria-haspopup="dialog"
-                  className="transition-transform hover:scale-105 active:scale-95"
+                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition"
                 >
-                  <Image
-                    src="/images/boton-sugerencias.png"
-                    alt=""
-                    width={220}
-                    height={66}
-                    className="w-[170px] md:w-[200px] lg:w-[220px] h-auto"
-                  />
+                  Sugerencias
                 </button>
               </ContactModal>
-
               <ContactModal type="Felicitaciones">
                 <button
                   type="button"
-                  aria-label="Abrir formulario de Felicitaciones"
                   aria-haspopup="dialog"
-                  className="transition-transform hover:scale-105 active:scale-95"
+                  className="w-[160px] h-[44px] rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[15px] font-bold shadow-md transition"
                 >
-                  <Image
-                    src="/images/boton-felicitaciones.png"
-                    alt=""
-                    width={220}
-                    height={66}
-                    className="w-[170px] md:w-[200px] lg:w-[220px] h-auto"
-                  />
+                  Felicitaciones
                 </button>
               </ContactModal>
             </div>
 
-            {/* Redes (una línea, como en mockup) */}
-            <div className="flex justify-center items-center gap-4 sm:gap-5 md:gap-6 flex-wrap max-w-2xl mx-auto">
-              {/* Facebook */}
-              <a
-                href="https://www.facebook.com/share/16ZPgemiKV/?mibextid=wwXIfr"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-                className="p-1.5 hover:text-purple-200 transition-colors"
-              >
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-              </a>
-              {/* X */}
-              <a
-                href="https://x.com/defensoriacanal?s=21"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="X"
-                className="p-1.5 hover:text-purple-200 transition-colors"
-              >
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-                </svg>
-              </a>
-              {/* Instagram */}
-              <a
-                href="https://www.instagram.com/defensoriacanalmx?igsh=Zmc5d21laW84MWZ4&utm_source=qr"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-                className="p-1.5 hover:text-purple-200 transition-colors"
-              >
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 8.001a4 4 0 110 8 4 4 0 010-8zm6.406-1.521c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
-                </svg>
-              </a>
-              {/* YouTube */}
-              <a
-                href="https://youtube.com/@defensoriadeaudienciacanal5590?si=ODRuPtkx3wFkH2AJ"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="YouTube"
-                className="p-1.5 hover:text-purple-200 transition-colors"
-              >
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-              </a>
-              {/* TikTok */}
-              <a
-                href="https://www.tiktok.com/@defensoriacongresomx?_t=ZS-8ze8m5kkjV1&_r=1"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="TikTok"
-                className="p-1.5 hover:text-purple-200 transition-colors"
-              >
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
-                </svg>
-              </a>
-              {/* Spotify */}
-              <a
-                href="https://open.spotify.com/show/defensoriacanal"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Spotify"
-                className="p-1.5 hover:text-purple-200 transition-colors"
-              >
-                <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/>
-                </svg>
-              </a>
+            {/* Redes: fila centrada, íconos 28px */}
+            <div className="mt-5 md:mt-6 flex items-center justify-center gap-5 md:gap-6">
+              {[
+                { href: "https://www.facebook.com/share/16ZPgemiKV/?mibextid=wwXIfr", label: "Facebook", path: "M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" },
+                { href: "https://x.com/defensoriacanal?s=21", label: "X", path: "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" },
+                { href: "https://www.instagram.com/defensoriacanalmx?igsh=Zmc5d21laW84MWZ4&utm_source=qr", label: "Instagram", path: "M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" },
+                { href: "https://youtube.com/@defensoriadeaudienciacanal5590?si=ODRuPtkx3wFkH2AJ", label: "YouTube", path: "M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" },
+                { href: "https://www.tiktok.com/@defensoriacongresomx?_t=ZS-8ze8m5kkjV1&_r=1", label: "TikTok", path: "M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z" },
+                { href: "https://open.spotify.com/show/defensoriacanal", label: "Spotify", path: "M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" },
+              ].map((s, i) => (
+                <a key={i} href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} className="text-white/95 hover:text-white">
+                  <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 24 24">
+                    <path d={s.path} />
+                  </svg>
+                </a>
+              ))}
             </div>
           </div>
         </section>
 
-        {/* ¿Qué hace la Defensoría? */}
+        {/* ===================== ¿QUÉ HACE…? ===================== */}
         <section
-          className="py-16 md:py-20 relative"
+          className="relative py-12 md:py-14"
           style={{
             backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')",
             backgroundSize: "cover",
@@ -193,91 +108,235 @@ export default function DefensoriaAudienciaPage() {
           }}
         >
           <div className="container mx-auto px-4 md:px-6">
-            <div className="text-center mb-10 md:mb-14">
-              <h2 className="font-extrabold text-gray-900 leading-tight text-[28px] sm:text-[34px] md:text-[40px]">
-                ¿QUÉ HACE LA <span className="text-purple-700">DEFENSORÍA</span>
-                <br className="hidden sm:block" />
-                <span className="text-purple-700">DE AUDIENCIAS</span> POR TI?
-              </h2>
-            </div>
+            <h2 className="text-center font-black text-[#1f1f1f] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
+              ¿QUÉ HACE LA DEFENSORÍA<br className="hidden sm:block" /> DE AUDIENCIAS POR TI?
+            </h2>
 
-            <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-7">
               {/* Card 1 */}
-              <div className="bg-white rounded-2xl shadow-md border border-purple-200/60 p-8 text-center">
-                <div className="flex justify-center mb-6">
-                  <Image
-                    src="/images/defensoria-icono-1.png"
-                    alt="Recibir documentar y procesar"
-                    width={64}
-                    height={64}
-                    className="h-16 w-16"
-                  />
+              <div className="rounded-2xl bg-white shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
+                <div className="flex justify-center mb-4">
+                  <Image src="/images/defensoria-icono-1.png" alt="Recibir" width={52} height={52} />
                 </div>
-                <h3 className="text-lg md:text-xl font-extrabold text-gray-900">
-                  Recibir documentar y
-                  <br /> procesar tus observaciones,
-                  <br /> quejas y sugerencias
+                <h3 className="text-[16px] md:text-[17px] font-extrabold text-[#262626] leading-snug">
+                  Recibir documentar y procesar<br />
+                  tus observaciones,<br />
+                  quejas y sugerencias
                 </h3>
               </div>
 
-              {/* Card 2 */}
-              <div className="bg-white rounded-2xl shadow-md border border-purple-200/60 p-8 text-center">
-                <div className="flex justify-center mb-6">
-                  <Image
-                    src="/images/defensoria-icono-2.png"
-                    alt="Representar intereses"
-                    width={64}
-                    height={64}
-                    className="h-16 w-16"
-                  />
+              {/* Card 2 con divisores laterales */}
+              <div className="relative rounded-2xl bg-white shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
+                <span className="hidden md:block absolute -left-4 top-6 bottom-6 w-[2px] bg-[#7d4bcd] opacity-60" />
+                <span className="hidden md:block absolute -right-4 top-6 bottom-6 w-[2px] bg-[#7d4bcd] opacity-60" />
+                <div className="flex justify-center mb-4">
+                  <Image src="/images/defensoria-icono-2.png" alt="Representar" width={52} height={52} />
                 </div>
-                <h3 className="text-lg md:text-xl font-extrabold text-gray-900">
-                  Representar tus intereses
-                  <br /> cuando haces alguna
-                  <br /> solicitud
+                <h3 className="text-[16px] md:text-[17px] font-extrabold text-[#262626] leading-snug">
+                  Representar tus intereses<br />
+                  cuando haces alguna<br />
+                  solicitud
                 </h3>
               </div>
 
               {/* Card 3 */}
-              <div className="bg-white rounded-2xl shadow-md border border-purple-200/60 p-8 text-center">
-                <div className="flex justify-center mb-6">
-                  <Image
-                    src="/images/defensoria-icono-3.png"
-                    alt="Promover y proteger derechos"
-                    width={64}
-                    height={64}
-                    className="h-16 w-16"
-                  />
+              <div className="rounded-2xl bg-white shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
+                <div className="flex justify-center mb-4">
+                  <Image src="/images/defensoria-icono-3.png" alt="Promover" width={52} height={52} />
                 </div>
-                <h3 className="text-lg md:text-xl font-extrabold text-gray-900">
-                  Promover y proteger
-                  <br /> tus derechos en temas
-                  <br /> de audiencia
+                <h3 className="text-[16px] md:text-[17px] font-extrabold text-[#262626] leading-snug">
+                  Promover y proteger<br />
+                  tus derechos en temas<br />
+                  de audiencia
                 </h3>
               </div>
             </div>
 
-            {/* Botón Conoce la Ley (centrado) */}
-            <div className="text-center mt-10 md:mt-12">
-              <ConoceTuLeyButton variant="primary" defaultText="Conoce la Ley" />
+            {/* Botón Conoce la Ley (chico) */}
+            <div className="text-center mt-6">
+              <a
+                href="/files/ConoceTuLey.pdf"
+                download
+                className="inline-flex h-8 items-center px-5 rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[13px] font-semibold transition"
+              >
+                Conoce la Ley
+              </a>
             </div>
           </div>
         </section>
 
-        {/* Perfil Defensora (editable por CMS) */}
-        <Suspense fallback={<div className="py-20 text-center">Cargando información…</div>}>
-          <DefensoraProfile />
-        </Suspense>
+        {/* ===================== CONOCE A TU DEFENSORA ===================== */}
+        <section className="relative py-12 md:py-16 bg-gradient-to-br from-[#5b199a] to-[#3c0f66] text-white">
+          <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tight uppercase mb-8">
+              CONOCE A TU DEFENSORA<br />DE AUDIENCIA
+            </h2>
 
-        {/* Recientes solicitudes (carrusel / tarjetas) */}
-        <Suspense fallback={<div className="py-20 text-center">Cargando solicitudes…</div>}>
-          <RecentRequests />
-        </Suspense>
+            <div className="grid grid-cols-1 md:grid-cols-[260px_minmax(0,1fr)] gap-6 items-start">
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <Image
+                  src="/images/defensora-photo.jpg"
+                  alt="Defensora de Audiencia"
+                  width={260}
+                  height={320}
+                  className="w-[260px] h-auto object-cover"
+                />
+              </div>
 
-        {/* Informes (PDF/Word por año) */}
-        <Suspense fallback={<div className="py-20 text-center">Cargando informes…</div>}>
-          <ReportsSection />
-        </Suspense>
+              <div>
+                <h3 className="text-lg md:text-xl font-extrabold mb-2">
+                  Mtra. María Gabriela Ortiz Portilla
+                </h3>
+                <p className="text-sm md:text-[15px] leading-6 opacity-95">
+                  Es Licenciada en Relaciones Internacionales por la Universidad Iberoamericana, con estudios en
+                  Derecho Internacional en la Université Jean Moulin Lyon III (Francia). Cuenta con una maestría en
+                  Derecho por la Universidad Anáhuac y un Máster en Comunicación Política y Gobernanza por The George
+                  Washington University. Desde el 26 de abril de 2022 se desempeña como Defensora de la Audiencia del
+                  Canal del Congreso.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ===================== RECIENTES SOLICITUDES ===================== */}
+        <section className="py-12 md:py-16" style={{ backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')" }}>
+          <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+            <h2 className="text-center font-black uppercase text-[22px] md:text-[28px] mb-6">
+              RECIENTES SOLICITUDES ATENDIDAS
+            </h2>
+
+            {/* Tres tarjetas de ejemplo */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  pregunta: "¿Por qué no transmiten las sesiones completas del Senado?",
+                  respuesta: "Le informamos que el Canal del Congreso transmite íntegramente todas las sesiones ordinarias y extraordinarias del Senado conforme a la programación oficial.",
+                  fecha: "15 de agosto, 2024"
+                },
+                {
+                  pregunta: "¿Pueden mejorar la calidad del audio en las transmisiones?",
+                  respuesta: "Agradecemos su observación. Hemos implementado mejoras técnicas en nuestro sistema de audio para brindar una mejor experiencia a nuestra audiencia.",
+                  fecha: "22 de agosto, 2024"
+                },
+                {
+                  pregunta: "¿Por qué no hay subtítulos en las transmisiones?",
+                  respuesta: "Estamos trabajando en implementar subtítulos automáticos para hacer más accesible nuestro contenido a personas con discapacidad auditiva.",
+                  fecha: "1 de septiembre, 2024"
+                }
+              ].map((item, i) => (
+                <div key={i} className="rounded-xl bg-white shadow-md p-0 overflow-hidden">
+                  <div className="bg-[#5b199a] text-white px-6 py-3 text-sm font-extrabold tracking-wide">
+                    PREGUNTA:
+                  </div>
+                  <div className="p-6">
+                    <p className="text-[14px] font-semibold text-gray-700 mb-3">
+                      {item.pregunta}
+                    </p>
+                    <div className="bg-gray-100 text-white px-4 py-2 text-xs font-extrabold tracking-wide mb-3">
+                      <span className="text-gray-600">RESPUESTA:</span>
+                    </div>
+                    <p className="text-[13px] text-gray-600 leading-5 mb-4">
+                      {item.respuesta}
+                    </p>
+                    <div className="text-right">
+                      <span className="text-xs text-gray-500 font-medium">
+                        {item.fecha}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===================== INFORMES Y REPORTES ===================== */}
+        <section className="py-12 md:py-16 bg-gradient-to-br from-[#5b199a] to-[#3c0f66] text-white">
+          <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+            <h2 className="text-center font-black uppercase text-[22px] md:text-[28px] mb-8">
+              INFORMES Y REPORTES
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                {
+                  titulo: "Informe Trimestral Q2 2024",
+                  descripcion: "Análisis de quejas, sugerencias y solicitudes del segundo trimestre del año.",
+                  fecha: "Julio 2024",
+                  archivo: "/files/informe-q2-2024.pdf"
+                },
+                {
+                  titulo: "Reporte de Transparencia 2024",
+                  descripcion: "Detalle de las acciones implementadas para garantizar la transparencia informativa.",
+                  fecha: "Agosto 2024", 
+                  archivo: "/files/transparencia-2024.pdf"
+                },
+                {
+                  titulo: "Estadísticas de Audiencia",
+                  descripcion: "Métricas y análisis del alcance de nuestras transmisiones legislativas.",
+                  fecha: "Septiembre 2024",
+                  archivo: "/files/estadisticas-audiencia.pdf"
+                }
+              ].map((informe, i) => (
+                <div key={i} className="bg-white/10 backdrop-blur-sm rounded-xl p-6 hover:bg-white/20 transition-colors">
+                  <h3 className="font-extrabold text-lg mb-2">
+                    {informe.titulo}
+                  </h3>
+                  <p className="text-white/90 text-sm mb-4 leading-5">
+                    {informe.descripcion}
+                  </p>
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-white/70">
+                      {informe.fecha}
+                    </span>
+                    <a 
+                      href={informe.archivo}
+                      download
+                      className="inline-flex items-center px-3 py-1.5 bg-white text-purple-700 text-xs font-semibold rounded-full hover:bg-purple-50 transition-colors"
+                    >
+                      Descargar PDF
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===================== CONTACTO ===================== */}
+        <section className="py-12 md:py-16" style={{ backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')" }}>
+          <div className="container mx-auto px-4 md:px-6 max-w-4xl text-center">
+            <h2 className="font-black text-[#1f1f1f] text-[22px] md:text-[28px] mb-8">
+              ¿TIENES ALGUNA CONSULTA ADICIONAL?
+            </h2>
+            
+            <div className="bg-white rounded-2xl shadow-lg p-8 md:p-10">
+              <p className="text-gray-600 text-lg mb-8">
+                Nuestro equipo está aquí para ayudarte. Contáctanos directamente a través de nuestros canales oficiales.
+              </p>
+              
+              <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 bg-[#7746d6] rounded-full flex items-center justify-center">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div className="text-left">
+                    <p className="text-sm text-gray-500 font-medium">Correo electrónico</p>
+                    <a 
+                      href="mailto:defensoria.audiencia@canaldelcongreso.gob.mx"
+                      className="text-[#7746d6] font-semibold hover:text-[#6a38cf]"
+                    >
+                      defensoria.audiencia@canaldelcongreso.gob.mx
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </>
