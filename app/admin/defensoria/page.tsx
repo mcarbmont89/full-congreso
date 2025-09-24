@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from "react"
@@ -17,7 +16,7 @@ import { toast } from "@/components/ui/use-toast"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface DefensoriaContent {
-  id: string
+  id: string | number; // Changed to string | number to accommodate potential API responses
   section: string
   title: string
   content?: string
@@ -65,18 +64,41 @@ export default function DefensoriaAdmin() {
   const [editingContent, setEditingContent] = useState<DefensoriaContent | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
-  const [formData, setFormData] = useState({
-    section: '',
+  const [formData, setFormData] = useState<Omit<DefensoriaContent, 'id' | 'created_at' | 'updated_at'>>({
+    section: 'conoce_ley',
     title: '',
     content: '',
     image_url: '',
     file_url: '',
-    metadata: {} as any,
+    metadata: {},
     display_order: 0,
     is_active: true
   })
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>('')
+  const [editingId, setEditingId] = useState<string | number | null>(null)
+
+  const getSectionPlaceholder = (section: string, field: string) => {
+    const placeholders: Record<string, Record<string, string>> = {
+      conoce_ley: {
+        title: 'Conoce la Ley',
+        content: 'Descripción del documento'
+      },
+      defensora_profile: {
+        title: 'Mtra. Sandra Luz Hernández Bernal',
+        content: 'Biografía de la defensora...'
+      },
+      recent_requests: {
+        title: 'Pregunta frecuente',
+        content: 'Use los campos específicos abajo'
+      },
+      annual_reports: {
+        title: 'Informe 2024',
+        content: 'Descripción del informe'
+      }
+    }
+    return placeholders[section]?.[field] || ''
+  }
 
   useEffect(() => {
     loadContent()
@@ -213,11 +235,13 @@ export default function DefensoriaAdmin() {
         }
       }
 
-      const url = '/api/defensoria-audiencia'
-      const method = editingContent ? 'PUT' : 'POST'
+      const url = editingId 
+        ? '/api/defensoria-audiencia' 
+        : '/api/defensoria-audiencia'
 
-      const requestData = editingContent 
-        ? { ...finalFormData, id: editingContent.id }
+      const method = editingId ? 'PUT' : 'POST'
+      const payload = editingId 
+        ? { ...finalFormData, id: editingId }
         : finalFormData
 
       const response = await fetch(url, {
@@ -225,13 +249,13 @@ export default function DefensoriaAdmin() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(requestData)
+        body: JSON.stringify(payload)
       })
 
       if (response.ok) {
         toast({
           title: "Éxito",
-          description: editingContent ? "Contenido actualizado" : "Contenido creado"
+          description: editingId ? "Contenido actualizado" : "Contenido creado"
         })
 
         resetForm()
@@ -260,7 +284,7 @@ export default function DefensoriaAdmin() {
     setEditingContent(item)
     setFormData({
       section: item.section,
-      title: item.title,
+      title: item.title || '',
       content: item.content || '',
       image_url: item.image_url || '',
       file_url: item.file_url || '',
@@ -269,10 +293,11 @@ export default function DefensoriaAdmin() {
       is_active: item.is_active
     })
     setImagePreview(item.image_url || '')
+    setEditingId(item.id)
     setShowForm(true)
   }
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string | number) => {
     if (!confirm('¿Está seguro de que desea eliminar este contenido?')) {
       return
     }
@@ -324,17 +349,18 @@ export default function DefensoriaAdmin() {
     setSelectedFile(null)
     setImagePreview('')
     setShowForm(false)
+    setEditingId(null)
   }
 
   const renderFormFields = () => {
     const config = SECTION_CONFIG[activeTab as keyof typeof SECTION_CONFIG]
-    
+
     return (
       <div className="space-y-6">
         {/* Title Field */}
         <div>
           <Label htmlFor="title">
-            {activeTab === 'defensora_profile' ? 'Nombre de la Defensora' : 
+            {activeTab === 'defensora_profile' ? 'Nombre de la Defensora' :
              activeTab === 'conoce_ley' ? 'Nombre del Documento' :
              activeTab === 'recent_requests' ? 'Título de la Solicitud' :
              activeTab === 'annual_reports' ? 'Nombre del Informe' : 'Título'}
@@ -381,8 +407,8 @@ export default function DefensoriaAdmin() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="request_type">Tipo de Solicitud</Label>
-                <Select 
-                  value={formData.metadata?.type || ''} 
+                <Select
+                  value={formData.metadata?.type || ''}
                   onValueChange={(value) => handleMetadataChange('type', value)}
                 >
                   <SelectTrigger>
@@ -409,8 +435,8 @@ export default function DefensoriaAdmin() {
 
             <div>
               <Label htmlFor="request_status">Estado</Label>
-              <Select 
-                value={formData.metadata?.status || ''} 
+              <Select
+                value={formData.metadata?.status || ''}
                 onValueChange={(value) => handleMetadataChange('status', value)}
               >
                 <SelectTrigger>
@@ -455,8 +481,8 @@ export default function DefensoriaAdmin() {
 
               <div>
                 <Label htmlFor="report_type">Tipo de Informe</Label>
-                <Select 
-                  value={formData.metadata?.reportType || ''} 
+                <Select
+                  value={formData.metadata?.reportType || ''}
                   onValueChange={(value) => handleMetadataChange('reportType', value)}
                 >
                   <SelectTrigger>
@@ -591,7 +617,7 @@ export default function DefensoriaAdmin() {
           <CardContent>
             <form onSubmit={handleSubmit}>
               {renderFormFields()}
-              
+
               <div className="flex justify-end space-x-2 mt-6">
                 <Button type="button" variant="outline" onClick={resetForm}>
                   Cancelar
@@ -605,7 +631,7 @@ export default function DefensoriaAdmin() {
                   ) : (
                     <>
                       <Save className="w-4 h-4 mr-2" />
-                      {editingContent ? 'Actualizar' : 'Crear'}
+                      {editingId ? 'Actualizar' : 'Crear'}
                     </>
                   )}
                 </Button>
@@ -638,7 +664,7 @@ export default function DefensoriaAdmin() {
 
         {Object.entries(SECTION_CONFIG).map(([key, config]) => {
           const Icon = config.icon
-          const sectionContent = filteredContent
+          const sectionContent = filteredContent.filter(item => item.section === key)
 
           return (
             <TabsContent key={key} value={key}>
@@ -701,7 +727,7 @@ export default function DefensoriaAdmin() {
                         </TableHeader>
                         <TableBody>
                           {sectionContent.map((item) => (
-                            <TableRow key={item.id}>
+                            <TableRow key={item.id as string}>
                               <TableCell className="font-medium">
                                 <div>
                                   <p>{item.title}</p>

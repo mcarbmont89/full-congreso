@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from 'react'
@@ -6,80 +5,93 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Calendar, CheckCircle, Clock, FileText } from "lucide-react"
 
-interface RecentRequest {
-  id: string
-  title: string
-  content: string
-  metadata?: {
-    date?: string
-    status?: string
-    type?: string
-    description?: string
-  }
+interface DefensoriaContent {
+  id: number
+  section: string
+  title?: string
+  content?: string
+  image_url?: string
+  file_url?: string
+  metadata?: any
+  display_order: number
+  is_active: boolean
+  created_at: string
+  updated_at: string
+}
+
+interface CarouselItem {
+  question: string
+  answer: string
 }
 
 export default function RecentRequestsSection() {
-  const [requests, setRequests] = useState<RecentRequest[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [carouselData, setCarouselData] = useState<CarouselItem[]>([])
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [isLoading, setIsLoading] = useState(true) // Added isLoading state
 
   useEffect(() => {
-    fetchRecentRequests()
+    const fetchCarouselData = async () => {
+      try {
+        const response = await fetch('/api/defensoria-audiencia?section=recent_requests')
+        if (response.ok) {
+          const data = await response.json()
+          if (data && data.length > 0) {
+            const items = data.map((item: DefensoriaContent) => {
+              const metadata = item.metadata || {}
+              return {
+                question: metadata.question || item.title || '',
+                answer: metadata.answer || item.content || ''
+              }
+            })
+            setCarouselData(items)
+          } else {
+            // Fallback data if no database content
+            setCarouselData([
+              {
+                question: "¿Cómo puedo presentar una queja sobre el contenido del Canal del Congreso?",
+                answer: "Puedes presentar tu queja a través de nuestros formularios en línea, por correo electrónico o directamente en nuestras oficinas. Tu opinión es muy importante para nosotros."
+              },
+              {
+                question: "¿Qué tipo de programación maneja el Canal del Congreso?",
+                answer: "Transmitimos sesiones legislativas, programas informativos, debates, entrevistas y contenido educativo relacionado con el trabajo parlamentario y la democracia."
+              },
+              {
+                question: "¿Cómo puedo acceder a transmisiones anteriores?",
+                answer: "Todas nuestras transmisiones están disponibles en nuestro archivo digital y plataformas digitales oficiales para consulta pública las 24 horas del día."
+              }
+            ])
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching carousel data:', error)
+        // Set fallback data on error
+        setCarouselData([
+          {
+            question: "¿Cómo puedo presentar una queja sobre el contenido del Canal del Congreso?",
+            answer: "Puedes presentar tu queja a través de nuestros formularios en línea, por correo electrónico o directamente en nuestras oficinas."
+          }
+        ])
+      } finally { // Ensure isLoading is set to false after fetch
+        setIsLoading(false)
+      }
+    }
+
+    fetchCarouselData()
   }, [])
 
-  const fetchRecentRequests = async () => {
-    try {
-      const response = await fetch('/api/defensoria-audiencia?section=recent_requests')
-      
-      if (response.ok) {
-        const data = await response.json()
-        if (data && data.length > 0) {
-          setRequests(data)
-        } else {
-          // Default data if no CMS content
-          setRequests([
-            {
-              id: '1',
-              title: 'Mejora en la Calidad de Audio',
-              content: 'Solicitud atendida sobre la calidad del audio en las transmisiones en vivo del Canal 45.1.',
-              metadata: {
-                date: '2024-09-15',
-                status: 'Resuelto',
-                type: 'Sugerencia',
-                description: 'Se implementaron mejoras técnicas en el sistema de audio.'
-              }
-            },
-            {
-              id: '2',
-              title: 'Subtítulos para Personas con Discapacidad Auditiva',
-              content: 'Propuesta para incluir subtítulos en todas las transmisiones del Canal del Congreso.',
-              metadata: {
-                date: '2024-09-10',
-                status: 'En proceso',
-                type: 'Sugerencia',
-                description: 'Se está trabajando en la implementación de subtítulos automáticos.'
-              }
-            },
-            {
-              id: '3',
-              title: 'Felicitaciones por Cobertura Especial',
-              content: 'Reconocimiento por la excelente cobertura del período de sesiones ordinarias.',
-              metadata: {
-                date: '2024-09-05',
-                status: 'Resuelto',
-                type: 'Felicitaciones',
-                description: 'Agradecimiento por la profesionalidad en la cobertura legislativa.'
-              }
-            }
-          ])
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching recent requests:', error)
-    } finally {
-      setIsLoading(false)
-    }
+  const nextSlide = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === carouselData.length - 1 ? 0 : prevIndex + 1
+    )
   }
 
+  const prevSlide = () => {
+    setCurrentIndex((prevIndex) => 
+      prevIndex === 0 ? carouselData.length - 1 : prevIndex - 1
+    )
+  }
+
+  // Original helper functions (kept for potential future use or if not fully refactored)
   const getStatusColor = (status: string) => {
     switch (status?.toLowerCase()) {
       case 'resuelto':
@@ -117,82 +129,90 @@ export default function RecentRequestsSection() {
     }
   }
 
-  return (
-    <section className="py-12 md:py-16" style={{ backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')" }}>
-      <div className="container mx-auto px-4 md:px-6 max-w-6xl">
-        <h2 className="text-center font-black uppercase text-[22px] md:text-[28px] mb-8">
-          RECIENTES SOLICITUDES ATENDIDAS
-        </h2>
+  // Removed the card mapping and rendering logic from the original code
+  // as the new carousel structure replaces it.
 
-        {isLoading ? (
+  if (isLoading) { // Added loading state handling
+    return (
+      <section className="py-12 md:py-16" style={{ backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')" }}>
+        <div className="container mx-auto px-4 md:px-6 max-w-6xl">
+          <h2 className="text-center font-black uppercase text-[22px] md:text-[28px] mb-8">
+            RECIENTES SOLICITUDES ATENDIDAS
+          </h2>
           <div className="flex justify-center items-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {requests.map((request) => (
-              <Card
-                key={request.id}
-                className="group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border-0 bg-white overflow-hidden"
-              >
-                <CardHeader className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white">
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg font-semibold leading-tight group-hover:text-purple-100 transition-colors">
-                      {request.title}
-                    </CardTitle>
-                    {request.metadata?.status && getStatusIcon(request.metadata.status)}
-                  </div>
-                </CardHeader>
+        </div>
+      </section>
+    )
+  }
 
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    {/* Status and Type Badges */}
-                    <div className="flex flex-wrap gap-2">
-                      {request.metadata?.status && (
-                        <Badge className={`${getStatusColor(request.metadata.status)} font-medium`}>
-                          {request.metadata.status}
-                        </Badge>
-                      )}
-                      {request.metadata?.type && (
-                        <Badge className={`${getTypeColor(request.metadata.type)} font-medium`}>
-                          {request.metadata.type}
-                        </Badge>
-                      )}
-                    </div>
+  if (carouselData.length === 0) {
+    return null
+  }
 
-                    {/* Content */}
-                    <p className="text-gray-700 leading-relaxed">
-                      {request.content}
-                    </p>
+  return (
+    <section className="py-12 md:py-14 bg-white">
+      <div className="container mx-auto px-4 md:px-6">
+        <h2 className="text-center font-black text-[#1f1f1f] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
+          RECIENTES SOLICITUDES
+        </h2>
 
-                    {/* Description */}
-                    {request.metadata?.description && (
-                      <div className="bg-gray-50 p-3 rounded-lg border-l-4 border-purple-500">
-                        <p className="text-sm text-gray-600 font-medium">
-                          {request.metadata.description}
-                        </p>
-                      </div>
-                    )}
+        <div className="mx-auto max-w-4xl">
+          <div className="bg-[#7746d6] rounded-2xl p-8 md:p-10 text-white relative overflow-hidden">
+            {/* Carousel Content */}
+            <div className="relative min-h-[200px] flex items-center">
+              <div className="w-full">
+                <h3 className="text-[18px] md:text-[20px] font-bold mb-4">
+                  {carouselData[currentIndex]?.question}
+                </h3>
+                <p className="text-[15px] md:text-[16px] leading-relaxed opacity-95">
+                  {carouselData[currentIndex]?.answer}
+                </p>
+              </div>
+            </div>
 
-                    {/* Date */}
-                    {request.metadata?.date && (
-                      <div className="flex items-center text-sm text-gray-500 pt-2 border-t">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        <span>
-                          Atendido el {new Date(request.metadata.date).toLocaleDateString('es-MX', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                          })}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+            {/* Navigation Arrows */}
+            {carouselData.length > 1 && (
+              <>
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200"
+                  aria-label="Anterior solicitud"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-4 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200"
+                  aria-label="Siguiente solicitud"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </>
+            )}
+
+            {/* Dots Indicator */}
+            {carouselData.length > 1 && (
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+                {carouselData.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentIndex(index)}
+                    className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                      index === currentIndex ? 'bg-white' : 'bg-white/50'
+                    }`}
+                    aria-label={`Ir a solicitud ${index + 1}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </section>
   )
