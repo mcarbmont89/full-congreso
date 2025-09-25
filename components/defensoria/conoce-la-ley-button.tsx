@@ -63,7 +63,7 @@ export default function ConoceLaLeyButton() {
                  bg-[#7746d6] hover:bg-[#6a38cf] 
                  text-white text-[26px] font-bold transition shadow-lg"
     >
-      {buttonData?.title || 'Conoce la Ley'}
+      Conoce la Ley
     </button>
   )
 }
