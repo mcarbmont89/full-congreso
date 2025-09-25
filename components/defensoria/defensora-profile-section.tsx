@@ -46,7 +46,15 @@ export default function DefensoraProfileSection() {
   const defensoraImage = profileData?.image_url || "/images/defensora-photo.jpg"
 
   return (
-    <section className="py-12 md:py-14 bg-gradient-to-br from-purple-600 via-purple-700 to-purple-900">
+    <section 
+      className="py-12 md:py-14 relative overflow-hidden"
+      style={{
+        backgroundImage: "url('/images/defensoria-gradient-background.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat"
+      }}
+    >
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-center font-black text-white tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10 drop-shadow-lg">
           CONOCE A TU DEFENSORA
