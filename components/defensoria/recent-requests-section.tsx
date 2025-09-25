@@ -220,19 +220,19 @@ export default function RecentRequestsSection() {
                       <Check className="w-5 h-5 text-white" strokeWidth={3} />
                     </div>
 
-                    {/* Purple header with "PREGUNTA:" */}
+                    {/* Purple header with "PREGUNTA:" and question text */}
                     <div className="bg-[#8b5cdf] text-white px-6 py-4 relative">
-                      <h3 className="text-sm font-black tracking-wide uppercase">
+                      <h3 className="text-sm font-black tracking-wide uppercase mb-3">
                         PREGUNTA:
                       </h3>
+                      {/* Question text */}
+                      <p className="text-[14px] font-medium text-white leading-relaxed">
+                        {request.pregunta}
+                      </p>
                     </div>
 
                     {/* White content area */}
                     <div className="p-6">
-                      {/* Question text */}
-                      <p className="text-[14px] font-medium text-gray-800 mb-4 leading-relaxed">
-                        {request.pregunta}
-                      </p>
 
                       {/* Purple "RESPUESTA:" label */}
                       <div className="bg-[#8b5cdf] text-white px-4 py-2 mb-4 rounded">
