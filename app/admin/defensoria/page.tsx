@@ -217,18 +217,39 @@ export default function DefensoriaAdmin() {
 
       if (!allowedTypes.includes(fileExtension)) {
         setDialogMessage(`Solo se permiten archivos ${fileType === 'pdf' ? 'PDF' : 'Word (DOC, DOCX)'}`)
+        // Clear the file input
+        e.target.value = ''
         return
       }
 
       if (file.size > 50 * 1024 * 1024) {
         setDialogMessage('El archivo no puede ser mayor a 50MB')
+        // Clear the file input
+        e.target.value = ''
         return
+      }
+
+      // Additional validation for Word files
+      if (fileType === 'word') {
+        const validMimeTypes = [
+          'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+          'application/msword',
+          'application/octet-stream' // Sometimes .docx files are detected as this
+        ]
+        
+        if (!validMimeTypes.includes(file.type) && !fileExtension.match(/\.(doc|docx)$/)) {
+          setDialogMessage('Por favor selecciona un archivo Word válido (.doc o .docx)')
+          e.target.value = ''
+          return
+        }
       }
 
       if (fileType === 'pdf') {
         setSelectedPdfFile(file)
+        setSelectedWordFile(null) // Clear word file when PDF is selected
       } else {
         setSelectedWordFile(file)
+        setSelectedPdfFile(null) // Clear PDF file when Word is selected
       }
       setDialogMessage('')
     }
@@ -237,7 +258,7 @@ export default function DefensoriaAdmin() {
   const uploadFile = async (file: File): Promise<string> => {
     const uploadFormData = new FormData()
     uploadFormData.append('file', file)
-    uploadFormData.append('type', 'documents') // Assuming 'documents' is the correct type for API
+    uploadFormData.append('type', 'documents')
 
     const uploadResponse = await fetch('/api/upload', {
       method: 'POST',
@@ -245,11 +266,26 @@ export default function DefensoriaAdmin() {
     })
 
     if (!uploadResponse.ok) {
-      throw new Error(`Error uploading ${file.name}`)
+      const errorText = await uploadResponse.text()
+      let errorMessage = `Error uploading ${file.name}`
+      
+      try {
+        const errorJson = JSON.parse(errorText)
+        errorMessage = errorJson.error || errorMessage
+      } catch {
+        errorMessage = errorText || errorMessage
+      }
+      
+      throw new Error(errorMessage)
     }
 
     const uploadResult = await uploadResponse.json()
-    return uploadResult.url
+    
+    if (!uploadResult.url && !uploadResult.fileUrl && !uploadResult.documentUrl) {
+      throw new Error(`No se recibió URL válida para ${file.name}`)
+    }
+    
+    return uploadResult.url || uploadResult.fileUrl || uploadResult.documentUrl
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -746,15 +782,26 @@ export default function DefensoriaAdmin() {
     }
 
     setIsUploading(true)
+    setDialogMessage('Subiendo archivos...')
+    
     try {
       let pdfUrl = editingContent?.metadata?.pdfUrl || ''
       let wordUrl = editingContent?.metadata?.wordUrl || ''
 
       if (selectedPdfFile) {
-        pdfUrl = await uploadFile(selectedPdfFile)
+        try {
+          pdfUrl = await uploadFile(selectedPdfFile)
+        } catch (error) {
+          throw new Error(`Error al subir archivo PDF: ${error instanceof Error ? error.message : 'Error desconocido'}`)
+        }
       }
+      
       if (selectedWordFile) {
-        wordUrl = await uploadFile(selectedWordFile)
+        try {
+          wordUrl = await uploadFile(selectedWordFile)
+        } catch (error) {
+          throw new Error(`Error al subir archivo Word: ${error instanceof Error ? error.message : 'Error desconocido'}`)
+        }
       }
 
       // Create FormData instead of JSON
