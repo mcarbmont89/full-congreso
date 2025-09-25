@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Download, FileText, Calendar } from 'lucide-react'
+import { Download, FileText, User } from 'lucide-react'
 
 interface ReportItem {
   year: string
@@ -49,7 +49,7 @@ export default function AnnualReportsSection() {
             }).sort((a: ReportItem, b: ReportItem) => parseInt(b.year) - parseInt(a.year))
             setReports(reportItems)
           } else {
-            // Fallback data
+            // Fallback data with 6 years to match the design
             setReports([
               {
                 year: "2024",
@@ -74,6 +74,18 @@ export default function AnnualReportsSection() {
                 description: "INFORME ANUAL PLAN DE TRABAJO",
                 pdfUrl: "/files/informe-2021.pdf",
                 wordUrl: "/files/informe-2021.docx"
+              },
+              {
+                year: "2020",
+                description: "INFORME ANUAL PLAN DE TRABAJO",
+                pdfUrl: "/files/informe-2020.pdf",
+                wordUrl: "/files/informe-2020.docx"
+              },
+              {
+                year: "2019",
+                description: "INFORME ANUAL PLAN DE TRABAJO",
+                pdfUrl: "/files/informe-2019.pdf",
+                wordUrl: "/files/informe-2019.docx"
               }
             ])
           }
@@ -87,6 +99,36 @@ export default function AnnualReportsSection() {
             description: "INFORME ANUAL PLAN DE TRABAJO",
             pdfUrl: "/files/informe-2024.pdf",
             wordUrl: "/files/informe-2024.docx"
+          },
+          {
+            year: "2023", 
+            description: "INFORME ANUAL PLAN DE TRABAJO",
+            pdfUrl: "/files/informe-2023.pdf",
+            wordUrl: "/files/informe-2023.docx"
+          },
+          {
+            year: "2022",
+            description: "INFORME ANUAL PLAN DE TRABAJO", 
+            pdfUrl: "/files/informe-2022.pdf",
+            wordUrl: "/files/informe-2022.docx"
+          },
+          {
+            year: "2021",
+            description: "INFORME ANUAL PLAN DE TRABAJO",
+            pdfUrl: "/files/informe-2021.pdf",
+            wordUrl: "/files/informe-2021.docx"
+          },
+          {
+            year: "2020",
+            description: "INFORME ANUAL PLAN DE TRABAJO",
+            pdfUrl: "/files/informe-2020.pdf",
+            wordUrl: "/files/informe-2020.docx"
+          },
+          {
+            year: "2019",
+            description: "INFORME ANUAL PLAN DE TRABAJO",
+            pdfUrl: "/files/informe-2019.pdf",
+            wordUrl: "/files/informe-2019.docx"
           }
         ])
       } finally {
@@ -119,7 +161,7 @@ export default function AnnualReportsSection() {
         }}
       >
         <div className="container mx-auto px-4 md:px-6">
-          <h2 className="text-center font-black text-[#1f1f1f] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
+          <h2 className="text-center font-black text-[#4f148c] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
             INFORMES Y REPORTES
           </h2>
           <div className="flex justify-center">
@@ -144,61 +186,60 @@ export default function AnnualReportsSection() {
           INFORMES Y REPORTES
         </h2>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
-          {reports.map((report, index) => (
-            <Card key={index} className="bg-white rounded-2xl shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] overflow-hidden hover:shadow-[0_8px_25px_rgba(0,0,0,0.1)] transition-all duration-300">
-              <CardContent className="p-6 text-center">
-                {/* Año destacado */}
-                <div className="mb-4">
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full mb-3">
-                    <Calendar className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-3xl font-black text-purple-600 mb-2">
-                    {report.year}
-                  </h3>
-                </div>
+        {/* 3x2 Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {reports.slice(0, 6).map((report, index) => (
+            <div key={index} className="bg-gray-200 rounded-lg overflow-hidden shadow-md">
+              {/* Gray header with year */}
+              <div className="bg-gray-300 px-6 py-8 text-center">
+                <h3 className="text-5xl font-black text-gray-700">
+                  {report.year}
+                </h3>
+              </div>
 
-                {/* Descripción */}
-                <p className="text-sm font-medium text-gray-700 mb-6 leading-relaxed">
+              {/* Purple section with description */}
+              <div className="bg-[#8b5cdf] px-6 py-4 text-center">
+                <p className="text-white text-sm font-bold uppercase leading-tight">
                   {report.description}
                 </p>
+              </div>
 
-                {/* Botones de descarga */}
-                <div className="space-y-3">
+              {/* Download buttons */}
+              <div className="p-4 bg-gray-200">
+                <div className="flex justify-center space-x-3">
                   {report.pdfUrl && (
-                    <Button
+                    <button
                       onClick={() => handleDownload(report.pdfUrl!, report.year, 'pdf')}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                      className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200"
+                      title="Descargar PDF"
                     >
-                      <FileText className="w-4 h-4" />
-                      <span>PDF</span>
-                      <Download className="w-4 h-4" />
-                    </Button>
+                      <User className="w-5 h-5 text-white" />
+                    </button>
                   )}
                   
                   {report.wordUrl && (
-                    <Button
+                    <button
                       onClick={() => handleDownload(report.wordUrl!, report.year, 'word')}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                      className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200"
+                      title="Descargar Word"
                     >
-                      <FileText className="w-4 h-4" />
-                      <span>Word</span>
-                      <Download className="w-4 h-4" />
-                    </Button>
+                      <FileText className="w-5 h-5 text-white" />
+                    </button>
                   )}
 
                   {!report.pdfUrl && !report.wordUrl && (
-                    <Button
-                      disabled
-                      className="w-full bg-gray-300 text-gray-500 font-medium py-2.5 px-4 rounded-lg cursor-not-allowed"
-                    >
-                      <FileText className="w-4 h-4 mr-2" />
-                      Próximamente
-                    </Button>
+                    <div className="flex space-x-3">
+                      <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center">
+                        <User className="w-5 h-5 text-gray-600" />
+                      </div>
+                      <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center">
+                        <FileText className="w-5 h-5 text-gray-600" />
+                      </div>
+                    </div>
                   )}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
 
