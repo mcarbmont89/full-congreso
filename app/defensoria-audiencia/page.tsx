@@ -32,16 +32,16 @@ export default function DefensoriaAudienciaPage() {
               <Image
                 src="/images/defensoria-logo.png"
                 alt="Defensoría de Audiencia"
-                width={220}
-                height={110}
-                className="w-[160px] md:w-[200px] lg:w-[220px] h-auto"
+                width={360}
+                height={180}
+                className="w-[220px] md:w-[320px] lg:w-[400px] h-auto"
                 priority
               />
             </div>
 
             {/* Título + subtítulo */}
             <div className="text-center px-4">
-              <h1 className="font-black tracking-tight drop-shadow-xl text-[80px] sm:text-[100px] md:text-[130px] lg:text-[160px] xl:text-[180px] leading-[0.85] mb-2">
+              <h1 className="font-black tracking-tight drop-shadow-xl text-[80px] sm:text-[80px] md:text-[100px] lg:text-[140px] xl:text-[160px] leading-[0.85] mb-2">
                 ¡TU VOZ IMPORTA!
               </h1>
               <p className="text-[24px] sm:text-[26px] md:text-[28px] lg:text-[30px] font-normal drop-shadow-lg opacity-95">
