@@ -61,10 +61,10 @@ export default function DefensoraProfileSection() {
         </h2>
 
         <div className="mx-auto max-w-7xl">
-          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+          <div className="bg-transparent rounded-2xl overflow-hidden">
             <div className="grid grid-cols-1 lg:grid-cols-[0.8fr_1.2fr] gap-0 min-h-[500px]">
               {/* Imagen - Left side */}
-              <div className="relative bg-white flex items-center justify-center p-4">
+              <div className="relative bg-transparent flex items-center justify-center p-4">
                 <div className="relative w-full h-full max-w-[400px] max-h-[500px] aspect-[3/4]">
                   <Image
                     src={defensoraImage}
@@ -76,7 +76,7 @@ export default function DefensoraProfileSection() {
               </div>
 
               {/* Contenido - Right side */}
-              <div className="p-8 lg:p-12 flex flex-col justify-center text-white" style={{ backgroundColor: '#4f148c' }}>
+              <div className="p-8 lg:p-12 flex flex-col justify-center text-white bg-transparent">
                 <h3 className="text-[22px] md:text-[26px] font-bold text-white mb-6">
                   {defensoraName}
                 </h3>
