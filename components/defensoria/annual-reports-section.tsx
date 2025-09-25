@@ -66,13 +66,30 @@ export default function AnnualReportsSection() {
   }, [])
 
   const handleDownload = (fileUrl: string, year: string, fileType: string) => {
-    if (fileUrl) {
-      const link = document.createElement('a')
-      link.href = fileUrl
-      link.download = `informe-${year}.${fileType === 'pdf' ? 'pdf' : 'docx'}`
-      document.body.appendChild(link)
-      link.click()
-      document.body.removeChild(link)
+    if (fileUrl && fileUrl.trim() !== '') {
+      try {
+        // If it's a relative URL, make it absolute
+        const downloadUrl = fileUrl.startsWith('/') ? fileUrl : fileUrl
+        
+        const link = document.createElement('a')
+        link.href = downloadUrl
+        link.download = `informe-${year}.${fileType === 'pdf' ? 'pdf' : 'docx'}`
+        link.target = '_blank'
+        link.rel = 'noopener noreferrer'
+        
+        // Append to body, click, then remove
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        
+        console.log(`Downloading: ${downloadUrl}`)
+      } catch (error) {
+        console.error('Error downloading file:', error)
+        // Fallback: open in new tab
+        window.open(fileUrl, '_blank')
+      }
+    } else {
+      console.warn('No file URL provided for download')
     }
   }
 
@@ -133,24 +150,42 @@ export default function AnnualReportsSection() {
               {/* Download buttons */}
               <div className="p-4 bg-gray-200">
                 <div className="flex justify-center space-x-3">
-                  {report.pdfUrl && (
+                  {report.pdfUrl ? (
                     <button
-                      onClick={() => handleDownload(report.pdfUrl!, report.year, 'pdf')}
-                      className="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center transition-colors duration-200"
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDownload(report.pdfUrl!, report.year, 'pdf');
+                      }}
+                      className="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer z-10 relative"
                       title="Descargar PDF"
                     >
-                      <File className="w-5 h-5 text-white" />
+                      <File className="w-5 h-5 text-white pointer-events-none" />
                     </button>
+                  ) : (
+                    <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center cursor-not-allowed" title="PDF no disponible">
+                      <File className="w-5 h-5 text-gray-600" />
+                    </div>
                   )}
                   
-                  {report.wordUrl && (
+                  {report.wordUrl ? (
                     <button
-                      onClick={() => handleDownload(report.wordUrl!, report.year, 'word')}
-                      className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200"
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleDownload(report.wordUrl!, report.year, 'word');
+                      }}
+                      className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer z-10 relative"
                       title="Descargar Word"
                     >
-                      <FileText className="w-5 h-5 text-white" />
+                      <FileText className="w-5 h-5 text-white pointer-events-none" />
                     </button>
+                  ) : (
+                    <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center cursor-not-allowed" title="Word no disponible">
+                      <FileText className="w-5 h-5 text-gray-600" />
+                    </div>
                   )}
 
                   {!report.pdfUrl && !report.wordUrl && (
