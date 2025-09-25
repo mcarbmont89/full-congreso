@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from 'react'
@@ -60,7 +59,9 @@ export default function ConoceLaLeyButton() {
   return (
     <button
       onClick={handleDownload}
-      className="inline-flex h-8 items-center px-5 rounded-full bg-[#7746d6] hover:bg-[#6a38cf] text-white text-[13px] font-semibold transition"
+      className="inline-flex h-16 items-center px-10 rounded-full 
+                 bg-[#7746d6] hover:bg-[#6a38cf] 
+                 text-white text-[26px] font-bold transition shadow-lg"
     >
       {buttonData?.title || 'Conoce la Ley'}
     </button>
