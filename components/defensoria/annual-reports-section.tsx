@@ -49,88 +49,14 @@ export default function AnnualReportsSection() {
             }).sort((a: ReportItem, b: ReportItem) => parseInt(b.year) - parseInt(a.year))
             setReports(reportItems)
           } else {
-            // Fallback data with 6 years to match the design
-            setReports([
-              {
-                year: "2024",
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                pdfUrl: "/files/informe-2024.pdf",
-                wordUrl: "/files/informe-2024.docx"
-              },
-              {
-                year: "2023", 
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                pdfUrl: "/files/informe-2023.pdf",
-                wordUrl: "/files/informe-2023.docx"
-              },
-              {
-                year: "2022",
-                description: "INFORME ANUAL PLAN DE TRABAJO", 
-                pdfUrl: "/files/informe-2022.pdf",
-                wordUrl: "/files/informe-2022.docx"
-              },
-              {
-                year: "2021",
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                pdfUrl: "/files/informe-2021.pdf",
-                wordUrl: "/files/informe-2021.docx"
-              },
-              {
-                year: "2020",
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                pdfUrl: "/files/informe-2020.pdf",
-                wordUrl: "/files/informe-2020.docx"
-              },
-              {
-                year: "2019",
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                pdfUrl: "/files/informe-2019.pdf",
-                wordUrl: "/files/informe-2019.docx"
-              }
-            ])
+            // Show empty state when no reports from CMS
+            setReports([])
           }
         }
       } catch (error) {
         console.error('Error fetching annual reports:', error)
-        // Set fallback data on error
-        setReports([
-          {
-            year: "2024",
-            description: "INFORME ANUAL PLAN DE TRABAJO",
-            pdfUrl: "/files/informe-2024.pdf",
-            wordUrl: "/files/informe-2024.docx"
-          },
-          {
-            year: "2023", 
-            description: "INFORME ANUAL PLAN DE TRABAJO",
-            pdfUrl: "/files/informe-2023.pdf",
-            wordUrl: "/files/informe-2023.docx"
-          },
-          {
-            year: "2022",
-            description: "INFORME ANUAL PLAN DE TRABAJO", 
-            pdfUrl: "/files/informe-2022.pdf",
-            wordUrl: "/files/informe-2022.docx"
-          },
-          {
-            year: "2021",
-            description: "INFORME ANUAL PLAN DE TRABAJO",
-            pdfUrl: "/files/informe-2021.pdf",
-            wordUrl: "/files/informe-2021.docx"
-          },
-          {
-            year: "2020",
-            description: "INFORME ANUAL PLAN DE TRABAJO",
-            pdfUrl: "/files/informe-2020.pdf",
-            wordUrl: "/files/informe-2020.docx"
-          },
-          {
-            year: "2019",
-            description: "INFORME ANUAL PLAN DE TRABAJO",
-            pdfUrl: "/files/informe-2019.pdf",
-            wordUrl: "/files/informe-2019.docx"
-          }
-        ])
+        // Show empty state on error
+        setReports([])
       } finally {
         setIsLoading(false)
       }
