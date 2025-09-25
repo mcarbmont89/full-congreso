@@ -14,7 +14,7 @@ export default function DefensoriaAudienciaPage() {
     <>
       <main className="min-h-screen">
         {/* ===================== HERO ===================== */}
-        <section className="relative w-full h-[800px] md:h-[600px] overflow-hidden">
+        <section className="relative w-full h-[900px] md:h-[800px] lg:h-[900px] overflow-hidden">
           {/* Fondo + overlay */}
           <Image
             src="/images/defensoria-fondo-header.png"
