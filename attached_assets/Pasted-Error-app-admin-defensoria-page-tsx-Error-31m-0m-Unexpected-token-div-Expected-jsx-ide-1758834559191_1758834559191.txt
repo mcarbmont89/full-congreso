@@ -1,0 +1,28 @@
+Error: ./app/admin/defensoria/page.tsx
+Error:   [31m×[0m Unexpected token `div`. Expected jsx identifier
+     ╭─[[36;1;4m/home/runner/workspace/app/admin/defensoria/page.tsx[0m:859:1]
+ [2m856[0m │ 
+ [2m857[0m │   // --- Main view displaying tabs and tables ---
+ [2m858[0m │   return (
+ [2m859[0m │     <div className="space-y-6 p-6">
+     · [35;1m     ───[0m
+ [2m860[0m │       <div className="flex items-center justify-between">
+ [2m861[0m │         <h1 className="text-3xl font-bold">Gestión de Defensoría de Audiencia</h1>
+ [2m862[0m │       </div>
+     ╰────
+
+Caused by:
+    Syntax Error
+    at BuildError (webpack-internal:///(pages-dir-browser)/./node_modules/next/dist/client/components/react-dev-overlay/ui/container/build-error.js:43:41)
+    at Object.react_stack_bottom_frame (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:23864:20)
+    at renderWithHooksAgain (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:5630:20)
+    at renderWithHooks (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:5542:22)
+    at updateFunctionComponent (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:8898:19)
+    at beginWork (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:10523:18)
+    at runWithFiberInDEV (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:1520:30)
+    at performUnitOfWork (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:15133:22)
+    at workLoopSync (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:14957:41)
+    at renderRootSync (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:14937:11)
+    at performWorkOnRoot (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:14420:13)
+    at performWorkOnRootViaSchedulerTask (webpack-internal:///(pages-dir-browser)/./node_modules/react-dom/cjs/react-dom-client.development.js:16217:7)
+    at MessagePort.performWorkUntilDeadline (webpack-internal:///(pages-dir-browser)/./node_modules/scheduler/cjs/scheduler.development.js:45:48)
