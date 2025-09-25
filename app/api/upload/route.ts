@@ -41,13 +41,19 @@ function detectFileType(buffer: Buffer): string | null {
     // DOCX (ZIP format with specific content)
     if (buffer.subarray(0, 4).equals(Buffer.from([0x50, 0x4B, 0x03, 0x04]))) {
       // This is a ZIP file, could be DOCX - need deeper inspection
-      const content = buffer.toString('utf8', 30, 200)
-      if (content.includes('word/') || content.includes('docProps/')) {
-        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      try {
+        const content = buffer.toString('utf8', 0, Math.min(buffer.length, 1000))
+        if (content.includes('word/') || content.includes('docProps/') || 
+            content.includes('wordprocessingml') || content.includes('application/vnd.openxmlformats')) {
+          return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        }
+      } catch (e) {
+        // If UTF-8 conversion fails, check filename extension as fallback
+        // This will be handled by the caller
       }
     }
     
-    // DOC (older format)
+    // DOC (older format - OLE2 compound document)
     if (buffer.subarray(0, 8).equals(Buffer.from([0xD0, 0xCF, 0x11, 0xE0, 0xA1, 0xB1, 0x1A, 0xE1]))) {
       return 'application/msword'
     }
@@ -72,10 +78,28 @@ export async function POST(request: NextRequest) {
 
     // Server-side file type detection based on file content (magic bytes)
     const fileBuffer = Buffer.from(await file.arrayBuffer())
-    const detectedType = detectFileType(fileBuffer)
+    let detectedType = detectFileType(fileBuffer)
+    
+    // Fallback: if magic byte detection fails, use file extension
+    if (!detectedType) {
+      const fileName = file.name.toLowerCase()
+      if (fileName.endsWith('.docx')) {
+        detectedType = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+      } else if (fileName.endsWith('.doc')) {
+        detectedType = 'application/msword'
+      } else if (fileName.endsWith('.pdf')) {
+        detectedType = 'application/pdf'
+      } else if (fileName.endsWith('.mp3')) {
+        detectedType = 'audio/mpeg'
+      } else if (fileName.endsWith('.png')) {
+        detectedType = 'image/png'
+      } else if (fileName.endsWith('.jpg') || fileName.endsWith('.jpeg')) {
+        detectedType = 'image/jpeg'
+      }
+    }
     
     if (!detectedType) {
-      return NextResponse.json({ error: 'Unable to determine file type' }, { status: 400 })
+      return NextResponse.json({ error: 'Unable to determine file type. Please ensure the file is a valid PDF, Word document, image, or audio file.' }, { status: 400 })
     }
 
     const isAudio = detectedType.startsWith('audio/')
