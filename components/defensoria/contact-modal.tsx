@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
-import { Mail, X } from "lucide-react"
+import { X } from "lucide-react"
 
 interface ContactModalProps {
   type: 'Queja' | 'Sugerencia' | 'Felicitaciones'
@@ -298,22 +298,7 @@ export default function ContactModal({ type, children }: ContactModalProps) {
             </div>
           </div>
 
-          {/* Information Notice */}
-          <div className="p-4 rounded-lg border-l-4 border-purple-400 bg-purple-50">
-            <div className="flex items-start space-x-3">
-              <Mail className="w-5 h-5 mt-0.5 text-purple-600" />
-              <div>
-                <h4 className="font-medium text-purple-800">Información importante:</h4>
-                <p className="text-sm mt-1 text-purple-700">
-                  Su {type.toLowerCase()} será enviada directamente a la Defensoría de Audiencia del Canal del Congreso. 
-                  Recibirá una confirmación por correo electrónico y nuestro equipo se pondrá en contacto con usted a la brevedad.
-                </p>
-                <p className="text-sm mt-2 font-medium text-purple-800">
-                  Correo de contacto: defensoria.audiencia@canaldelcongreso.gob.mx
-                </p>
-              </div>
-            </div>
-          </div>
+          
 
           <DialogFooter className="flex justify-end space-x-3 pt-6 border-t">
             <Button
