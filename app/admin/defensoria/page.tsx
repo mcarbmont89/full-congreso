@@ -1208,7 +1208,7 @@ export default function DefensoriaAdmin() {
                           </DialogContent>
                         </Dialog>
                       </div>
-                    </div>
+                    ) : null}
                   </CardContent>
                 </Card>
               </TabsContent>
