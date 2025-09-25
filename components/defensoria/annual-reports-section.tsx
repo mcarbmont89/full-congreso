@@ -49,14 +49,88 @@ export default function AnnualReportsSection() {
             }).sort((a: ReportItem, b: ReportItem) => parseInt(b.year) - parseInt(a.year))
             setReports(reportItems)
           } else {
-            // Show empty state when no reports from CMS
-            setReports([])
+            // Fallback data with 6 years to match the design
+            setReports([
+              {
+                year: "2024",
+                description: "INFORME ANUAL PLAN DE TRABAJO",
+                pdfUrl: "/files/informe-2024.pdf",
+                wordUrl: "/files/informe-2024.docx"
+              },
+              {
+                year: "2023", 
+                description: "INFORME ANUAL PLAN DE TRABAJO",
+                pdfUrl: "/files/informe-2023.pdf",
+                wordUrl: "/files/informe-2023.docx"
+              },
+              {
+                year: "2022",
+                description: "INFORME ANUAL PLAN DE TRABAJO", 
+                pdfUrl: "/files/informe-2022.pdf",
+                wordUrl: "/files/informe-2022.docx"
+              },
+              {
+                year: "2021",
+                description: "INFORME ANUAL PLAN DE TRABAJO",
+                pdfUrl: "/files/informe-2021.pdf",
+                wordUrl: "/files/informe-2021.docx"
+              },
+              {
+                year: "2020",
+                description: "INFORME ANUAL PLAN DE TRABAJO",
+                pdfUrl: "/files/informe-2020.pdf",
+                wordUrl: "/files/informe-2020.docx"
+              },
+              {
+                year: "2019",
+                description: "INFORME ANUAL PLAN DE TRABAJO",
+                pdfUrl: "/files/informe-2019.pdf",
+                wordUrl: "/files/informe-2019.docx"
+              }
+            ])
           }
         }
       } catch (error) {
         console.error('Error fetching annual reports:', error)
-        // Show empty state on error
-        setReports([])
+        // Set fallback data on error
+        setReports([
+          {
+            year: "2024",
+            description: "INFORME ANUAL PLAN DE TRABAJO",
+            pdfUrl: "/files/informe-2024.pdf",
+            wordUrl: "/files/informe-2024.docx"
+          },
+          {
+            year: "2023", 
+            description: "INFORME ANUAL PLAN DE TRABAJO",
+            pdfUrl: "/files/informe-2023.pdf",
+            wordUrl: "/files/informe-2023.docx"
+          },
+          {
+            year: "2022",
+            description: "INFORME ANUAL PLAN DE TRABAJO", 
+            pdfUrl: "/files/informe-2022.pdf",
+            wordUrl: "/files/informe-2022.docx"
+          },
+          {
+            year: "2021",
+            description: "INFORME ANUAL PLAN DE TRABAJO",
+            pdfUrl: "/files/informe-2021.pdf",
+            wordUrl: "/files/informe-2021.docx"
+          },
+          {
+            year: "2020",
+            description: "INFORME ANUAL PLAN DE TRABAJO",
+            pdfUrl: "/files/informe-2020.pdf",
+            wordUrl: "/files/informe-2020.docx"
+          },
+          {
+            year: "2019",
+            description: "INFORME ANUAL PLAN DE TRABAJO",
+            pdfUrl: "/files/informe-2019.pdf",
+            wordUrl: "/files/informe-2019.docx"
+          }
+        ])
       } finally {
         setIsLoading(false)
       }
@@ -66,30 +140,13 @@ export default function AnnualReportsSection() {
   }, [])
 
   const handleDownload = (fileUrl: string, year: string, fileType: string) => {
-    if (fileUrl && fileUrl.trim() !== '') {
-      try {
-        // If it's a relative URL, make it absolute
-        const downloadUrl = fileUrl.startsWith('/') ? fileUrl : fileUrl
-        
-        const link = document.createElement('a')
-        link.href = downloadUrl
-        link.download = `informe-${year}.${fileType === 'pdf' ? 'pdf' : 'docx'}`
-        link.target = '_blank'
-        link.rel = 'noopener noreferrer'
-        
-        // Append to body, click, then remove
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        
-        console.log(`Downloading: ${downloadUrl}`)
-      } catch (error) {
-        console.error('Error downloading file:', error)
-        // Fallback: open in new tab
-        window.open(fileUrl, '_blank')
-      }
-    } else {
-      console.warn('No file URL provided for download')
+    if (fileUrl) {
+      const link = document.createElement('a')
+      link.href = fileUrl
+      link.download = `informe-${year}.${fileType === 'pdf' ? 'pdf' : 'docx'}`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
     }
   }
 
@@ -150,42 +207,24 @@ export default function AnnualReportsSection() {
               {/* Download buttons */}
               <div className="p-4 bg-gray-200">
                 <div className="flex justify-center space-x-3">
-                  {report.pdfUrl ? (
+                  {report.pdfUrl && (
                     <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleDownload(report.pdfUrl!, report.year, 'pdf');
-                      }}
-                      className="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer z-10 relative"
+                      onClick={() => handleDownload(report.pdfUrl!, report.year, 'pdf')}
+                      className="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center transition-colors duration-200"
                       title="Descargar PDF"
                     >
-                      <File className="w-5 h-5 text-white pointer-events-none" />
+                      <File className="w-5 h-5 text-white" />
                     </button>
-                  ) : (
-                    <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center cursor-not-allowed" title="PDF no disponible">
-                      <File className="w-5 h-5 text-gray-600" />
-                    </div>
                   )}
                   
-                  {report.wordUrl ? (
+                  {report.wordUrl && (
                     <button
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleDownload(report.wordUrl!, report.year, 'word');
-                      }}
-                      className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer z-10 relative"
+                      onClick={() => handleDownload(report.wordUrl!, report.year, 'word')}
+                      className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200"
                       title="Descargar Word"
                     >
-                      <FileText className="w-5 h-5 text-white pointer-events-none" />
+                      <FileText className="w-5 h-5 text-white" />
                     </button>
-                  ) : (
-                    <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center cursor-not-allowed" title="Word no disponible">
-                      <FileText className="w-5 h-5 text-gray-600" />
-                    </div>
                   )}
 
                   {!report.pdfUrl && !report.wordUrl && (
