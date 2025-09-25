@@ -156,7 +156,7 @@ export default function DefensoriaAudienciaPage() {
 
             <div className="mx-auto max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-7">
               {/* Card 1 */}
-              <div className="rounded-2xl bg-white shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
+              <div className="rounded-2xl bg-gray-100 shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
                 <div className="flex justify-center mb-4">
                   <Image
                     src="/images/defensoria-icono-1.png"
@@ -176,7 +176,7 @@ export default function DefensoriaAudienciaPage() {
               </div>
 
               {/* Card 2 con divisores laterales */}
-              <div className="relative rounded-2xl bg-white shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
+              <div className="relative rounded-2xl bg-gray-100 shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
                 <span className="hidden md:block absolute -left-4 top-6 bottom-6 w-[2px] bg-[#7d4bcd] opacity-60" />
                 <span className="hidden md:block absolute -right-4 top-6 bottom-6 w-[2px] bg-[#7d4bcd] opacity-60" />
                 <div className="flex justify-center mb-4">
@@ -198,7 +198,7 @@ export default function DefensoriaAudienciaPage() {
               </div>
 
               {/* Card 3 */}
-              <div className="rounded-2xl bg-white shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
+              <div className="rounded-2xl bg-gray-100 shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] p-6 text-center">
                 <div className="flex justify-center mb-4">
                   <Image
                     src="/images/defensoria-icono-3.png"
