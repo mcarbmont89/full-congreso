@@ -84,7 +84,7 @@ export default async function NewsPage() {
   // Automatically publish any scheduled news that should now be live
   try {
     await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/news/publish-scheduled`,
+      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhoHola st:3000"}/api/news/publish-scheduled`,
       {
         method: "POST",
         cache: "no-store",
