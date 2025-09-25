@@ -104,25 +104,8 @@ export default function ContactModal({ type, children }: ContactModalProps) {
   }
 
   const getTypeColor = () => {
-    switch (type) {
-      case 'Queja':
-        return 'text-red-600 border-red-200 bg-red-50'
-      case 'Sugerencia':
-        return 'text-blue-600 border-blue-200 bg-blue-50'
-      case 'Felicitaciones':
-        return 'text-green-600 border-green-200 bg-green-50'
-    }
-  }
-
-  const getTypeIcon = () => {
-    switch (type) {
-      case 'Queja':
-        return '⚠️'
-      case 'Sugerencia':
-        return '💡'
-      case 'Felicitaciones':
-        return '🎉'
-    }
+    // Use consistent purple theme for all types to maintain professional appearance
+    return 'text-purple-700 border-purple-200 bg-purple-50'
   }
 
   return (
@@ -132,33 +115,26 @@ export default function ContactModal({ type, children }: ContactModalProps) {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className={`p-3 rounded-full ${getTypeColor()}`}>
-                <span className="text-2xl">{getTypeIcon()}</span>
-              </div>
-              <div>
-                <DialogTitle className="text-2xl font-bold">
-                  {type} - Defensoría de Audiencia
-                </DialogTitle>
-                <DialogDescription className="text-gray-600 mt-1">
-                  Complete el formulario para enviar su {type.toLowerCase()} a la Defensoría de Audiencia
-                </DialogDescription>
-              </div>
-            </div>
+          <div className="text-center mb-6">
+            <DialogTitle className="text-2xl font-bold text-purple-800 mb-2">
+              {type} - Defensoría de Audiencia
+            </DialogTitle>
+            <DialogDescription className="text-gray-600">
+              Complete el formulario para enviar su {type.toLowerCase()} a la Defensoría de Audiencia
+            </DialogDescription>
           </div>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Contact Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
+            <h3 className="text-lg font-semibold text-purple-800 border-b border-purple-200 pb-2">
               Nombre y Apellido <span className="text-sm font-normal text-gray-500">(Obligatorio)</span>
             </h3>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="firstName" className="text-sm font-medium text-purple-700">
                   Primer nombre
                 </Label>
                 <Input
@@ -167,13 +143,13 @@ export default function ContactModal({ type, children }: ContactModalProps) {
                   value={formData.firstName || ''}
                   onChange={(e) => handleInputChange('firstName', e.target.value)}
                   placeholder=""
-                  className="mt-1"
+                  className="mt-1 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                   required
                 />
               </div>
               
               <div>
-                <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="lastName" className="text-sm font-medium text-purple-700">
                   Segundo nombre
                 </Label>
                 <Input
@@ -182,12 +158,12 @@ export default function ContactModal({ type, children }: ContactModalProps) {
                   value={formData.lastName || ''}
                   onChange={(e) => handleInputChange('lastName', e.target.value)}
                   placeholder=""
-                  className="mt-1"
+                  className="mt-1 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                 />
               </div>
 
               <div>
-                <Label htmlFor="surname" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="surname" className="text-sm font-medium text-purple-700">
                   Apellido
                 </Label>
                 <Input
@@ -196,7 +172,7 @@ export default function ContactModal({ type, children }: ContactModalProps) {
                   value={formData.surname || ''}
                   onChange={(e) => handleInputChange('surname', e.target.value)}
                   placeholder=""
-                  className="mt-1"
+                  className="mt-1 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                   required
                 />
               </div>
@@ -204,7 +180,7 @@ export default function ContactModal({ type, children }: ContactModalProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="email" className="text-sm font-medium text-purple-700">
                   Correo electrónico <span className="text-sm font-normal text-gray-500">(Obligatorio)</span>
                 </Label>
                 <Input
@@ -213,13 +189,13 @@ export default function ContactModal({ type, children }: ContactModalProps) {
                   value={formData.email}
                   onChange={(e) => handleInputChange('email', e.target.value)}
                   placeholder="example@example.com"
-                  className="mt-1"
+                  className="mt-1 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                   required
                 />
               </div>
 
               <div>
-                <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="phone" className="text-sm font-medium text-purple-700">
                   Celular
                 </Label>
                 <Input
@@ -228,7 +204,7 @@ export default function ContactModal({ type, children }: ContactModalProps) {
                   value={formData.phone}
                   onChange={(e) => handleInputChange('phone', e.target.value)}
                   placeholder=""
-                  className="mt-1"
+                  className="mt-1 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                 />
               </div>
             </div>
@@ -238,16 +214,16 @@ export default function ContactModal({ type, children }: ContactModalProps) {
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="requestType" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="requestType" className="text-sm font-medium text-purple-700">
                   Tipo de solicitud
                 </Label>
-                <div className="mt-1 p-3 bg-gray-100 rounded-md border">
-                  <span className="font-medium">{type}</span>
+                <div className="mt-1 p-3 bg-purple-50 rounded-md border border-purple-200">
+                  <span className="font-medium text-purple-800">{type}</span>
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="subject" className="text-sm font-medium text-gray-700">
+                <Label htmlFor="subject" className="text-sm font-medium text-purple-700">
                   Solicitud de información
                 </Label>
                 <Input
@@ -256,13 +232,13 @@ export default function ContactModal({ type, children }: ContactModalProps) {
                   value={formData.subject}
                   onChange={(e) => handleInputChange('subject', e.target.value)}
                   placeholder=""
-                  className="mt-1"
+                  className="mt-1 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                 />
               </div>
             </div>
             
             <div>
-              <Label htmlFor="subject2" className="text-sm font-medium text-gray-700">
+              <Label htmlFor="subject2" className="text-sm font-medium text-purple-700">
                 Tema o asunto <span className="text-sm font-normal text-gray-500">(Campo corto)</span>
               </Label>
               <Input
@@ -271,12 +247,12 @@ export default function ContactModal({ type, children }: ContactModalProps) {
                 value={formData.subject2 || ''}
                 onChange={(e) => handleInputChange('subject2', e.target.value)}
                 placeholder=""
-                className="mt-1"
+                className="mt-1 border-gray-300 focus:border-purple-500 focus:ring-purple-500"
               />
             </div>
 
             <div>
-              <Label htmlFor="message" className="text-sm font-medium text-gray-700">
+              <Label htmlFor="message" className="text-sm font-medium text-purple-700">
                 Mensaje / Descripción <span className="text-sm font-normal text-gray-500">(Campo largo)</span>
               </Label>
               <Textarea
@@ -284,13 +260,13 @@ export default function ContactModal({ type, children }: ContactModalProps) {
                 value={formData.message}
                 onChange={(e) => handleInputChange('message', e.target.value)}
                 placeholder=""
-                className="mt-1 min-h-[120px]"
+                className="mt-1 min-h-[120px] border-gray-300 focus:border-purple-500 focus:ring-purple-500"
                 required
               />
             </div>
 
             <div>
-              <Label htmlFor="attachment" className="text-sm font-medium text-gray-700">
+              <Label htmlFor="attachment" className="text-sm font-medium text-purple-700">
                 Archivo adjunto <span className="text-sm font-normal text-gray-500">(opcional, para evidencia)</span>
               </Label>
               <div className="mt-1 flex items-center gap-2">
@@ -311,7 +287,7 @@ export default function ContactModal({ type, children }: ContactModalProps) {
                   type="button"
                   variant="outline"
                   onClick={() => document.getElementById('attachment')?.click()}
-                  className="px-4 py-2"
+                  className="px-4 py-2 border-purple-300 text-purple-700 hover:bg-purple-50"
                 >
                   EXAMINAR
                 </Button>
@@ -323,16 +299,16 @@ export default function ContactModal({ type, children }: ContactModalProps) {
           </div>
 
           {/* Information Notice */}
-          <div className={`p-4 rounded-lg border-l-4 ${getTypeColor()}`}>
+          <div className="p-4 rounded-lg border-l-4 border-purple-400 bg-purple-50">
             <div className="flex items-start space-x-3">
-              <Mail className="w-5 h-5 mt-0.5" />
+              <Mail className="w-5 h-5 mt-0.5 text-purple-600" />
               <div>
-                <h4 className="font-medium">Información importante:</h4>
-                <p className="text-sm mt-1">
+                <h4 className="font-medium text-purple-800">Información importante:</h4>
+                <p className="text-sm mt-1 text-purple-700">
                   Su {type.toLowerCase()} será enviada directamente a la Defensoría de Audiencia del Canal del Congreso. 
                   Recibirá una confirmación por correo electrónico y nuestro equipo se pondrá en contacto con usted a la brevedad.
                 </p>
-                <p className="text-sm mt-2 font-medium">
+                <p className="text-sm mt-2 font-medium text-purple-800">
                   Correo de contacto: defensoria.audiencia@canaldelcongreso.gob.mx
                 </p>
               </div>
