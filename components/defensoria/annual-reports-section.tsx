@@ -2,30 +2,34 @@
 "use client"
 
 import { useState, useEffect } from 'react'
-import Image from "next/image"
-
-interface DefensoriaContent {
-  id: number
-  section: string
-  title?: string
-  content?: string
-  image_url?: string
-  file_url?: string
-  metadata?: any
-  display_order: number
-  is_active: boolean
-  created_at: string
-  updated_at: string
-}
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Download, FileText, Calendar } from 'lucide-react'
 
 interface ReportItem {
   year: string
   description: string
-  fileUrl: string
+  pdfUrl?: string
+  wordUrl?: string
+}
+
+interface DefensoriaContent {
+  id: string
+  title: string
+  content: string
+  file_url?: string
+  metadata?: {
+    year?: string
+    description?: string
+    fileType?: string
+    pdfUrl?: string
+    wordUrl?: string
+  }
 }
 
 export default function AnnualReportsSection() {
   const [reports, setReports] = useState<ReportItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -39,7 +43,8 @@ export default function AnnualReportsSection() {
               return {
                 year: metadata.year || item.title || '',
                 description: metadata.description || item.content || '',
-                fileUrl: item.file_url || ''
+                pdfUrl: metadata.pdfUrl || (metadata.fileType === 'pdf' ? item.file_url : ''),
+                wordUrl: metadata.wordUrl || (metadata.fileType === 'word' ? item.file_url : '')
               }
             }).sort((a: ReportItem, b: ReportItem) => parseInt(b.year) - parseInt(a.year))
             setReports(reportItems)
@@ -49,61 +54,80 @@ export default function AnnualReportsSection() {
               {
                 year: "2024",
                 description: "INFORME ANUAL PLAN DE TRABAJO",
-                fileUrl: "/files/informe-2024.pdf"
+                pdfUrl: "/files/informe-2024.pdf",
+                wordUrl: "/files/informe-2024.docx"
               },
               {
                 year: "2023", 
                 description: "INFORME ANUAL PLAN DE TRABAJO",
-                fileUrl: "/files/informe-2023.pdf"
+                pdfUrl: "/files/informe-2023.pdf",
+                wordUrl: "/files/informe-2023.docx"
               },
               {
                 year: "2022",
                 description: "INFORME ANUAL PLAN DE TRABAJO", 
-                fileUrl: "/files/informe-2022.pdf"
+                pdfUrl: "/files/informe-2022.pdf",
+                wordUrl: "/files/informe-2022.docx"
               },
               {
                 year: "2021",
                 description: "INFORME ANUAL PLAN DE TRABAJO",
-                fileUrl: "/files/informe-2021.pdf"
-              },
-              {
-                year: "2020",
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                fileUrl: "/files/informe-2020.pdf"
-              },
-              {
-                year: "2019",
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                fileUrl: "/files/informe-2019.pdf"
+                pdfUrl: "/files/informe-2021.pdf",
+                wordUrl: "/files/informe-2021.docx"
               }
             ])
           }
         }
       } catch (error) {
-        console.error('Error fetching reports:', error)
+        console.error('Error fetching annual reports:', error)
         // Set fallback data on error
         setReports([
           {
             year: "2024",
             description: "INFORME ANUAL PLAN DE TRABAJO",
-            fileUrl: "/files/informe-2024.pdf"
+            pdfUrl: "/files/informe-2024.pdf",
+            wordUrl: "/files/informe-2024.docx"
           }
         ])
+      } finally {
+        setIsLoading(false)
       }
     }
 
     fetchReports()
   }, [])
 
-  const handleDownload = (fileUrl: string, year: string) => {
+  const handleDownload = (fileUrl: string, year: string, fileType: string) => {
     if (fileUrl) {
       const link = document.createElement('a')
       link.href = fileUrl
-      link.download = `informe-${year}.pdf`
+      link.download = `informe-${year}.${fileType === 'pdf' ? 'pdf' : 'docx'}`
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
     }
+  }
+
+  if (isLoading) {
+    return (
+      <section 
+        className="py-12 md:py-14 bg-white"
+        style={{
+          backgroundImage: "url('/images/defensoria-micrositio-fondo-new.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="container mx-auto px-4 md:px-6">
+          <h2 className="text-center font-black text-[#1f1f1f] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
+            INFORMES Y REPORTES
+          </h2>
+          <div className="flex justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+          </div>
+        </div>
+      </section>
+    )
   }
 
   return (
@@ -120,48 +144,75 @@ export default function AnnualReportsSection() {
           INFORMES Y REPORTES
         </h2>
 
-        <div className="mx-auto max-w-6xl">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {reports.map((report, index) => (
-              <div 
-                key={index}
-                className="bg-white rounded-2xl shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd]/20 p-6 text-center hover:shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-all duration-300 cursor-pointer"
-                onClick={() => handleDownload(report.fileUrl, report.year)}
-              >
-                {/* Year */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          {reports.map((report, index) => (
+            <Card key={index} className="bg-white rounded-2xl shadow-[0_6px_20px_rgba(0,0,0,0.07)] border border-[#7d4bcd] overflow-hidden hover:shadow-[0_8px_25px_rgba(0,0,0,0.1)] transition-all duration-300">
+              <CardContent className="p-6 text-center">
+                {/* Año destacado */}
                 <div className="mb-4">
-                  <h3 className="text-[36px] md:text-[42px] font-black text-[#7746d6] leading-none">
+                  <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full mb-3">
+                    <Calendar className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-3xl font-black text-purple-600 mb-2">
                     {report.year}
                   </h3>
                 </div>
 
-                {/* Description */}
-                <div className="mb-4">
-                  <p className="text-[12px] md:text-[13px] font-bold text-white bg-[#7746d6] rounded-full px-4 py-2">
-                    {report.description}
-                  </p>
-                </div>
+                {/* Descripción */}
+                <p className="text-sm font-medium text-gray-700 mb-6 leading-relaxed">
+                  {report.description}
+                </p>
 
-                {/* Icons */}
-                <div className="flex justify-center items-center gap-3">
-                  {/* PDF Icon */}
-                  <div className="w-8 h-8 bg-red-500 rounded flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
-                    </svg>
-                  </div>
+                {/* Botones de descarga */}
+                <div className="space-y-3">
+                  {report.pdfUrl && (
+                    <Button
+                      onClick={() => handleDownload(report.pdfUrl!, report.year, 'pdf')}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                    >
+                      <FileText className="w-4 h-4" />
+                      <span>PDF</span>
+                      <Download className="w-4 h-4" />
+                    </Button>
+                  )}
                   
-                  {/* Download Icon */}
-                  <div className="w-8 h-8 bg-[#7746d6] rounded flex items-center justify-center">
-                    <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
+                  {report.wordUrl && (
+                    <Button
+                      onClick={() => handleDownload(report.wordUrl!, report.year, 'word')}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+                    >
+                      <FileText className="w-4 h-4" />
+                      <span>Word</span>
+                      <Download className="w-4 h-4" />
+                    </Button>
+                  )}
+
+                  {!report.pdfUrl && !report.wordUrl && (
+                    <Button
+                      disabled
+                      className="w-full bg-gray-300 text-gray-500 font-medium py-2.5 px-4 rounded-lg cursor-not-allowed"
+                    >
+                      <FileText className="w-4 h-4 mr-2" />
+                      Próximamente
+                    </Button>
+                  )}
                 </div>
-              </div>
-            ))}
-          </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
+
+        {reports.length === 0 && (
+          <div className="text-center py-12">
+            <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-gray-700 mb-2">
+              No hay informes disponibles
+            </h3>
+            <p className="text-gray-500">
+              Los informes aparecerán aquí cuando estén disponibles.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   )

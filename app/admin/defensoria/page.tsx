@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { toast } from "@/components/ui/use-toast"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface DefensoriaContent {
   id: string | number; // Changed to string | number to accommodate potential API responses
@@ -77,6 +78,15 @@ export default function DefensoriaAdmin() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [imagePreview, setImagePreview] = useState<string>('')
   const [editingId, setEditingId] = useState<string | number | null>(null)
+
+  // New state for handling PDF and Word files specifically for Annual Reports
+  const [selectedPdfFile, setSelectedPdfFile] = useState<File | null>(null)
+  const [selectedWordFile, setSelectedWordFile] = useState<File | null>(null)
+  const [uploadMessage, setUploadMessage] = useState('')
+  const [isUploading, setIsUploading] = useState(false)
+  const [dialogMessage, setDialogMessage] = useState('')
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+
 
   const getSectionPlaceholder = (section: string, field: string) => {
     const placeholders: Record<string, Record<string, string>> = {
@@ -196,53 +206,166 @@ export default function DefensoriaAdmin() {
     }
   }
 
-  const uploadFile = async (file: File): Promise<string | null> => {
-    const formData = new FormData()
-    formData.append('file', file)
+  // New handler for Annual Report file selection
+  const handleAnnualReportFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: 'pdf' | 'word') => {
+    const file = e.target.files?.[0]
+    if (file) {
+      const allowedTypes = fileType === 'pdf' 
+        ? ['.pdf'] 
+        : ['.doc', '.docx']
+      const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase()
 
-    try {
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      })
-
-      if (response.ok) {
-        const result = await response.json()
-        return result.url
+      if (!allowedTypes.includes(fileExtension)) {
+        setDialogMessage(`Solo se permiten archivos ${fileType === 'pdf' ? 'PDF' : 'Word (DOC, DOCX)'}`)
+        return
       }
-    } catch (error) {
-      console.error('Error uploading file:', error)
+
+      if (file.size > 50 * 1024 * 1024) {
+        setDialogMessage('El archivo no puede ser mayor a 50MB')
+        return
+      }
+
+      if (fileType === 'pdf') {
+        setSelectedPdfFile(file)
+      } else {
+        setSelectedWordFile(file)
+      }
+      setDialogMessage('')
     }
-    return null
+  }
+
+  const uploadFile = async (file: File): Promise<string> => {
+    const uploadFormData = new FormData()
+    uploadFormData.append('file', file)
+    uploadFormData.append('type', 'documents') // Assuming 'documents' is the correct type for API
+
+    const uploadResponse = await fetch('/api/upload', {
+      method: 'POST',
+      body: uploadFormData
+    })
+
+    if (!uploadResponse.ok) {
+      throw new Error(`Error uploading ${file.name}`)
+    }
+
+    const uploadResult = await uploadResponse.json()
+    return uploadResult.url
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
 
+    // Specific validation for annual reports
+    if (activeTab === 'annual_reports') {
+      if (!formData.title || !formData.content) { // Title is now year, content is description
+        setDialogMessage('Por favor completa el año y la descripción del informe')
+        return
+      }
+      if (!selectedPdfFile && !selectedWordFile && !editingId) {
+        // Allow submission if editing and no new files are selected, but require at least one file if creating
+        setDialogMessage('Por favor, selecciona al menos un archivo PDF o Word para el informe')
+        return
+      }
+    } else {
+      // Generic validation for other sections
+      if (!formData.title) {
+        setDialogMessage('Por favor, introduce un título')
+        return
+      }
+    }
+
+
+    setIsUploading(true)
     try {
-      let finalFormData = { ...formData }
-      finalFormData.section = activeTab
+      let finalFileUrl = formData.file_url
+      let finalImageUrl = formData.image_url
+      let pdfUrl = ''
+      let wordUrl = ''
 
-      if (selectedFile) {
-        const uploadedUrl = await uploadFile(selectedFile)
-        if (uploadedUrl) {
-          if (selectedFile.type.startsWith('image/')) {
-            finalFormData.image_url = uploadedUrl
-          } else {
-            finalFormData.file_url = uploadedUrl
+      // Handle file uploads for annual reports
+      if (activeTab === 'annual_reports') {
+        if (selectedPdfFile) {
+          pdfUrl = await uploadFile(selectedPdfFile)
+        }
+        if (selectedWordFile) {
+          wordUrl = await uploadFile(selectedWordFile)
+        }
+
+        // Preserve existing URLs if no new files are uploaded for editing
+        if (editingId) {
+          const currentItem = content.find(item => item.id === editingId);
+          pdfUrl = pdfUrl || currentItem?.metadata?.pdfUrl || ''
+          wordUrl = wordUrl || currentItem?.metadata?.wordUrl || ''
+        }
+
+        // Update formData for annual reports section
+        formData.metadata = {
+          ...(formData.metadata || {}),
+          year: formData.title, // Year is now in title field for annual reports
+          description: formData.content, // Description is in content field
+          period: formData.metadata?.period,
+          reportType: formData.metadata?.reportType,
+          pdfUrl: pdfUrl,
+          wordUrl: wordUrl
+        };
+        // Clear selected files after successful upload
+        setSelectedPdfFile(null)
+        setSelectedWordFile(null)
+
+      } else {
+        // Handle file upload for other sections (like 'conoce_ley' or 'defensora_profile')
+        if (selectedFile) {
+          const uploadedUrl = await uploadFile(selectedFile)
+          if (uploadedUrl) {
+            if (selectedFile.type.startsWith('image/')) {
+              finalImageUrl = uploadedUrl
+            } else {
+              finalFileUrl = uploadedUrl
+            }
           }
         }
+        // Update formData with potentially new image/file URLs
+        formData.image_url = finalImageUrl
+        formData.file_url = finalFileUrl
       }
 
-      const url = editingId 
-        ? '/api/defensoria-audiencia' 
+
+      const url = editingId
+        ? `/api/defensoria-audiencia/${editingId}` // Use dynamic ID for PUT
         : '/api/defensoria-audiencia'
 
       const method = editingId ? 'PUT' : 'POST'
-      const payload = editingId 
-        ? { ...finalFormData, id: editingId }
-        : finalFormData
+      const payload = { ...formData, section: activeTab, file_url: finalFileUrl, image_url: finalImageUrl }
+
+      // Adjust payload for annual reports to use metadata fields correctly
+      if (activeTab === 'annual_reports') {
+        payload.title = formData.metadata?.year || formData.title; // Ensure title is year
+        payload.content = formData.metadata?.description || formData.content; // Ensure content is description
+        payload.file_url = formData.metadata?.pdfUrl; // Use pdfUrl from metadata
+        payload.image_url = formData.metadata?.wordUrl; // This mapping seems incorrect, assuming image_url is not used for word docs
+        // If word docs should also have a specific URL field, it needs to be added to DefensoriaContent interface and handled here.
+        // For now, let's assume wordUrl is also part of metadata and not directly mapped to image_url.
+        // If wordUrl needs to be accessible, it should be added to the UI and handled separately.
+        // Re-evaluating: The new structure uses metadata.pdfUrl and metadata.wordUrl.
+        // The original `formData.file_url` and `formData.image_url` might be remnants or for other sections.
+        // Let's ensure annual_reports uses the metadata correctly.
+
+        payload.metadata = {
+          year: formData.metadata?.year,
+          description: formData.metadata?.description,
+          period: formData.metadata?.period,
+          reportType: formData.metadata?.reportType,
+          pdfUrl: pdfUrl || formData.metadata?.pdfUrl, // Use newly uploaded or existing
+          wordUrl: wordUrl || formData.metadata?.wordUrl // Use newly uploaded or existing
+        };
+        // Ensure title and content are set correctly for the table view if needed by backend schema
+        payload.title = formData.metadata?.year || '';
+        payload.content = formData.metadata?.description || '';
+        payload.file_url = pdfUrl || formData.metadata?.pdfUrl; // Use PDF URL for file_url if available
+        // The original code didn't explicitly handle a separate URL for Word docs in the main fields.
+        // The new structure stores wordUrl in metadata.
+      }
+
 
       const response = await fetch(url, {
         method,
@@ -276,8 +399,32 @@ export default function DefensoriaAdmin() {
         variant: "destructive"
       })
     } finally {
-      setIsLoading(false)
+      setIsUploading(false)
+      // Clear dialog message after submission attempt
+      setDialogMessage('')
     }
+  }
+
+  const resetForm = () => {
+    setFormData({
+      section: activeTab,
+      title: '',
+      content: '',
+      image_url: '',
+      file_url: '',
+      metadata: {},
+      display_order: 0,
+      is_active: true
+    })
+    setEditingContent(null)
+    setSelectedFile(null)
+    setImagePreview('')
+    setEditingId(null)
+    // Reset annual report specific files and messages
+    setSelectedPdfFile(null)
+    setSelectedWordFile(null)
+    setDialogMessage('')
+    setIsDialogOpen(false)
   }
 
   const handleEdit = (item: DefensoriaContent) => {
@@ -294,6 +441,24 @@ export default function DefensoriaAdmin() {
     })
     setImagePreview(item.image_url || '')
     setEditingId(item.id)
+
+    // Pre-fill annual report form fields if editing
+    if (item.section === 'annual_reports') {
+      setFormData(prev => ({
+        ...prev,
+        title: item.metadata?.year || item.title || '', // Use year from metadata as title
+        content: item.metadata?.description || item.content || '', // Use description from metadata as content
+        metadata: {
+          year: item.metadata?.year || '',
+          description: item.metadata?.description || '',
+          period: item.metadata?.period || '',
+          reportType: item.metadata?.reportType || 'Plan de Trabajo',
+          pdfUrl: item.metadata?.pdfUrl || '',
+          wordUrl: item.metadata?.wordUrl || ''
+        }
+      }));
+    }
+
     setShowForm(true)
   }
 
@@ -334,22 +499,12 @@ export default function DefensoriaAdmin() {
     }
   }
 
-  const resetForm = () => {
-    setFormData({
-      section: activeTab,
-      title: '',
-      content: '',
-      image_url: '',
-      file_url: '',
-      metadata: {},
-      display_order: 0,
-      is_active: true
-    })
-    setEditingContent(null)
-    setSelectedFile(null)
-    setImagePreview('')
-    setShowForm(false)
-    setEditingId(null)
+  // Formatter for file size
+  const formatFileSize = (bytes: number) => {
+    const sizes = ['Bytes', 'KB', 'MB', 'GB']
+    if (bytes === 0) return '0 Bytes'
+    const i = Math.floor(Math.log(bytes) / Math.log(1024))
+    return Math.round(bytes / Math.pow(1024, i) * 100) / 100 + ' ' + sizes[i]
   }
 
   const renderFormFields = () => {
@@ -363,17 +518,23 @@ export default function DefensoriaAdmin() {
             {activeTab === 'defensora_profile' ? 'Nombre de la Defensora' :
              activeTab === 'conoce_ley' ? 'Nombre del Documento' :
              activeTab === 'recent_requests' ? 'Título de la Solicitud' :
-             activeTab === 'annual_reports' ? 'Nombre del Informe' : 'Título'}
+             activeTab === 'annual_reports' ? 'Año del Informe' : 'Título'}
           </Label>
           <Input
             id="title"
             value={formData.title}
-            onChange={(e) => handleInputChange('title', e.target.value)}
+            onChange={(e) => {
+              handleInputChange('title', e.target.value);
+              // If it's an annual report, update metadata year as well
+              if (activeTab === 'annual_reports') {
+                handleMetadataChange('year', e.target.value);
+              }
+            }}
             placeholder={
               activeTab === 'defensora_profile' ? 'Ej: Mtra. María Gabriela Ortiz Portilla' :
               activeTab === 'conoce_ley' ? 'Ej: Ley de Defensoría de Audiencia 2024' :
               activeTab === 'recent_requests' ? 'Ej: Mejora en la Calidad de Audio' :
-              activeTab === 'annual_reports' ? 'Ej: Informe Anual 2024' : 'Título'
+              activeTab === 'annual_reports' ? 'Ej: 2024' : 'Título'
             }
             required
           />
@@ -390,7 +551,13 @@ export default function DefensoriaAdmin() {
             <Textarea
               id="content"
               value={formData.content}
-              onChange={(e) => handleInputChange('content', e.target.value)}
+              onChange={(e) => {
+                handleInputChange('content', e.target.value)
+                // If it's an annual report, update metadata description as well
+                if (activeTab === 'annual_reports') {
+                  handleMetadataChange('description', e.target.value);
+                }
+              }}
               placeholder={
                 activeTab === 'defensora_profile' ? 'Biografía profesional, educación, trayectoria...' :
                 activeTab === 'recent_requests' ? 'Detalle de la solicitud y cómo se atendió...' :
@@ -463,41 +630,14 @@ export default function DefensoriaAdmin() {
           </>
         )}
 
-        {/* Metadata Fields for Annual Reports */}
+        {/* Metadata Fields for Annual Reports - These fields are now handled in the Dialog */}
+        {/* The original structure had these fields here, but the new implementation uses a separate dialog.
+             We will keep this conditional rendering for completeness if other sections were to use similar metadata,
+             but for annual_reports, the dialog's form will take precedence. */}
         {activeTab === 'annual_reports' && (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="report_year">Año del Informe</Label>
-                <Input
-                  id="report_year"
-                  type="number"
-                  min="2019"
-                  max="2030"
-                  value={formData.metadata?.year || new Date().getFullYear()}
-                  onChange={(e) => handleMetadataChange('year', parseInt(e.target.value))}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="report_type">Tipo de Informe</Label>
-                <Select
-                  value={formData.metadata?.reportType || ''}
-                  onValueChange={(value) => handleMetadataChange('reportType', value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Seleccione tipo" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Informe Anual">Informe Anual</SelectItem>
-                    <SelectItem value="Plan de Trabajo">Plan de Trabajo</SelectItem>
-                    <SelectItem value="Informe Trimestral">Informe Trimestral</SelectItem>
-                    <SelectItem value="Reporte Especial">Reporte Especial</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-
+            {/* Year field is now handled by the 'title' input in the dialog */}
+            {/* Type of Report is now a select in the dialog */}
             <div>
               <Label htmlFor="report_period">Período</Label>
               <Input
@@ -510,20 +650,20 @@ export default function DefensoriaAdmin() {
           </>
         )}
 
-        {/* File Upload */}
-        {config.fields.includes('file') && (
+
+        {/* File Upload - Generic handler for sections other than annual reports */}
+        {config.fields.includes('file') && activeTab !== 'annual_reports' && (
           <div>
             <Label htmlFor="file">
-              {activeTab === 'conoce_ley' ? 'Documento PDF' :
-               activeTab === 'annual_reports' ? 'Archivo del Informe (PDF)' : 'Archivo'}
+              {activeTab === 'conoce_ley' ? 'Documento PDF' : 'Archivo'}
             </Label>
             <Input
               id="file"
               type="file"
               onChange={handleFileSelect}
-              accept={activeTab === 'conoce_ley' || activeTab === 'annual_reports' ? '.pdf' : '*'}
+              accept={activeTab === 'conoce_ley' ? '.pdf' : '*'}
             />
-            {selectedFile && (
+            {selectedFile && !selectedFile.type.startsWith('image/') && (
               <p className="text-sm text-gray-600 mt-1">
                 Archivo seleccionado: {selectedFile.name}
               </p>
@@ -589,6 +729,77 @@ export default function DefensoriaAdmin() {
     )
   }
 
+  // --- New logic for Annual Reports Dialog ---
+  const handleAnnualReportSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    if (!formData.title || !formData.content) { // Title is year, content is description
+      setDialogMessage('Por favor completa el año y la descripción del informe')
+      return
+    }
+
+    // Require at least one file if creating a new report, or if editing and no files exist
+    const hasExistingFiles = editingContent?.metadata?.pdfUrl || editingContent?.metadata?.wordUrl;
+    if ((!selectedPdfFile && !selectedWordFile) && !hasExistingFiles) {
+        setDialogMessage('Por favor, selecciona al menos un archivo PDF o Word para el informe.');
+        return;
+    }
+
+
+    setIsUploading(true)
+    try {
+      let pdfUrl = editingContent?.metadata?.pdfUrl || ''
+      let wordUrl = editingContent?.metadata?.wordUrl || ''
+
+      if (selectedPdfFile) {
+        pdfUrl = await uploadFile(selectedPdfFile)
+      }
+      if (selectedWordFile) {
+        wordUrl = await uploadFile(selectedWordFile)
+      }
+
+      const reportData = {
+        section: 'annual_reports',
+        title: formData.title, // Year as title
+        content: formData.content, // Description as content
+        metadata: {
+          year: formData.title,
+          description: formData.content,
+          period: formData.metadata?.period,
+          reportType: formData.metadata?.reportType,
+          pdfUrl: pdfUrl,
+          wordUrl: wordUrl
+        }
+      }
+
+      const url = editingContent
+        ? `/api/defensoria-audiencia/${editingContent.id}`
+        : '/api/defensoria-audiencia'
+      const method = editingContent ? 'PUT' : 'POST'
+
+      const response = await fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reportData)
+      })
+
+      if (response.ok) {
+        setDialogMessage(editingContent ? 'Informe anual actualizado exitosamente' : 'Informe anual creado exitosamente')
+        setIsDialogOpen(false)
+        resetForm() // Reset form state
+        loadContent() // Reload content
+      } else {
+        const error = await response.json()
+        setDialogMessage(`Error al guardar el informe: ${error.message || 'Error desconocido'}`)
+      }
+    } catch (error: any) {
+      setDialogMessage(`Error al guardar el informe: ${error.message || 'Error de conexión'}`)
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+
   if (showForm) {
     const config = SECTION_CONFIG[activeTab as keyof typeof SECTION_CONFIG]
     const Icon = config.icon
@@ -643,8 +854,9 @@ export default function DefensoriaAdmin() {
     )
   }
 
+  // --- Main view displaying tabs and tables ---
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Gestión de Defensoría de Audiencia</h1>
       </div>
@@ -666,6 +878,344 @@ export default function DefensoriaAdmin() {
           const Icon = config.icon
           const sectionContent = filteredContent.filter(item => item.section === key)
 
+          // Special rendering for 'annual_reports' tab
+          if (key === 'annual_reports') {
+            const annualReports = content.filter(item => item.section === 'annual_reports');
+            return (
+              <TabsContent key={key} value={key}>
+                <Card>
+                  <CardHeader>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <Icon className="w-6 h-6 text-purple-600" />
+                        <div>
+                          <CardTitle>{config.label}</CardTitle>
+                          <CardDescription>{config.description}</CardDescription>
+                        </div>
+                      </div>
+                      <Dialog open={isDialogOpen} onOpenChange={(open) => {
+                        setIsDialogOpen(open);
+                        if (!open) {
+                          resetForm(); // Reset form when dialog closes
+                          setEditingContent(null); // Clear editing content state
+                        }
+                      }}>
+                        <DialogTrigger asChild>
+                          <Button onClick={() => { setActiveTab(key); /* No need to call setShowForm(true) here */ }}>
+                            <Plus className="w-4 h-4 mr-2" />
+                            Agregar Informe Anual
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle>
+                              {editingContent?.section === 'annual_reports' ? 'Editar Informe Anual' : 'Nuevo Informe Anual'}
+                            </DialogTitle>
+                            <DialogDescription>
+                              Crea o edita informes anuales con archivos PDF y Word
+                            </DialogDescription>
+                          </DialogHeader>
+                          <form onSubmit={handleAnnualReportSubmit}>
+                            <div className="space-y-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                  <Label htmlFor="year">Año del Informe *</Label>
+                                  <Input
+                                    id="year"
+                                    value={formData.title} // Use title for year input
+                                    onChange={(e) => {
+                                      setFormData({ ...formData, title: e.target.value });
+                                      setDialogMessage(''); // Clear message on input change
+                                    }}
+                                    placeholder="2024"
+                                    required
+                                  />
+                                </div>
+                                <div>
+                                  <Label htmlFor="reportType">Tipo de Informe</Label>
+                                  <Select
+                                    value={formData.metadata?.reportType || ''}
+                                    onValueChange={(value) => {
+                                      setFormData({ ...formData, metadata: { ...formData.metadata, reportType: value } });
+                                      setDialogMessage('');
+                                    }}
+                                  >
+                                    <SelectTrigger>
+                                      <SelectValue placeholder="Seleccione tipo" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="Plan de Trabajo">Plan de Trabajo</SelectItem>
+                                      <SelectItem value="Informe Anual">Informe Anual</SelectItem>
+                                      <SelectItem value="Reporte Especial">Reporte Especial</SelectItem>
+                                    </SelectContent>
+                                  </Select>
+                                </div>
+                              </div>
+
+                              <div>
+                                <Label htmlFor="description">Descripción del Informe *</Label>
+                                <Textarea
+                                  id="description"
+                                  value={formData.content} // Use content for description textarea
+                                  onChange={(e) => {
+                                    setFormData({ ...formData, content: e.target.value });
+                                    setDialogMessage('');
+                                  }}
+                                  placeholder="Resumen ejecutivo del informe..."
+                                  rows={3}
+                                  required
+                                />
+                              </div>
+
+                              <div>
+                                <Label htmlFor="period">Período</Label>
+                                <Input
+                                  id="period"
+                                  value={formData.metadata?.period || ''}
+                                  onChange={(e) => {
+                                    setFormData({ ...formData, metadata: { ...formData.metadata, period: e.target.value } });
+                                    setDialogMessage('');
+                                  }}
+                                  placeholder="Ej: Enero - Diciembre 2024"
+                                />
+                              </div>
+
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                  <Label htmlFor="pdfFile">Archivo PDF</Label>
+                                  <Input
+                                    id="pdfFile"
+                                    type="file"
+                                    onChange={(e) => handleAnnualReportFileChange(e, 'pdf')}
+                                    accept=".pdf"
+                                  />
+                                  {selectedPdfFile && (
+                                    <p className="text-sm text-gray-600 mt-1">
+                                      PDF: {selectedPdfFile.name} ({formatFileSize(selectedPdfFile.size)})
+                                    </p>
+                                  )}
+                                  {/* Display existing PDF if no new PDF is selected */}
+                                  {editingContent?.metadata?.pdfUrl && !selectedPdfFile && (
+                                    <p className="text-sm text-green-600 mt-1">
+                                      <a href={editingContent.metadata.pdfUrl} target="_blank" rel="noopener noreferrer" className="underline">
+                                        PDF actual disponible
+                                      </a>
+                                    </p>
+                                  )}
+                                </div>
+
+                                <div>
+                                  <Label htmlFor="wordFile">Archivo Word</Label>
+                                  <Input
+                                    id="wordFile"
+                                    type="file"
+                                    onChange={(e) => handleAnnualReportFileChange(e, 'word')}
+                                    accept=".doc,.docx"
+                                  />
+                                  {selectedWordFile && (
+                                    <p className="text-sm text-gray-600 mt-1">
+                                      Word: {selectedWordFile.name} ({formatFileSize(selectedWordFile.size)})
+                                    </p>
+                                  )}
+                                  {/* Display existing Word if no new Word is selected */}
+                                  {editingContent?.metadata?.wordUrl && !selectedWordFile && (
+                                    <p className="text-sm text-green-600 mt-1">
+                                      <a href={editingContent.metadata.wordUrl} target="_blank" rel="noopener noreferrer" className="underline">
+                                        Word actual disponible
+                                      </a>
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {dialogMessage && (
+                              <Alert className="mt-4">
+                                <AlertDescription>{dialogMessage}</AlertDescription>
+                              </Alert>
+                            )}
+
+                            <DialogFooter className="mt-6">
+                              <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                                Cancelar
+                              </Button>
+                              <Button type="submit" disabled={isUploading}>
+                                <Upload className="h-4 w-4 mr-2" />
+                                {isUploading ? 'Guardando...' : (editingContent?.section === 'annual_reports' ? 'Actualizar' : 'Crear')}
+                              </Button>
+                            </DialogFooter>
+                          </form>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    {/* Search for Annual Reports */}
+                    <div className="mb-4">
+                      <div className="relative">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                        <Input
+                          placeholder={`Buscar en ${config.label.toLowerCase()}...`}
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                          className="pl-10"
+                        />
+                      </div>
+                    </div>
+
+                    {isLoading ? (
+                      <div className="flex justify-center items-center py-12">
+                        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                      </div>
+                    ) : annualReports.length === 0 ? (
+                      <div className="text-center py-12 text-gray-500">
+                        <Icon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                        <h3 className="text-lg font-medium mb-2">No hay informes anuales</h3>
+                        <p>Agrega el primer informe anual.</p>
+                        <Dialog open={isDialogOpen} onOpenChange={(open) => {
+                          setIsDialogOpen(open);
+                          if (!open) {
+                            resetForm();
+                            setEditingContent(null);
+                          }
+                        }}>
+                          <DialogTrigger asChild>
+                            <Button className="mt-4" onClick={() => setActiveTab(key)}>
+                              <Plus className="w-4 h-4 mr-2" />
+                              Agregar Informe Anual
+                            </Button>
+                          </DialogTrigger>
+                          {/* Dialog content for adding new annual report - same as above */}
+                          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                            <DialogHeader>
+                              <DialogTitle>Nuevo Informe Anual</DialogTitle>
+                              <DialogDescription>Crea o edita informes anuales con archivos PDF y Word</DialogDescription>
+                            </DialogHeader>
+                            <form onSubmit={handleAnnualReportSubmit}>
+                              <div className="space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div>
+                                    <Label htmlFor="year">Año del Informe *</Label>
+                                    <Input
+                                      id="year"
+                                      value={formData.title}
+                                      onChange={(e) => {
+                                        setFormData({ ...formData, title: e.target.value });
+                                        setDialogMessage('');
+                                      }}
+                                      placeholder="2024"
+                                      required
+                                    />
+                                  </div>
+                                  <div>
+                                    <Label htmlFor="reportType">Tipo de Informe</Label>
+                                    <Select
+                                      value={formData.metadata?.reportType || ''}
+                                      onValueChange={(value) => {
+                                        setFormData({ ...formData, metadata: { ...formData.metadata, reportType: value } });
+                                        setDialogMessage('');
+                                      }}
+                                    >
+                                      <SelectTrigger>
+                                        <SelectValue placeholder="Seleccione tipo" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Plan de Trabajo">Plan de Trabajo</SelectItem>
+                                        <SelectItem value="Informe Anual">Informe Anual</SelectItem>
+                                        <SelectItem value="Reporte Especial">Reporte Especial</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                </div>
+
+                                <div>
+                                  <Label htmlFor="description">Descripción del Informe *</Label>
+                                  <Textarea
+                                    id="description"
+                                    value={formData.content}
+                                    onChange={(e) => {
+                                      setFormData({ ...formData, content: e.target.value });
+                                      setDialogMessage('');
+                                    }}
+                                    placeholder="Resumen ejecutivo del informe..."
+                                    rows={3}
+                                    required
+                                  />
+                                </div>
+
+                                <div>
+                                  <Label htmlFor="period">Período</Label>
+                                  <Input
+                                    id="period"
+                                    value={formData.metadata?.period || ''}
+                                    onChange={(e) => {
+                                      setFormData({ ...formData, metadata: { ...formData.metadata, period: e.target.value } });
+                                      setDialogMessage('');
+                                    }}
+                                    placeholder="Ej: Enero - Diciembre 2024"
+                                  />
+                                </div>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div>
+                                    <Label htmlFor="pdfFile">Archivo PDF</Label>
+                                    <Input
+                                      id="pdfFile"
+                                      type="file"
+                                      onChange={(e) => handleAnnualReportFileChange(e, 'pdf')}
+                                      accept=".pdf"
+                                    />
+                                    {selectedPdfFile && (
+                                      <p className="text-sm text-gray-600 mt-1">
+                                        PDF: {selectedPdfFile.name} ({formatFileSize(selectedPdfFile.size)})
+                                      </p>
+                                    )}
+                                  </div>
+
+                                  <div>
+                                    <Label htmlFor="wordFile">Archivo Word</Label>
+                                    <Input
+                                      id="wordFile"
+                                      type="file"
+                                      onChange={(e) => handleAnnualReportFileChange(e, 'word')}
+                                      accept=".doc,.docx"
+                                    />
+                                    {selectedWordFile && (
+                                      <p className="text-sm text-gray-600 mt-1">
+                                        Word: {selectedWordFile.name} ({formatFileSize(selectedWordFile.size)})
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                              </div>
+
+                              {dialogMessage && (
+                                <Alert className="mt-4">
+                                  <AlertDescription>{dialogMessage}</AlertDescription>
+                                </Alert>
+                              )}
+
+                              <DialogFooter className="mt-6">
+                                <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
+                                  Cancelar
+                                </Button>
+                                <Button type="submit" disabled={isUploading}>
+                                  <Upload className="h-4 w-4 mr-2" />
+                                  {isUploading ? 'Guardando...' : 'Crear'}
+                                </Button>
+                              </DialogFooter>
+                            </form>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            )
+          }
+
+          // Render for other tabs (original logic)
           return (
             <TabsContent key={key} value={key}>
               <Card>
@@ -707,7 +1257,7 @@ export default function DefensoriaAdmin() {
                       <Icon className="w-16 h-16 mx-auto mb-4 text-gray-300" />
                       <h3 className="text-lg font-medium mb-2">No hay contenido</h3>
                       <p>Agregue el primer elemento para {config.label.toLowerCase()}.</p>
-                      <Button className="mt-4" onClick={() => setShowForm(true)}>
+                      <Button className="mt-4" onClick={() => { setActiveTab(key); setShowForm(true) }}>
                         <Plus className="w-4 h-4 mr-2" />
                         Agregar {config.label}
                       </Button>
