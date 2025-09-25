@@ -190,7 +190,7 @@ export default function RecentRequestsSection() {
       }}
     >
       <div className="container mx-auto px-4 md:px-6">
-        <h2 className="text-center font-black text-[#1f1f1f] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
+        <h2 className="text-center font-black text-[#4f148c] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
           RECIENTES SOLICITUDES ATENDIDAS
         </h2>
 
