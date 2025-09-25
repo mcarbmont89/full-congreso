@@ -1,8 +1,11 @@
 "use client"
 
 import { useState, useEffect, useCallback } from 'react'
-import { ChevronLeft, ChevronRight, Check } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import useEmblaCarousel from 'embla-carousel-react'
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Calendar, CheckCircle, Clock, FileText } from "lucide-react"
 
 interface DefensoriaContent {
   id: number
@@ -192,21 +195,21 @@ export default function RecentRequestsSection() {
         </h2>
 
         <div className="relative mx-auto max-w-7xl">
-          {/* Navigation Buttons - Purple circular arrows */}
+          {/* Navigation Buttons */}
           <button
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-20 h-20 rounded-full bg-[#8b5cdf] hover:bg-[#7746d6] text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg -ml-10"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-16 h-16 rounded-full bg-[#8b5cdf] hover:bg-[#7746d6] text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed -ml-8"
             onClick={scrollPrev}
             disabled={prevBtnDisabled}
           >
-            <ChevronLeft className="w-10 h-10" strokeWidth={3} />
+            <ChevronLeft className="w-8 h-8" />
           </button>
 
           <button
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-20 h-20 rounded-full bg-[#8b5cdf] hover:bg-[#7746d6] text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg -mr-10"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center w-16 h-16 rounded-full bg-[#8b5cdf] hover:bg-[#7746d6] text-white transition-colors disabled:opacity-50 disabled:cursor-not-allowed -mr-8"
             onClick={scrollNext}
             disabled={nextBtnDisabled}
           >
-            <ChevronRight className="w-10 h-10" strokeWidth={3} />
+            <ChevronRight className="w-8 h-8" />
           </button>
 
           {/* Carousel Container */}
@@ -214,14 +217,9 @@ export default function RecentRequestsSection() {
             <div className="flex">
               {requests.map((request) => (
                 <div key={request.id} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] pl-6">
-                  <div className="bg-white rounded-2xl overflow-hidden mr-6 shadow-[0_6px_20px_rgba(0,0,0,0.07)] relative">
-                    {/* Checkmark icon in top-right corner */}
-                    <div className="absolute top-4 right-4 z-10 w-8 h-8 bg-[#8b5cdf] rounded-full flex items-center justify-center">
-                      <Check className="w-5 h-5 text-white" strokeWidth={3} />
-                    </div>
-
+                  <div className="bg-white rounded-2xl overflow-hidden mr-6 shadow-[0_6px_20px_rgba(0,0,0,0.07)]">
                     {/* Purple header with "PREGUNTA:" */}
-                    <div className="bg-[#8b5cdf] text-white px-6 py-4 relative">
+                    <div className="bg-[#7746d6] text-white px-6 py-4">
                       <h3 className="text-sm font-black tracking-wide uppercase">
                         PREGUNTA:
                       </h3>
@@ -234,9 +232,9 @@ export default function RecentRequestsSection() {
                         {request.pregunta}
                       </p>
 
-                      {/* Purple "RESPUESTA:" label */}
-                      <div className="bg-[#8b5cdf] text-white px-4 py-2 mb-4 rounded">
-                        <h4 className="text-xs font-black tracking-wide uppercase">
+                      {/* Blue "RESPUESTA:" label */}
+                      <div className="bg-[#e8f0fe] px-4 py-2 mb-4 rounded">
+                        <h4 className="text-xs font-black tracking-wide uppercase text-[#7746d6]">
                           RESPUESTA:
                         </h4>
                       </div>
