@@ -745,7 +745,6 @@ export default function DefensoriaAdmin() {
         return;
     }
 
-
     setIsUploading(true)
     try {
       let pdfUrl = editingContent?.metadata?.pdfUrl || ''
@@ -758,29 +757,35 @@ export default function DefensoriaAdmin() {
         wordUrl = await uploadFile(selectedWordFile)
       }
 
-      const reportData = {
-        section: 'annual_reports',
-        title: formData.title, // Year as title
-        content: formData.content, // Description as content
-        metadata: {
-          year: formData.title,
-          description: formData.content,
-          period: formData.metadata?.period,
-          reportType: formData.metadata?.reportType,
-          pdfUrl: pdfUrl,
-          wordUrl: wordUrl
-        }
+      // Create FormData instead of JSON
+      const reportFormData = new FormData()
+      reportFormData.append('section', 'annual_reports')
+      reportFormData.append('title', formData.title) // Year as title
+      reportFormData.append('content', formData.content) // Description as content
+      reportFormData.append('metadata', JSON.stringify({
+        year: formData.title,
+        description: formData.content,
+        period: formData.metadata?.period || '',
+        reportType: formData.metadata?.reportType || 'Plan de Trabajo',
+        pdfUrl: pdfUrl,
+        wordUrl: wordUrl
+      }))
+      reportFormData.append('display_order', '0')
+      reportFormData.append('is_active', 'true')
+
+      // Add ID for editing
+      if (editingContent) {
+        reportFormData.append('id', editingContent.id.toString())
       }
 
       const url = editingContent
-        ? `/api/defensoria-audiencia/${editingContent.id}`
+        ? `/api/defensoria-audiencia`
         : '/api/defensoria-audiencia'
       const method = editingContent ? 'PUT' : 'POST'
 
       const response = await fetch(url, {
         method: method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(reportData)
+        body: reportFormData // Send FormData instead of JSON
       })
 
       if (response.ok) {
@@ -790,7 +795,7 @@ export default function DefensoriaAdmin() {
         loadContent() // Reload content
       } else {
         const error = await response.json()
-        setDialogMessage(`Error al guardar el informe: ${error.message || 'Error desconocido'}`)
+        setDialogMessage(`Error al guardar el informe: ${error.error || error.message || 'Error desconocido'}`)
       }
     } catch (error: any) {
       setDialogMessage(`Error al guardar el informe: ${error.message || 'Error de conexión'}`)
