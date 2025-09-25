@@ -18,11 +18,15 @@ export default function ContactModal({ type, children }: ContactModalProps) {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({
-    name: '',
+    firstName: '',
+    lastName: '',
+    surname: '',
     email: '',
     phone: '',
     subject: '',
-    message: ''
+    subject2: '',
+    message: '',
+    attachment: ''
   })
 
   const handleInputChange = (field: string, value: string) => {
@@ -35,10 +39,10 @@ export default function ContactModal({ type, children }: ContactModalProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    if (!formData.name || !formData.email || !formData.message) {
+    if (!formData.firstName || !formData.surname || !formData.email || !formData.message) {
       toast({
         title: "Error",
-        description: "Por favor complete todos los campos obligatorios.",
+        description: "Por favor complete todos los campos obligatorios (Primer nombre, Apellido, Correo electrónico y Mensaje).",
         variant: "destructive"
       })
       return
@@ -54,6 +58,7 @@ export default function ContactModal({ type, children }: ContactModalProps) {
         },
         body: JSON.stringify({
           ...formData,
+          name: `${formData.firstName} ${formData.lastName ? formData.lastName + ' ' : ''}${formData.surname}`.trim(),
           type: type
         })
       })
@@ -68,11 +73,15 @@ export default function ContactModal({ type, children }: ContactModalProps) {
         
         // Reset form and close modal
         setFormData({
-          name: '',
+          firstName: '',
+          lastName: '',
+          surname: '',
           email: '',
           phone: '',
           subject: '',
-          message: ''
+          subject2: '',
+          message: '',
+          attachment: ''
         })
         setIsOpen(false)
       } else {
@@ -144,88 +153,172 @@ export default function ContactModal({ type, children }: ContactModalProps) {
           {/* Contact Information */}
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
-              Información de Contacto
+              Nombre y Apellido <span className="text-sm font-normal text-gray-500">(Obligatorio)</span>
             </h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
-                <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-                  Nombre completo *
+                <Label htmlFor="firstName" className="text-sm font-medium text-gray-700">
+                  Primer nombre
                 </Label>
                 <Input
-                  id="name"
+                  id="firstName"
                   type="text"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Ingrese su nombre completo"
+                  value={formData.firstName || ''}
+                  onChange={(e) => handleInputChange('firstName', e.target.value)}
+                  placeholder=""
                   className="mt-1"
                   required
                 />
               </div>
               
               <div>
-                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
-                  Correo electrónico *
+                <Label htmlFor="lastName" className="text-sm font-medium text-gray-700">
+                  Segundo nombre
                 </Label>
                 <Input
-                  id="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="correo@ejemplo.com"
+                  id="lastName"
+                  type="text"
+                  value={formData.lastName || ''}
+                  onChange={(e) => handleInputChange('lastName', e.target.value)}
+                  placeholder=""
+                  className="mt-1"
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="surname" className="text-sm font-medium text-gray-700">
+                  Apellido
+                </Label>
+                <Input
+                  id="surname"
+                  type="text"
+                  value={formData.surname || ''}
+                  onChange={(e) => handleInputChange('surname', e.target.value)}
+                  placeholder=""
                   className="mt-1"
                   required
                 />
               </div>
             </div>
 
-            <div>
-              <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                Teléfono (opcional)
-              </Label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                placeholder="Número de teléfono"
-                className="mt-1"
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="email" className="text-sm font-medium text-gray-700">
+                  Correo electrónico <span className="text-sm font-normal text-gray-500">(Obligatorio)</span>
+                </Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  placeholder="example@example.com"
+                  className="mt-1"
+                  required
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
+                  Celular
+                </Label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  placeholder=""
+                  className="mt-1"
+                />
+              </div>
             </div>
           </div>
 
           {/* Message Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-800 border-b pb-2">
-              Detalles de la {type}
-            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="requestType" className="text-sm font-medium text-gray-700">
+                  Tipo de solicitud
+                </Label>
+                <div className="mt-1 p-3 bg-gray-100 rounded-md border">
+                  <span className="font-medium">{type}</span>
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="subject" className="text-sm font-medium text-gray-700">
+                  Solicitud de información
+                </Label>
+                <Input
+                  id="subject"
+                  type="text"
+                  value={formData.subject}
+                  onChange={(e) => handleInputChange('subject', e.target.value)}
+                  placeholder=""
+                  className="mt-1"
+                />
+              </div>
+            </div>
             
             <div>
-              <Label htmlFor="subject" className="text-sm font-medium text-gray-700">
-                Asunto (opcional)
+              <Label htmlFor="subject2" className="text-sm font-medium text-gray-700">
+                Tema o asunto <span className="text-sm font-normal text-gray-500">(Campo corto)</span>
               </Label>
               <Input
-                id="subject"
+                id="subject2"
                 type="text"
-                value={formData.subject}
-                onChange={(e) => handleInputChange('subject', e.target.value)}
-                placeholder={`Asunto de su ${type.toLowerCase()}`}
+                value={formData.subject2 || ''}
+                onChange={(e) => handleInputChange('subject2', e.target.value)}
+                placeholder=""
                 className="mt-1"
               />
             </div>
 
             <div>
               <Label htmlFor="message" className="text-sm font-medium text-gray-700">
-                Mensaje *
+                Mensaje / Descripción <span className="text-sm font-normal text-gray-500">(Campo largo)</span>
               </Label>
               <Textarea
                 id="message"
                 value={formData.message}
                 onChange={(e) => handleInputChange('message', e.target.value)}
-                placeholder={`Describa detalladamente su ${type.toLowerCase()}...`}
+                placeholder=""
                 className="mt-1 min-h-[120px]"
                 required
               />
+            </div>
+
+            <div>
+              <Label htmlFor="attachment" className="text-sm font-medium text-gray-700">
+                Archivo adjunto <span className="text-sm font-normal text-gray-500">(opcional, para evidencia)</span>
+              </Label>
+              <div className="mt-1 flex items-center gap-2">
+                <Input
+                  id="attachment"
+                  type="file"
+                  className="hidden"
+                  accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
+                  onChange={(e) => {
+                    // Handle file upload logic here
+                    const file = e.target.files?.[0]
+                    if (file) {
+                      handleInputChange('attachment', file.name)
+                    }
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => document.getElementById('attachment')?.click()}
+                  className="px-4 py-2"
+                >
+                  EXAMINAR
+                </Button>
+                <span className="text-sm text-gray-500">
+                  {formData.attachment || '(No se ha seleccionado ningún archivo)'}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -258,18 +351,16 @@ export default function ContactModal({ type, children }: ContactModalProps) {
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-gradient-to-r from-purple-500 to-indigo-600 hover:from-purple-600 hover:to-indigo-700"
+              className="bg-purple-700 hover:bg-purple-800 text-white font-bold px-8 py-2 text-lg"
+              style={{ backgroundColor: '#4f148c' }}
             >
               {isLoading ? (
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>Enviando...</span>
+                  <span>ENVIANDO...</span>
                 </div>
               ) : (
-                <>
-                  <Mail className="w-4 h-4 mr-2" />
-                  Enviar {type}
-                </>
+                'ENVIAR'
               )}
             </Button>
           </DialogFooter>
