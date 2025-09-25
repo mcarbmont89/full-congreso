@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Download, FileText, User } from 'lucide-react'
+import { Download, FileText, File } from 'lucide-react'
 
 interface ReportItem {
   year: string
@@ -210,10 +210,10 @@ export default function AnnualReportsSection() {
                   {report.pdfUrl && (
                     <button
                       onClick={() => handleDownload(report.pdfUrl!, report.year, 'pdf')}
-                      className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200"
+                      className="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center transition-colors duration-200"
                       title="Descargar PDF"
                     >
-                      <User className="w-5 h-5 text-white" />
+                      <File className="w-5 h-5 text-white" />
                     </button>
                   )}
                   
@@ -230,7 +230,7 @@ export default function AnnualReportsSection() {
                   {!report.pdfUrl && !report.wordUrl && (
                     <div className="flex space-x-3">
                       <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center">
-                        <User className="w-5 h-5 text-gray-600" />
+                        <File className="w-5 h-5 text-gray-600" />
                       </div>
                       <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center">
                         <FileText className="w-5 h-5 text-gray-600" />
