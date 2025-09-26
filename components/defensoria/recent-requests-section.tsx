@@ -216,7 +216,7 @@ export default function RecentRequestsSection() {
                 <div key={request.id} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] pl-6">
                   <div className="bg-white overflow-hidden mr-6 shadow-[0_6px_20px_rgba(0,0,0,0.07)] relative">
                     {/* Checkmark icon in top-left corner */}
-                    <div className="absolute top-[-10px] left-4 z-10">
+                    <div className="absolute top-[-20px] left-4 z-10">
                       <img src="/images/custom-checkmark.png" alt="Completed" className="w-20 h-20" />
                     </div>
 
