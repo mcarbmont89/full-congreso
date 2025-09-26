@@ -133,7 +133,7 @@ export default function DefensoriaAdmin() {
     try {
       // Add a small delay to ensure database operations are complete
       await new Promise(resolve => setTimeout(resolve, 500))
-      
+
       const response = await fetch('/api/defensoria-audiencia?admin=true', {
         // Add cache-busting to ensure fresh data
         headers: {
@@ -166,7 +166,7 @@ export default function DefensoriaAdmin() {
         const data = await response.json()
         console.log('Loaded content:', data) // Debug log
         setContent(data)
-        
+
         // Force re-render of filtered content
         setTimeout(() => {
           setFilteredContent(data.filter((item: DefensoriaContent) => {
@@ -180,7 +180,7 @@ export default function DefensoriaAdmin() {
             return filtered
           }))
         }, 100)
-        
+
       } else {
         toast({
           title: "Error",
@@ -785,7 +785,7 @@ export default function DefensoriaAdmin() {
           <Checkbox
             id="is_active"
             checked={formData.is_active}
-            onCheckedChange={(checked) => handleInputChange('is_active', checked)}
+            onCheckedChange={(checked) => handleInputChange('is_active', checked === true)}
           />
           <Label htmlFor="is_active">Contenido activo</Label>
         </div>
@@ -892,19 +892,19 @@ export default function DefensoriaAdmin() {
 
       if (response.ok) {
         setDialogMessage(editingContent ? 'Informe anual actualizado exitosamente' : 'Informe anual creado exitosamente')
-        
+
         // Add a longer delay to ensure database transaction is committed
         setTimeout(async () => {
           setIsDialogOpen(false)
           resetForm() // Reset form state
           await loadContent() // Reload content with await to ensure completion
-          
+
           // Additional delay to ensure state is updated
           setTimeout(() => {
             setIsLoading(false)
           }, 1000)
         }, 2000) // Increased timeout to 2 seconds
-        
+
       } else {
         const error = await response.json()
         setDialogMessage(`Error al guardar el informe: ${error.error || error.message || 'Error desconocido'}`)
