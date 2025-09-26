@@ -139,6 +139,11 @@ export async function sendEmail(data: EmailData) {
       }
     }
 
+    // Use defensoria email address if this is a defensoria email
+    const finalDestination = data.to === 'defensoria.audiencia@canaldelcongreso.gob.mx' 
+      ? 'defensoria.audiencia@canaldelcongreso.gob.mx' 
+      : data.to
+
     // Create nodemailer transporter
     const transporter = nodemailer.createTransport({
       host: smtpConfig.host,
@@ -179,7 +184,7 @@ export async function sendEmail(data: EmailData) {
     // Send email
     const info = await transporter.sendMail({
       from: data.from || `"Canal del Congreso" <${smtpConfig.from}>`,
-      to: data.to,
+      to: finalDestination,
       replyTo: data.replyTo,
       subject: data.subject,
       html: data.html,

@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       <p><em>Fecha: ${new Date().toLocaleString('es-MX', { timeZone: 'America/Mexico_City' })}</em></p>
     `
     
-    // Send email to defensoria
+    // Send email to defensoria using SMTP configuration
     const emailResult = await sendEmail({
       to: 'defensoria.audiencia@canaldelcongreso.gob.mx',
       subject: emailSubject,
