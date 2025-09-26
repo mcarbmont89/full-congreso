@@ -236,7 +236,7 @@ export default function RecentRequestsSection() {
 
                       {/* Purple "RESPUESTA:" label */}
                       <div className="text-[#5b199a] px-4 py-2 mb-4">
-                        <h4 className="text-xs font-black tracking-wide uppercase">
+                        <h4 className="text-sm font-black tracking-wide uppercase">
                           RESPUESTA:
                         </h4>
                       </div>
