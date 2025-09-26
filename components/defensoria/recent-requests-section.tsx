@@ -232,7 +232,7 @@ export default function RecentRequestsSection() {
                     </div>
 
                     {/* Light grey content area */}
-                    <div className="p-6 bg-gray-100">
+                    <div className="p-6 bg-gray-200">
 
                       {/* Purple "RESPUESTA:" label */}
                       <div className="bg-[#5b199a] text-white px-4 py-2 mb-4 rounded">
