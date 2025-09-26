@@ -59,7 +59,7 @@ export default function ConoceLaLeyButton() {
   return (
     <button
       onClick={handleDownload}
-      className="inline-flex h-16 items-center px-10 rounded-full 
+      className="inline-flex h-16 items-center px-10 rounded-lg 
                  bg-[#7746d6] hover:bg-[#6a38cf] 
                  text-white text-[26px] font-bold transition shadow-lg"
     >
