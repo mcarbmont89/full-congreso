@@ -28,9 +28,10 @@ async function getConfiguredTimezone(): Promise<string> {
       
       if (response.ok) {
         const config = await response.json()
-        cachedTimezone = config.timezone || DEFAULT_TIMEZONE
+        const timezone = config.timezone || DEFAULT_TIMEZONE
+        cachedTimezone = timezone
         cacheTimestamp = now
-        return cachedTimezone
+        return timezone
       }
     }
   } catch (error) {
@@ -40,7 +41,7 @@ async function getConfiguredTimezone(): Promise<string> {
   // Fallback to default timezone
   cachedTimezone = DEFAULT_TIMEZONE
   cacheTimestamp = now
-  return cachedTimezone
+  return DEFAULT_TIMEZONE
 }
 
 /**
@@ -124,7 +125,7 @@ export function formatMexicoCityTime(date: Date, formatStr: string = 'yyyy-MM-dd
  */
 export function isMexicoCityTimePast(date: Date): boolean {
   const mexicoCityNow = getMexicoCityTime()
-  const targetMexicoTime = toZonedTime(date, MEXICO_CITY_TIMEZONE)
+  const targetMexicoTime = toZonedTime(date, DEFAULT_TIMEZONE)
   return targetMexicoTime <= mexicoCityNow
 }
 
