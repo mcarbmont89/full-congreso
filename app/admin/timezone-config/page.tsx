@@ -224,9 +224,9 @@ export default function TimezoneConfigAdmin() {
               <SelectTrigger>
                 <SelectValue placeholder="Selecciona una zona horaria" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white border border-gray-200 shadow-lg z-50">
                 {TIMEZONE_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
+                  <SelectItem key={option.value} value={option.value} className="bg-white hover:bg-gray-50">
                     <div className="flex flex-col">
                       <span>{option.label}</span>
                       <span className="text-xs text-gray-500">{option.offset}</span>
