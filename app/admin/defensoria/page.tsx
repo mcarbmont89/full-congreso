@@ -131,7 +131,17 @@ export default function DefensoriaAdmin() {
   const loadContent = async () => {
     setIsLoading(true)
     try {
-      const response = await fetch('/api/defensoria-audiencia?admin=true')
+      // Add a small delay to ensure database operations are complete
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      const response = await fetch('/api/defensoria-audiencia?admin=true', {
+        // Add cache-busting to ensure fresh data
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0'
+        }
+      })
 
       if (response.status === 401) {
         toast({
@@ -154,7 +164,23 @@ export default function DefensoriaAdmin() {
 
       if (response.ok) {
         const data = await response.json()
+        console.log('Loaded content:', data) // Debug log
         setContent(data)
+        
+        // Force re-render of filtered content
+        setTimeout(() => {
+          setFilteredContent(data.filter((item: DefensoriaContent) => {
+            let filtered = item.section === activeTab
+            if (searchTerm) {
+              filtered = filtered && (
+                item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                (item.content && item.content.toLowerCase().includes(searchTerm.toLowerCase()))
+              )
+            }
+            return filtered
+          }))
+        }, 100)
+        
       } else {
         toast({
           title: "Error",
@@ -170,7 +196,9 @@ export default function DefensoriaAdmin() {
         variant: "destructive"
       })
     } finally {
-      setIsLoading(false)
+      setTimeout(() => {
+        setIsLoading(false)
+      }, 500) // Slight delay to ensure state updates
     }
   }
 
@@ -474,6 +502,8 @@ export default function DefensoriaAdmin() {
     setSelectedWordFile(null)
     setDialogMessage('')
     setIsDialogOpen(false)
+    setIsUploading(false) // Ensure upload state is reset
+    setUploadMessage('') // Clear any upload messages
   }
 
   const handleEdit = (item: DefensoriaContent) => {
@@ -804,6 +834,7 @@ export default function DefensoriaAdmin() {
       if (selectedPdfFile) {
         try {
           pdfUrl = await uploadFile(selectedPdfFile) as string
+          setDialogMessage('Archivo PDF subido, procesando...')
         } catch (error) {
           throw new Error(`Error al subir archivo PDF: ${error instanceof Error ? error.message : 'Error desconocido'}`)
         }
@@ -822,6 +853,7 @@ export default function DefensoriaAdmin() {
           } else {
             wordUrl = uploadResult as string
           }
+          setDialogMessage('Archivo Word subido, guardando informe...')
         } catch (error) {
           throw new Error(`Error al subir archivo Word: ${error instanceof Error ? error.message : 'Error desconocido'}`)
         }
@@ -860,9 +892,19 @@ export default function DefensoriaAdmin() {
 
       if (response.ok) {
         setDialogMessage(editingContent ? 'Informe anual actualizado exitosamente' : 'Informe anual creado exitosamente')
-        setIsDialogOpen(false)
-        resetForm() // Reset form state
-        loadContent() // Reload content
+        
+        // Add a longer delay to ensure database transaction is committed
+        setTimeout(async () => {
+          setIsDialogOpen(false)
+          resetForm() // Reset form state
+          await loadContent() // Reload content with await to ensure completion
+          
+          // Additional delay to ensure state is updated
+          setTimeout(() => {
+            setIsLoading(false)
+          }, 1000)
+        }, 2000) // Increased timeout to 2 seconds
+        
       } else {
         const error = await response.json()
         setDialogMessage(`Error al guardar el informe: ${error.error || error.message || 'Error desconocido'}`)
@@ -870,7 +912,7 @@ export default function DefensoriaAdmin() {
     } catch (error: any) {
       setDialogMessage(`Error al guardar el informe: ${error.message || 'Error de conexión'}`)
     } finally {
-      setIsUploading(false)
+      // Don't set isUploading to false immediately, let the timeout handle it
     }
   }
 
