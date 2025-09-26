@@ -217,7 +217,7 @@ export default function RecentRequestsSection() {
                   <div className="bg-white overflow-hidden mr-6 shadow-[0_6px_20px_rgba(0,0,0,0.07)] relative">
                     {/* Checkmark icon in top-left corner */}
                     <div className="absolute top-4 left-4 z-10">
-                      <img src="/images/custom-checkmark.png" alt="Completed" className="w-8 h-8" />
+                      <img src="/images/custom-checkmark.png" alt="Completed" className="w-12 h-12" />
                     </div>
 
                     {/* Purple header with "PREGUNTA:" and question text */}
