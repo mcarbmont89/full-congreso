@@ -84,7 +84,7 @@ export default function TinyMCEEditor({
             'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
             'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
             'insertdatetime', 'media', 'table', 'help', 'wordcount', 'paste',
-            'textpattern', 'nonbreaking', 'pagebreak', 'save', 'directionality', 'quickbars'
+            'nonbreaking', 'pagebreak', 'save', 'directionality', 'quickbars'
           ],
           toolbar: [
             'undo redo | blocks fontsize | bold italic underline strikethrough |',
