@@ -216,12 +216,12 @@ export default function RecentRequestsSection() {
                 <div key={request.id} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] pl-6">
                   <div className="bg-white overflow-hidden mr-6 shadow-[0_6px_20px_rgba(0,0,0,0.07)] relative">
                     {/* Checkmark icon in top-right corner */}
-                    <div className="absolute top-4 right-4 z-10 w-8 h-8 bg-[#8b5cdf] rounded-full flex items-center justify-center">
+                    <div className="absolute top-4 right-4 z-10 w-8 h-8 bg-[#5b199a] rounded-full flex items-center justify-center">
                       <Check className="w-5 h-5 text-white" strokeWidth={3} />
                     </div>
 
                     {/* Purple header with "PREGUNTA:" and question text */}
-                    <div className="bg-[#8b5cdf] text-white px-6 py-4 relative">
+                    <div className="bg-[#5b199a] text-white px-6 py-4 relative">
                       <h3 className="text-sm font-black tracking-wide uppercase mb-3">
                         PREGUNTA:
                       </h3>
@@ -235,7 +235,7 @@ export default function RecentRequestsSection() {
                     <div className="p-6">
 
                       {/* Purple "RESPUESTA:" label */}
-                      <div className="bg-[#8b5cdf] text-white px-4 py-2 mb-4 rounded">
+                      <div className="bg-[#5b199a] text-white px-4 py-2 mb-4 rounded">
                         <h4 className="text-xs font-black tracking-wide uppercase">
                           RESPUESTA:
                         </h4>
