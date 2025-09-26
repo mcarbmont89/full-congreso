@@ -215,9 +215,12 @@ export default function RecentRequestsSection() {
               {requests.map((request) => (
                 <div key={request.id} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] pl-6">
                   <div className="bg-white overflow-visible mr-6 shadow-[0_6px_20px_rgba(0,0,0,0.07)] relative">
-                    {/* Checkmark icon in top-left corner */}
-                    <div className="absolute top-[-50px] left-4 z-10">
-                      <img src="/images/custom-checkmark.png" alt="Completed" className="w-20 h-20" />
+                    {/* Transparent spacer for checkmark */}
+                    <div className="h-5 bg-transparent relative">
+                      {/* Checkmark icon positioned in the spacer */}
+                      <div className="absolute top-0 left-4 z-10">
+                        <img src="/images/custom-checkmark.png" alt="Completed" className="w-20 h-20" />
+                      </div>
                     </div>
 
                     {/* Purple header with "PREGUNTA:" and question text */}
