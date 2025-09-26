@@ -222,11 +222,11 @@ export default function RecentRequestsSection() {
 
                     {/* Purple header with "PREGUNTA:" and question text */}
                     <div className="bg-[#5b199a] text-white px-6 py-4 relative">
-                      <h3 className="text-sm font-black tracking-wide uppercase mb-3 ml-24">
+                      <h3 className="text-sm font-black tracking-wide uppercase mb-3 ml-32">
                         PREGUNTA:
                       </h3>
                       {/* Question text */}
-                      <p className="text-[14px] font-medium text-white leading-relaxed ml-24">
+                      <p className="text-[14px] font-medium text-white leading-relaxed ml-32">
                         {request.pregunta}
                       </p>
                     </div>
