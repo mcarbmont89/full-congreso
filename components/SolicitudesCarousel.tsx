@@ -102,7 +102,7 @@ export default function SolicitudesCarousel() {
                   <div className="bg-gray-100 text-white px-4 py-2 text-xs font-extrabold tracking-wide mb-3">
                     <span className="text-gray-600">RESPUESTA:</span>
                   </div>
-                  <p className="text-[13px] text-gray-600 leading-5 mb-4">
+                  <p className="text-[13px] text-[#5b199a] leading-5 mb-4">
                     {item.respuesta}
                   </p>
                   <div className="text-right">
