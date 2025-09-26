@@ -214,7 +214,7 @@ export default function RecentRequestsSection() {
             <div className="flex">
               {requests.map((request) => (
                 <div key={request.id} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] pl-6">
-                  <div className="bg-white rounded-2xl overflow-hidden mr-6 shadow-[0_6px_20px_rgba(0,0,0,0.07)] relative">
+                  <div className="bg-white overflow-hidden mr-6 shadow-[0_6px_20px_rgba(0,0,0,0.07)] relative">
                     {/* Checkmark icon in top-right corner */}
                     <div className="absolute top-4 right-4 z-10 w-8 h-8 bg-[#8b5cdf] rounded-full flex items-center justify-center">
                       <Check className="w-5 h-5 text-white" strokeWidth={3} />
