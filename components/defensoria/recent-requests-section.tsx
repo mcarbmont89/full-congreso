@@ -242,7 +242,7 @@ export default function RecentRequestsSection() {
                       </div>
 
                       {/* Answer text */}
-                      <p className="text-[13px] text-gray-600 leading-relaxed">
+                      <p className="text-[13px] text-[#5b199a] leading-relaxed">
                         {request.respuesta}
                       </p>
                     </div>
