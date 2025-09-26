@@ -91,7 +91,7 @@ export default function SolicitudesCarousel() {
         <div className="flex">
           {solicitudesData.map((item, i) => (
             <div key={i} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] pl-6">
-              <div className="rounded-xl bg-white shadow-md p-0 overflow-hidden mr-6">
+              <div className="bg-white shadow-md p-0 overflow-hidden mr-6">
                 <div className="bg-[#5b199a] text-white px-6 py-3 text-sm font-extrabold tracking-wide">
                   PREGUNTA:
                 </div>
