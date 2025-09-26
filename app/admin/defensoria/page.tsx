@@ -285,6 +285,14 @@ export default function DefensoriaAdmin() {
       throw new Error(`No se recibió URL válida para ${file.name}`)
     }
     
+    // Return an object with both original and PDF URLs for Word documents
+    if (uploadResult.pdfUrl && (file.name.toLowerCase().endsWith('.doc') || file.name.toLowerCase().endsWith('.docx'))) {
+      return {
+        originalUrl: uploadResult.url || uploadResult.fileUrl || uploadResult.documentUrl,
+        pdfUrl: uploadResult.pdfUrl
+      }
+    }
+    
     return uploadResult.url || uploadResult.fileUrl || uploadResult.documentUrl
   }
 
@@ -798,7 +806,17 @@ export default function DefensoriaAdmin() {
       
       if (selectedWordFile) {
         try {
-          wordUrl = await uploadFile(selectedWordFile)
+          const uploadResult = await uploadFile(selectedWordFile)
+          // Handle both cases: string URL or object with URLs
+          if (typeof uploadResult === 'object' && uploadResult.originalUrl) {
+            wordUrl = uploadResult.originalUrl
+            // If PDF conversion was successful, also use the PDF URL
+            if (uploadResult.pdfUrl && !pdfUrl) {
+              pdfUrl = uploadResult.pdfUrl
+            }
+          } else {
+            wordUrl = uploadResult as string
+          }
         } catch (error) {
           throw new Error(`Error al subir archivo Word: ${error instanceof Error ? error.message : 'Error desconocido'}`)
         }
