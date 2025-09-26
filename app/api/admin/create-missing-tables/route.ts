@@ -1,4 +1,3 @@
-
 import { NextResponse } from 'next/server'
 import { createDatabaseConnectionFromEnv } from '@/lib/database-env'
 
@@ -138,6 +137,28 @@ export async function POST() {
       )
     `)
 
+    // Create timezone_config table if it doesn't exist
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS timezone_config (
+        id SERIAL PRIMARY KEY,
+        timezone VARCHAR(100) NOT NULL,
+        display_name VARCHAR(255) NOT NULL,
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
+    // Insert default timezone configuration if none exists
+    const timezoneResult = await pool.query('SELECT COUNT(*) FROM timezone_config WHERE is_active = true')
+    if (timezoneResult.rows[0].count === '0') {
+      await pool.query(`
+        INSERT INTO timezone_config (timezone, display_name, is_active)
+        VALUES ('America/Mexico_City', 'Ciudad de México (CST/CDT)', true)
+      `)
+      console.log('Default timezone configuration created')
+    }
+
     // Insert default categories
     await pool.query(`
       INSERT INTO categories (name, slug, description) VALUES
@@ -184,9 +205,9 @@ export async function POST() {
       WHERE table_schema = 'public' 
       ORDER BY table_name
     `)
-    
+
     const createdTables = tablesResult.rows.map(row => row.table_name)
-    
+
     await pool.end()
 
     return NextResponse.json({ 

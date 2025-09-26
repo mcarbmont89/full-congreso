@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { Inter } from "next/font/google"
-import { Home, Monitor, BarChart3, Newspaper, Users, Settings, LogOut, Mail, Radio, Mic, Building, LayoutDashboard, Eye, Globe, Menu, X } from 'lucide-react'
+import { Home, Monitor, BarChart3, Newspaper, Users, Settings, LogOut, Mail, Radio, Mic, Building, LayoutDashboard, Eye, Globe, Menu, X, Clock } from 'lucide-react'
 import { Toaster } from "@/components/ui/toaster"
 import { useRouter, usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
@@ -199,6 +199,14 @@ export default function AdminLayout({
              >
               <Eye className="h-4 w-4 flex-shrink-0" />
               <span className="text-sm sm:text-base">Programas Destacados</span>
+            </Link>
+
+            <Link 
+              href="/admin/timezone-config" 
+              className={linkClassName("/admin/timezone-config")}
+            >
+              <Clock className="h-4 w-4 flex-shrink-0" />
+              <span className="text-sm sm:text-base">Zona Horaria</span>
             </Link>
 
             <div className="mt-4 pt-4 border-t border-gray-200">
