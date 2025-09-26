@@ -210,8 +210,8 @@ export default function DefensoriaAdmin() {
   const handleAnnualReportFileChange = (e: React.ChangeEvent<HTMLInputElement>, fileType: 'pdf' | 'word') => {
     const file = e.target.files?.[0]
     if (file) {
-      const allowedTypes = fileType === 'pdf' 
-        ? ['.pdf'] 
+      const allowedTypes = fileType === 'pdf'
+        ? ['.pdf']
         : ['.doc', '.docx']
       const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase()
 
@@ -236,7 +236,7 @@ export default function DefensoriaAdmin() {
           'application/msword',
           'application/octet-stream' // Sometimes .docx files are detected as this
         ]
-        
+
         if (!validMimeTypes.includes(file.type) && !fileExtension.match(/\.(doc|docx)$/)) {
           setDialogMessage('Por favor selecciona un archivo Word válido (.doc o .docx)')
           e.target.value = ''
@@ -255,7 +255,7 @@ export default function DefensoriaAdmin() {
     }
   }
 
-  const uploadFile = async (file: File): Promise<string> => {
+  const uploadFile = async (file: File): Promise<string | { originalUrl: string, pdfUrl?: string }> => {
     const uploadFormData = new FormData()
     uploadFormData.append('file', file)
     uploadFormData.append('type', 'documents')
@@ -268,23 +268,23 @@ export default function DefensoriaAdmin() {
     if (!uploadResponse.ok) {
       const errorText = await uploadResponse.text()
       let errorMessage = `Error uploading ${file.name}`
-      
+
       try {
         const errorJson = JSON.parse(errorText)
         errorMessage = errorJson.error || errorMessage
       } catch {
         errorMessage = errorText || errorMessage
       }
-      
+
       throw new Error(errorMessage)
     }
 
     const uploadResult = await uploadResponse.json()
-    
+
     if (!uploadResult.url && !uploadResult.fileUrl && !uploadResult.documentUrl) {
       throw new Error(`No se recibió URL válida para ${file.name}`)
     }
-    
+
     // Return an object with both original and PDF URLs for Word documents
     if (uploadResult.pdfUrl && (file.name.toLowerCase().endsWith('.doc') || file.name.toLowerCase().endsWith('.docx'))) {
       return {
@@ -292,7 +292,7 @@ export default function DefensoriaAdmin() {
         pdfUrl: uploadResult.pdfUrl
       }
     }
-    
+
     return uploadResult.url || uploadResult.fileUrl || uploadResult.documentUrl
   }
 
@@ -329,10 +329,20 @@ export default function DefensoriaAdmin() {
       // Handle file uploads for annual reports
       if (activeTab === 'annual_reports') {
         if (selectedPdfFile) {
-          pdfUrl = await uploadFile(selectedPdfFile)
+          pdfUrl = await uploadFile(selectedPdfFile) as string // Assuming uploadFile returns string for PDF
         }
         if (selectedWordFile) {
-          wordUrl = await uploadFile(selectedWordFile)
+          const uploadResult = await uploadFile(selectedWordFile)
+          // Handle both cases: string URL or object with URLs
+          if (typeof uploadResult === 'object' && uploadResult.originalUrl) {
+            wordUrl = uploadResult.originalUrl
+            // If PDF conversion was successful, also use the PDF URL
+            if (uploadResult.pdfUrl && !pdfUrl) {
+              pdfUrl = uploadResult.pdfUrl
+            }
+          } else {
+            wordUrl = uploadResult as string
+          }
         }
 
         // Preserve existing URLs if no new files are uploaded for editing
@@ -360,7 +370,7 @@ export default function DefensoriaAdmin() {
         // Handle file upload for other sections (like 'conoce_ley' or 'defensora_profile')
         if (selectedFile) {
           const uploadedUrl = await uploadFile(selectedFile)
-          if (uploadedUrl) {
+          if (typeof uploadedUrl === 'string' && uploadedUrl) { // Check if it's a string URL
             if (selectedFile.type.startsWith('image/')) {
               finalImageUrl = uploadedUrl
             } else {
@@ -375,7 +385,7 @@ export default function DefensoriaAdmin() {
 
 
       const url = editingId
-        ? `/api/defensoria-audiencia/${editingId}` // Use dynamic ID for PUT
+        ? `/api/defensoria-audiencia` // Use the same endpoint for PUT, backend will handle based on ID
         : '/api/defensoria-audiencia'
 
       const method = editingId ? 'PUT' : 'POST'
@@ -386,14 +396,9 @@ export default function DefensoriaAdmin() {
         payload.title = formData.metadata?.year || formData.title; // Ensure title is year
         payload.content = formData.metadata?.description || formData.content; // Ensure content is description
         payload.file_url = formData.metadata?.pdfUrl; // Use pdfUrl from metadata
-        payload.image_url = formData.metadata?.wordUrl; // This mapping seems incorrect, assuming image_url is not used for word docs
-        // If word docs should also have a specific URL field, it needs to be added to DefensoriaContent interface and handled here.
-        // For now, let's assume wordUrl is also part of metadata and not directly mapped to image_url.
-        // If wordUrl needs to be accessible, it should be added to the UI and handled separately.
-        // Re-evaluating: The new structure uses metadata.pdfUrl and metadata.wordUrl.
-        // The original `formData.file_url` and `formData.image_url` might be remnants or for other sections.
-        // Let's ensure annual_reports uses the metadata correctly.
-
+        // The original code had `image_url: formData.metadata?.wordUrl`, which is likely a mistake.
+        // `wordUrl` should ideally be stored in metadata or a dedicated field if the API supports it.
+        // For now, we'll stick to using `file_url` for PDF and `metadata.wordUrl` for Word.
         payload.metadata = {
           year: formData.metadata?.year,
           description: formData.metadata?.description,
@@ -791,19 +796,19 @@ export default function DefensoriaAdmin() {
 
     setIsUploading(true)
     setDialogMessage('Subiendo archivos...')
-    
+
     try {
       let pdfUrl = editingContent?.metadata?.pdfUrl || ''
       let wordUrl = editingContent?.metadata?.wordUrl || ''
 
       if (selectedPdfFile) {
         try {
-          pdfUrl = await uploadFile(selectedPdfFile)
+          pdfUrl = await uploadFile(selectedPdfFile) as string
         } catch (error) {
           throw new Error(`Error al subir archivo PDF: ${error instanceof Error ? error.message : 'Error desconocido'}`)
         }
       }
-      
+
       if (selectedWordFile) {
         try {
           const uploadResult = await uploadFile(selectedWordFile)

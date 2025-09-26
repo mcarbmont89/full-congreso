@@ -181,38 +181,9 @@ export async function POST(request: NextRequest) {
     // Write file to local storage (using already read buffer)
     await writeFile(filePath, fileBuffer)
 
-    // Convert Word documents to PDF if requested
+    // Note: PDF conversion temporarily disabled due to LibreOffice compatibility issues
+    // Files will be stored in their original format
     let pdfUrl = null
-    if (isDocument && (detectedType === 'application/msword' || 
-        detectedType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
-      try {
-        // Dynamic import to avoid module loading issues
-        const libre = await import('libreoffice-convert')
-        const convert = libre.default
-        
-        // Convert to PDF
-        const pdfBuffer = await new Promise((resolve, reject) => {
-          convert(fileBuffer, '.pdf', undefined, (err: any, done: Buffer) => {
-            if (err) {
-              console.log('PDF conversion error:', err)
-              reject(err)
-            } else {
-              resolve(done)
-            }
-          })
-        }) as Buffer
-
-        // Save PDF version
-        const pdfFilename = `${randomUUID()}.pdf`
-        const pdfPath = join(normalizedUploadDir, pdfFilename)
-        await writeFile(pdfPath, pdfBuffer)
-        
-        pdfUrl = `/uploads/documents/${pdfFilename}`
-      } catch (conversionError) {
-        console.log('PDF conversion failed:', conversionError)
-        // Continue without PDF conversion if it fails
-      }
-    }
 
     // Return the public URL path with proper response format
     if (isAudio || file.name.toLowerCase().endsWith('.mp3')) {
