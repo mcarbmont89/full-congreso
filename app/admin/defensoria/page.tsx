@@ -120,8 +120,10 @@ export default function DefensoriaAdmin() {
 
     if (searchTerm) {
       filtered = filtered.filter(item =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (item.content && item.content.toLowerCase().includes(searchTerm.toLowerCase()))
+        Boolean(
+          (item.title && item.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          (item.content && item.content.toLowerCase().includes(searchTerm.toLowerCase()))
+        )
       )
     }
 
@@ -170,10 +172,10 @@ export default function DefensoriaAdmin() {
         // Force re-render of filtered content
         setTimeout(() => {
           setFilteredContent(data.filter((item: DefensoriaContent) => {
-            let filtered = item.section === activeTab
+            let filtered = Boolean(item.section === activeTab)
             if (searchTerm) {
-              filtered = filtered && (
-                item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              filtered = filtered && Boolean(
+                (item.title && item.title.toLowerCase().includes(searchTerm.toLowerCase())) ||
                 (item.content && item.content.toLowerCase().includes(searchTerm.toLowerCase()))
               )
             }
