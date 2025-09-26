@@ -145,10 +145,30 @@ export function parseMexicoCityDate(dateString: string): Date {
 }
 
 /**
+ * Get a SQL timestamp that represents "NOW" in configured timezone
+ * This returns a properly formatted timestamp for PostgreSQL
+ */
+export async function getConfiguredNowForSQL(): Promise<string> {
+  const configuredTime = await getCurrentTime()
+  return configuredTime.toISOString()
+}
+
+/**
  * Get a SQL timestamp that represents "NOW" in Mexico City timezone
  * This returns a properly formatted timestamp for PostgreSQL
  */
 export function getMexicoCityNowForSQL(): string {
   const mexicoCityTime = getMexicoCityTime()
   return mexicoCityTime.toISOString()
+}
+
+/**
+ * Check if a given date/time in configured timezone is in the past
+ * Used for scheduled publishing logic
+ */
+export async function isConfiguredTimePast(date: Date): Promise<boolean> {
+  const configuredNow = await getCurrentTime()
+  const timezone = await getCurrentTimezone()
+  const targetConfiguredTime = toZonedTime(date, timezone)
+  return targetConfiguredTime <= configuredNow
 }

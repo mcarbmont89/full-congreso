@@ -1,7 +1,7 @@
 
 import { NextResponse } from 'next/server'
 import { getDB } from '@/lib/database-env'
-import { formatMexicoCityTime } from '@/lib/timezone'
+import { formatConfiguredTime, getCurrentTimezone } from '@/lib/timezone'
 
 export async function POST() {
   try {
@@ -14,7 +14,10 @@ export async function POST() {
       WHERE status = 'scheduled' AND published_at <= CURRENT_TIMESTAMP
     `)
     
-    console.log(`Found ${checkResult.rows.length} scheduled items ready to publish (Mexico City time: ${formatMexicoCityTime(new Date())}):`, 
+    const currentTimezone = await getCurrentTimezone()
+    const currentTime = await formatConfiguredTime(new Date())
+    
+    console.log(`Found ${checkResult.rows.length} scheduled items ready to publish (${currentTimezone} time: ${currentTime}):`, 
       checkResult.rows.map(row => ({
         id: row.id,
         title: row.title?.substring(0, 30) + '...',

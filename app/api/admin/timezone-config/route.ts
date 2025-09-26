@@ -1,18 +1,18 @@
-
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { getDB } from '@/lib/database-env'
+import { clearTimezoneCache } from '@/lib/timezone'
 
 export async function GET() {
   try {
     const pool = getDB()
-    
+
     const result = await pool.query(`
       SELECT * FROM timezone_config 
       WHERE is_active = true 
       ORDER BY updated_at DESC 
       LIMIT 1
     `)
-    
+
     if (result.rows.length === 0) {
       // Return default timezone if none configured
       return NextResponse.json({
@@ -21,7 +21,7 @@ export async function GET() {
         isActive: true
       })
     }
-    
+
     return NextResponse.json(result.rows[0])
   } catch (error) {
     console.error('Error fetching timezone config:', error)
@@ -29,26 +29,38 @@ export async function GET() {
   }
 }
 
-export async function POST(request: Request) {
+export async function POST(request: NextRequest) {
   try {
+    const url = new URL(request.url)
+    const clearCache = url.searchParams.get('clearCache')
+
+    // If this is just a cache clear request
+    if (clearCache === 'true') {
+      clearTimezoneCache()
+      return NextResponse.json({ success: true, message: 'Cache cleared' })
+    }
+
     const { timezone, displayName } = await request.json()
-    
+
     if (!timezone || !displayName) {
       return NextResponse.json({ error: 'Timezone and display name are required' }, { status: 400 })
     }
-    
+
     const pool = getDB()
-    
+
     // Deactivate existing configurations
     await pool.query('UPDATE timezone_config SET is_active = false')
-    
+
     // Insert new configuration
     const result = await pool.query(`
       INSERT INTO timezone_config (timezone, display_name, is_active, created_at, updated_at)
       VALUES ($1, $2, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       RETURNING *
     `, [timezone, displayName])
-    
+
+    // Clear the cache so the new timezone takes effect immediately
+    clearTimezoneCache()
+
     return NextResponse.json(result.rows[0])
   } catch (error) {
     console.error('Error saving timezone config:', error)
@@ -59,16 +71,16 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const { id, timezone, displayName } = await request.json()
-    
+
     if (!id || !timezone || !displayName) {
       return NextResponse.json({ error: 'ID, timezone and display name are required' }, { status: 400 })
     }
-    
+
     const pool = getDB()
-    
+
     // Deactivate all configurations first
     await pool.query('UPDATE timezone_config SET is_active = false')
-    
+
     // Update and activate the specified configuration
     const result = await pool.query(`
       UPDATE timezone_config 
@@ -76,11 +88,14 @@ export async function PUT(request: Request) {
       WHERE id = $3
       RETURNING *
     `, [timezone, displayName, id])
-    
+
     if (result.rows.length === 0) {
       return NextResponse.json({ error: 'Timezone configuration not found' }, { status: 404 })
     }
-    
+
+    // Clear the cache so the new timezone takes effect immediately
+    clearTimezoneCache()
+
     return NextResponse.json(result.rows[0])
   } catch (error) {
     console.error('Error updating timezone config:', error)
