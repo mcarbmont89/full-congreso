@@ -62,7 +62,7 @@ export function clearTimezoneCache(): void {
 /**
  * Get current date and time in configured timezone
  */
-export async function getCurrentTime(): Date {
+export async function getCurrentTime(): Promise<Date> {
   const timezone = await getCurrentTimezone()
   return toZonedTime(new Date(), timezone)
 }
