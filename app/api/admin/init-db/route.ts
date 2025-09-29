@@ -67,7 +67,9 @@ export async function POST() {
         title VARCHAR(255) NOT NULL,
         thumbnail_url TEXT,
         stream_url TEXT NOT NULL,
+        channel VARCHAR(50),
         is_live BOOLEAN DEFAULT false,
+        status VARCHAR(20) DEFAULT 'offline',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )

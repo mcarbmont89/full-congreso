@@ -109,7 +109,7 @@ export async function getLiveStreamsFromDB(): Promise<LiveStream[]> {
 
     const result = await pool.query(`
       SELECT id, title, thumbnail_url as "thumbnailUrl", stream_url as "streamUrl", 
-             channel, is_live as "isLive", created_at as "createdAt"
+             channel, is_live as "isLive", status, created_at as "createdAt"
       FROM live_streams 
       ORDER BY created_at DESC
     `)
@@ -370,7 +370,7 @@ export async function getAllLiveStreamsFromDB(): Promise<LiveStream[]> {
 
     const result = await pool.query(`
       SELECT id, title, thumbnail_url as "thumbnailUrl", stream_url as "streamUrl", 
-             channel, is_live as "isLive", created_at as "createdAt"
+             channel, is_live as "isLive", status, created_at as "createdAt"
       FROM live_streams 
       ORDER BY created_at DESC, id DESC
     `)
