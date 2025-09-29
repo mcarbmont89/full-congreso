@@ -229,7 +229,7 @@ export default function NewsAdmin() {
       const newsData = {
         ...formData,
         imageUrl,
-        publishedAt: formData.publishedAt || publishedAt, // Send raw datetime-local string if available
+        publishedAt: publishedAt, // Always use the Date object for type safety
         status
       }
 

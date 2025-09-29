@@ -44,8 +44,21 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
 
-    // Parse datetime-local input as admin timezone time (NO CONVERSION)
-    const publishDate = await parseAdminTimezoneDateTime(data.publishedAt)
+    // Handle publishedAt - if it's an ISO string from Date serialization, use it directly
+    // If it's a naive datetime-local string, parse it in admin timezone
+    let publishDate: Date
+    if (data.publishedAt) {
+      if (typeof data.publishedAt === 'string' && (data.publishedAt.includes('Z') || /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(data.publishedAt))) {
+        // It's an ISO string from Date serialization, use it directly
+        publishDate = new Date(data.publishedAt)
+      } else {
+        // It's a naive datetime-local string, parse in admin timezone
+        publishDate = await parseAdminTimezoneDateTime(data.publishedAt)
+      }
+    } else {
+      publishDate = new Date()
+    }
+
     const now = new Date()
     const status = data.status || (publishDate <= now ? 'published' : 'scheduled')
 
