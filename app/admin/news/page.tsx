@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Plus, Edit, Trash2, ArrowLeft, Search, Send, Star } from "lucide-react"
 import { getNews, createNewsItem, updateNewsItem, deleteNewsItem, type NewsItem } from "@/lib/api-client"
 import BulkNewsUpload from "@/components/bulk-news-upload"
+import { formatForAdminTimezoneInput, parseAdminTimezoneDateTime } from "@/lib/timezone"
 
 export default function NewsAdmin() {
   const [news, setNews] = useState<NewsItem[]>([])
@@ -209,8 +210,8 @@ export default function NewsAdmin() {
         status = 'published'
         publishedAt = new Date()
       } else if (formData.publishedAt) {
-        // If date is provided, use it and determine status based on time
-        publishedAt = new Date(formData.publishedAt)
+        // Parse datetime-local input as admin timezone time (NO CONVERSION)
+        publishedAt = await parseAdminTimezoneDateTime(formData.publishedAt)
         const now = new Date()
         
         // If we're editing and the original status was 'scheduled', preserve the scheduled date
@@ -261,15 +262,18 @@ export default function NewsAdmin() {
     }
   }
 
-  const handleEdit = (newsItem: NewsItem) => {
+  const handleEdit = async (newsItem: NewsItem) => {
     setEditingNews(newsItem)
+    // Format the publishedAt date using admin timezone (NO CONVERSION)
+    const formattedDate = await formatForAdminTimezoneInput(new Date(newsItem.publishedAt))
+    
     setFormData({
       title: newsItem.title,
       summary: newsItem.summary,
       content: newsItem.content,
       imageUrl: newsItem.imageUrl,
       category: newsItem.category || '',
-      publishedAt: new Date(newsItem.publishedAt).toISOString().slice(0, 16),
+      publishedAt: formattedDate,
       date: new Date(newsItem.publishedAt).toISOString().split('T')[0],
       isFeatured: newsItem.isFeatured || false,
       featuredRank: newsItem.featuredRank ?? null
