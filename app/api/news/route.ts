@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getNewsFromDB, createNewsItemInDB } from '@/lib/api-database'
+import { parseAdminTimezoneDateTime } from '@/lib/timezone'
 
 export async function GET(request: Request) {
   try {
@@ -43,13 +44,14 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
 
-    // Determine status based on publish date
-    const publishDate = new Date(data.publishedAt)
+    // Parse datetime-local input as admin timezone time (NO CONVERSION)
+    const publishDate = await parseAdminTimezoneDateTime(data.publishedAt)
     const now = new Date()
     const status = data.status || (publishDate <= now ? 'published' : 'scheduled')
 
     const newsItem = await createNewsItemInDB({
       ...data,
+      publishedAt: publishDate,
       status
     })
     return NextResponse.json(newsItem)

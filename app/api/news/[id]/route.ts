@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { updateNewsItemInDB, deleteNewsItemFromDB } from '@/lib/api-database'
+import { parseAdminTimezoneDateTime } from '@/lib/timezone'
 
 export async function PUT(
   request: NextRequest,
@@ -8,6 +9,12 @@ export async function PUT(
   try {
     const { id } = await params
     const data = await request.json()
+    
+    // Parse datetime-local input as admin timezone time (NO CONVERSION) if publishedAt is provided
+    if (data.publishedAt) {
+      data.publishedAt = await parseAdminTimezoneDateTime(data.publishedAt)
+    }
+    
     const newsItem = await updateNewsItemInDB(id, data)
 
     if (!newsItem) {
