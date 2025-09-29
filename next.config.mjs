@@ -49,6 +49,12 @@ const nextConfig = {
   output: 'standalone',
   assetPrefix: process.env.NODE_ENV === 'production' ? '' : '',
   trailingSlash: false,
+  // Ensure proper port configuration for deployment
+  ...(process.env.NODE_ENV === 'production' && {
+    env: {
+      PORT: '80'
+    }
+  }),
   images: {
     unoptimized: true,
     remotePatterns: [
