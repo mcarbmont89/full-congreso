@@ -223,9 +223,9 @@ export default function AnnualReportsSection() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {yearGroups.slice(0, 6).map((yearGroup) => (
             <div key={yearGroup.year} className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-300">
-              {/* Gray header with year */}
-              <div className="bg-gray-300 px-6 py-6 text-center border-b border-gray-400">
-                <h3 className="text-6xl font-black" style={{ color: "#7B2CBF" }}>
+              {/* Purple header with year */}
+              <div className="px-6 py-6 text-center border-b border-purple-700" style={{ backgroundColor: "#7B2CBF" }}>
+                <h3 className="text-6xl font-black text-white">
                   {yearGroup.year}
                 </h3>
               </div>
