@@ -185,13 +185,16 @@ export async function parseAdminTimezoneDateTime(datetimeLocalString: string): P
     return new Date()
   }
   
-  // Parse the datetime-local string as if it's in the admin timezone
+  // If input already has timezone info (Z or offset), don't convert
+  if (datetimeLocalString.includes('Z') || /[+-]\d{2}:\d{2}$/.test(datetimeLocalString)) {
+    return new Date(datetimeLocalString)
+  }
+  
   const timezone = await getCurrentTimezone()
   
-  // Create a Date object treating the input as admin timezone
-  // We use fromZonedTime to create UTC Date from admin timezone input
-  const localDate = new Date(datetimeLocalString)
-  return fromZonedTime(localDate, timezone)
+  // Parse the naive datetime string directly as admin timezone
+  // Do NOT create Date object first as that causes conversion issues
+  return fromZonedTime(datetimeLocalString, timezone)
 }
 
 /**
@@ -207,9 +210,8 @@ export async function formatForAdminTimezoneInput(date: Date): Promise<string> {
   
   const timezone = await getCurrentTimezone()
   
-  // Convert the UTC date to admin timezone and format for input
-  const adminTimezoneDate = toZonedTime(date, timezone)
-  return adminTimezoneDate.toISOString().slice(0, 16)
+  // Format directly in admin timezone - do NOT use toISOString which converts to UTC
+  return formatInTimeZone(date, timezone, "yyyy-MM-dd'T'HH:mm")
 }
 
 /**
@@ -221,9 +223,13 @@ export function parseMexicoCityDateTime(datetimeLocalString: string): Date {
     return new Date()
   }
   
-  // Parse as Mexico City time without conversion
-  const localDate = new Date(datetimeLocalString)
-  return fromZonedTime(localDate, DEFAULT_TIMEZONE)
+  // If input already has timezone info, don't convert
+  if (datetimeLocalString.includes('Z') || /[+-]\d{2}:\d{2}$/.test(datetimeLocalString)) {
+    return new Date(datetimeLocalString)
+  }
+  
+  // Parse the naive datetime string directly as Mexico City time
+  return fromZonedTime(datetimeLocalString, DEFAULT_TIMEZONE)
 }
 
 /**
@@ -235,7 +241,6 @@ export function formatForMexicoCityInput(date: Date): string {
     return ''
   }
   
-  // Convert to Mexico City time and format for input
-  const mexicoCityDate = toZonedTime(date, DEFAULT_TIMEZONE)
-  return mexicoCityDate.toISOString().slice(0, 16)
+  // Format directly in Mexico City timezone - do NOT use toISOString
+  return formatInTimeZone(date, DEFAULT_TIMEZONE, "yyyy-MM-dd'T'HH:mm")
 }

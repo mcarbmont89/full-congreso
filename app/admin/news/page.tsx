@@ -210,8 +210,8 @@ export default function NewsAdmin() {
         status = 'published'
         publishedAt = new Date()
       } else if (formData.publishedAt) {
-        // Parse datetime-local input as admin timezone time (NO CONVERSION)
-        publishedAt = await parseAdminTimezoneDateTime(formData.publishedAt)
+        // Send raw datetime-local string to server - let server handle timezone conversion
+        publishedAt = new Date(formData.publishedAt) // Keep for status determination only
         const now = new Date()
         
         // If we're editing and the original status was 'scheduled', preserve the scheduled date
@@ -229,7 +229,7 @@ export default function NewsAdmin() {
       const newsData = {
         ...formData,
         imageUrl,
-        publishedAt,
+        publishedAt: formData.publishedAt || publishedAt, // Send raw datetime-local string if available
         status
       }
 
