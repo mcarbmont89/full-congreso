@@ -315,7 +315,7 @@ export default function AnnualReportsSection() {
                   report.type !== "PLAN DE TRABAJO" && 
                   report.type !== "Plan de Trabajo"
                 ).map((report, reportIndex) => (
-                  <div key={`${yearGroup.year}-${report.id || reportIndex}`} className="bg-[#7B2CBF] px-4 py-3">
+                  <div key={`${yearGroup.year}-${report.id || reportIndex}`} className="px-4 py-3" style={{ backgroundColor: "#7B2CBF" }}>
                     <div className="flex items-center justify-between">
                       <span className="text-white text-sm font-bold uppercase">
                         {report.type}
