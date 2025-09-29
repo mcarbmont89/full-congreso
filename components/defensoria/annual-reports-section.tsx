@@ -86,13 +86,15 @@ export default function AnnualReportsSection() {
                     type: "INFORME ANUAL",
                     description: "INFORME ANUAL",
                     pdfUrl: "/files/informe-anual-2024.pdf",
-                    wordUrl: "/files/informe-anual-2024.docx"
+                    wordUrl: "/files/informe-anual-2024.docx",
+                    id: "fallback-2024-1"
                   },
                   {
                     type: "PLAN DE TRABAJO",
                     description: "PLAN DE TRABAJO",
                     pdfUrl: "/files/plan-trabajo-2024.pdf",
-                    wordUrl: "/files/plan-trabajo-2024.docx"
+                    wordUrl: "/files/plan-trabajo-2024.docx",
+                    id: "fallback-2024-2"
                   }
                 ]
               },
@@ -103,13 +105,15 @@ export default function AnnualReportsSection() {
                     type: "INFORME ANUAL",
                     description: "INFORME ANUAL",
                     pdfUrl: "/files/informe-anual-2023.pdf",
-                    wordUrl: "/files/informe-anual-2023.docx"
+                    wordUrl: "/files/informe-anual-2023.docx",
+                    id: "fallback-2023-1"
                   },
                   {
                     type: "PLAN DE TRABAJO",
                     description: "PLAN DE TRABAJO",
                     pdfUrl: "/files/plan-trabajo-2023.pdf",
-                    wordUrl: "/files/plan-trabajo-2023.docx"
+                    wordUrl: "/files/plan-trabajo-2023.docx",
+                    id: "fallback-2023-2"
                   }
                 ]
               },
@@ -120,13 +124,15 @@ export default function AnnualReportsSection() {
                     type: "INFORME ANUAL",
                     description: "INFORME ANUAL",
                     pdfUrl: "/files/informe-anual-2022.pdf",
-                    wordUrl: "/files/informe-anual-2022.docx"
+                    wordUrl: "/files/informe-anual-2022.docx",
+                    id: "fallback-2022-1"
                   },
                   {
                     type: "PLAN DE TRABAJO", 
                     description: "PLAN DE TRABAJO",
                     pdfUrl: "/files/plan-trabajo-2022.pdf",
-                    wordUrl: "/files/plan-trabajo-2022.docx"
+                    wordUrl: "/files/plan-trabajo-2022.docx",
+                    id: "fallback-2022-2"
                   }
                 ]
               }
@@ -144,13 +150,15 @@ export default function AnnualReportsSection() {
                 type: "INFORME ANUAL",
                 description: "INFORME ANUAL",
                 pdfUrl: "/files/informe-anual-2024.pdf",
-                wordUrl: "/files/informe-anual-2024.docx"
+                wordUrl: "/files/informe-anual-2024.docx",
+                id: "fallback-error-2024-1"
               },
               {
                 type: "PLAN DE TRABAJO",
                 description: "PLAN DE TRABAJO",
                 pdfUrl: "/files/plan-trabajo-2024.pdf",
-                wordUrl: "/files/plan-trabajo-2024.docx"
+                wordUrl: "/files/plan-trabajo-2024.docx",
+                id: "fallback-error-2024-2"
               }
             ]
           }
@@ -217,7 +225,7 @@ export default function AnnualReportsSection() {
             <div key={yearGroup.year} className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-300">
               {/* Gray header with year */}
               <div className="bg-gray-300 px-6 py-6 text-center border-b border-gray-400">
-                <h3 className="text-6xl font-black text-purple-900">
+                <h3 className="text-6xl font-black text-[#7B2CBF]">
                   {yearGroup.year}
                 </h3>
               </div>
