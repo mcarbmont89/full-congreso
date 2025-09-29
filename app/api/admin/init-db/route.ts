@@ -75,6 +75,39 @@ export async function POST() {
       )
     `)
 
+    // Add channel column if it doesn't exist (for existing tables)
+    await pool.query(`
+      DO $$ 
+      BEGIN 
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'live_streams' AND column_name = 'channel'
+        ) THEN
+          ALTER TABLE live_streams ADD COLUMN channel VARCHAR(50);
+        END IF;
+      END $$;
+    `)
+
+    // Add status column if it doesn't exist (for existing tables)
+    await pool.query(`
+      DO $$ 
+      BEGIN 
+        IF NOT EXISTS (
+          SELECT 1 FROM information_schema.columns 
+          WHERE table_name = 'live_streams' AND column_name = 'status'
+        ) THEN
+          ALTER TABLE live_streams ADD COLUMN status VARCHAR(20) DEFAULT 'offline';
+        END IF;
+      END $$;
+    `)
+
+    // Sync status with is_live for existing rows
+    await pool.query(`
+      UPDATE live_streams 
+      SET status = CASE WHEN is_live THEN 'live' ELSE 'offline' END 
+      WHERE status IS NULL OR status NOT IN ('live','offline','recess','signal_open')
+    `)
+
     // Create news table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS news (
