@@ -11,6 +11,7 @@ interface ReportType {
   description: string
   pdfUrl?: string
   wordUrl?: string
+  id: string
 }
 
 interface YearGroup {
@@ -43,7 +44,6 @@ export default function AnnualReportsSection() {
         const response = await fetch('/api/defensoria-audiencia?section=annual_reports')
         if (response.ok) {
           const data = await response.json()
-          console.log('Loaded content:', data)
           if (data && data.length > 0) {
             // Group reports by year
             const groupedByYear: { [year: string]: ReportType[] } = {}
@@ -61,17 +61,19 @@ export default function AnnualReportsSection() {
                 type: reportType,
                 description: metadata.description || item.content || reportType,
                 pdfUrl: metadata.pdfUrl,
-                wordUrl: metadata.wordUrl
+                wordUrl: metadata.wordUrl,
+                id: item.id // Add unique ID for stable keys
               })
             })
             
             // Convert to array and sort by year descending
+            const toNum = (y: string) => Number.parseInt(y, 10) || 0
             const yearGroupsArray = Object.entries(groupedByYear)
               .map(([year, reports]) => ({
                 year,
                 reports
               }))
-              .sort((a, b) => parseInt(b.year) - parseInt(a.year))
+              .sort((a, b) => toNum(b.year) - toNum(a.year))
             
             setYearGroups(yearGroupsArray)
           } else {
@@ -211,8 +213,8 @@ export default function AnnualReportsSection() {
 
         {/* 3x2 Grid Layout - One card per year */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {yearGroups.slice(0, 6).map((yearGroup, index) => (
-            <div key={index} className="bg-gray-200 rounded-lg overflow-hidden shadow-md">
+          {yearGroups.slice(0, 6).map((yearGroup) => (
+            <div key={yearGroup.year} className="bg-gray-200 rounded-lg overflow-hidden shadow-md">
               {/* Gray header with year */}
               <div className="bg-gray-300 px-6 py-8 text-center">
                 <h3 className="text-5xl font-black text-gray-700">
@@ -222,7 +224,7 @@ export default function AnnualReportsSection() {
 
               {/* Purple sections for each report type */}
               {yearGroup.reports.map((report, reportIndex) => (
-                <div key={reportIndex} className="mb-2 last:mb-0">
+                <div key={`${yearGroup.year}-${report.id || reportIndex}`} className="mb-2 last:mb-0">
                   <div className="bg-[#8b5cdf] px-6 py-3 text-center">
                     <p className="text-white text-sm font-bold uppercase leading-tight">
                       {report.type}
