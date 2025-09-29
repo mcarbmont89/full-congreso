@@ -225,7 +225,7 @@ export default function AnnualReportsSection() {
             <div key={yearGroup.year} className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-300">
               {/* Gray header with year */}
               <div className="bg-gray-300 px-6 py-6 text-center border-b border-gray-400">
-                <h3 className="text-6xl font-black text-[#7B2CBF]">
+                <h3 className="text-6xl font-black" style={{ color: "#7B2CBF" }}>
                   {yearGroup.year}
                 </h3>
               </div>
@@ -234,7 +234,7 @@ export default function AnnualReportsSection() {
               <div className="space-y-0">
                 {/* Show INFORME ANUAL if available */}
                 {yearGroup.reports.some(report => report.type === "INFORME ANUAL" || report.type === "Informe Anual") && (
-                  <div className="bg-[#7B2CBF] px-4 py-3">
+                  <div className="px-4 py-3" style={{ backgroundColor: "#7B2CBF" }}>
                     <div className="flex items-center justify-between">
                       <span className="text-white text-sm font-bold uppercase">
                         INFORME ANUAL
@@ -272,7 +272,7 @@ export default function AnnualReportsSection() {
 
                 {/* Show PLAN DE TRABAJO if available */}
                 {yearGroup.reports.some(report => report.type === "PLAN DE TRABAJO" || report.type === "Plan de Trabajo") && (
-                  <div className="bg-[#7B2CBF] px-4 py-3">
+                  <div className="px-4 py-3" style={{ backgroundColor: "#7B2CBF" }}>
                     <div className="flex items-center justify-between">
                       <span className="text-white text-sm font-bold uppercase">
                         PLAN DE TRABAJO
