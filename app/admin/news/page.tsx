@@ -13,7 +13,6 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Plus, Edit, Trash2, ArrowLeft, Search, Send, Star } from "lucide-react"
 import { getNews, createNewsItem, updateNewsItem, deleteNewsItem, type NewsItem } from "@/lib/api-client"
 import BulkNewsUpload from "@/components/bulk-news-upload"
-import { formatForAdminTimezoneInput, parseAdminTimezoneDateTime } from "@/lib/timezone"
 
 export default function NewsAdmin() {
   const [news, setNews] = useState<NewsItem[]>([])
@@ -210,8 +209,8 @@ export default function NewsAdmin() {
         status = 'published'
         publishedAt = new Date()
       } else if (formData.publishedAt) {
-        // Send raw datetime-local string to server - let server handle timezone conversion
-        publishedAt = new Date(formData.publishedAt) // Keep for status determination only
+        // If date is provided, use it and determine status based on time
+        publishedAt = new Date(formData.publishedAt)
         const now = new Date()
         
         // If we're editing and the original status was 'scheduled', preserve the scheduled date
@@ -229,7 +228,7 @@ export default function NewsAdmin() {
       const newsData = {
         ...formData,
         imageUrl,
-        publishedAt: publishedAt, // Always use the Date object for type safety
+        publishedAt,
         status
       }
 
@@ -262,18 +261,15 @@ export default function NewsAdmin() {
     }
   }
 
-  const handleEdit = async (newsItem: NewsItem) => {
+  const handleEdit = (newsItem: NewsItem) => {
     setEditingNews(newsItem)
-    // Format the publishedAt date using admin timezone (NO CONVERSION)
-    const formattedDate = await formatForAdminTimezoneInput(new Date(newsItem.publishedAt))
-    
     setFormData({
       title: newsItem.title,
       summary: newsItem.summary,
       content: newsItem.content,
       imageUrl: newsItem.imageUrl,
       category: newsItem.category || '',
-      publishedAt: formattedDate,
+      publishedAt: new Date(newsItem.publishedAt).toISOString().slice(0, 16),
       date: new Date(newsItem.publishedAt).toISOString().split('T')[0],
       isFeatured: newsItem.isFeatured || false,
       featuredRank: newsItem.featuredRank ?? null

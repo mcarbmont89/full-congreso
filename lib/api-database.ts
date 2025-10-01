@@ -109,7 +109,7 @@ export async function getLiveStreamsFromDB(): Promise<LiveStream[]> {
 
     const result = await pool.query(`
       SELECT id, title, thumbnail_url as "thumbnailUrl", stream_url as "streamUrl", 
-             channel, is_live as "isLive", status, created_at as "createdAt"
+             channel, is_live as "isLive", created_at as "createdAt"
       FROM live_streams 
       ORDER BY created_at DESC
     `)
@@ -134,15 +134,12 @@ export async function createLiveStreamInDB(data: {
   status?: string
 }): Promise<LiveStream> {
   const pool = getDB()
-  // Set status based on isLive if not explicitly provided
-  const status = data.status ?? (data.isLive ? 'live' : 'offline')
-  
   const result = await pool.query(
       `INSERT INTO live_streams (title, thumbnail_url, stream_url, channel, is_live, status) 
        VALUES ($1, $2, $3, $4, $5, $6) 
        RETURNING id, title, thumbnail_url as "thumbnailUrl", stream_url as "streamUrl", 
                  channel, is_live as "isLive", status, created_at as "createdAt"`,
-      [data.title, data.thumbnailUrl, data.streamUrl, data.channel, data.isLive, status]
+      [data.title, data.thumbnailUrl, data.streamUrl, data.channel, data.isLive, data.status || 'offline']
     )
 
   const row = result.rows[0]
@@ -336,9 +333,6 @@ export async function updateLiveStreamInDB(
   if (data.isLive !== undefined && data.status === undefined) {
     fields.push(`is_live = $${paramIndex++}`)
     values.push(data.isLive)
-    // Keep status in sync with isLive
-    fields.push(`status = $${paramIndex++}`)
-    values.push(data.isLive ? 'live' : 'offline')
   }
 
   if (fields.length === 0) return null
@@ -376,7 +370,7 @@ export async function getAllLiveStreamsFromDB(): Promise<LiveStream[]> {
 
     const result = await pool.query(`
       SELECT id, title, thumbnail_url as "thumbnailUrl", stream_url as "streamUrl", 
-             channel, is_live as "isLive", status, created_at as "createdAt"
+             channel, is_live as "isLive", created_at as "createdAt"
       FROM live_streams 
       ORDER BY created_at DESC, id DESC
     `)

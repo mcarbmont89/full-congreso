@@ -110,6 +110,7 @@ export default function TinyMCEEditor({
             { title: 'Imagen flotante izquierda', value: 'float-left mr-4 mb-2' },
             { title: 'Imagen flotante derecha', value: 'float-right ml-4 mb-2' }
           ],
+          table_responsive_width: true,
           table_default_attributes: {
             'class': 'table table-striped table-bordered'
           },
@@ -159,6 +160,7 @@ export default function TinyMCEEditor({
           valid_elements: 'p,h1,h2,h3,h4,h5,h6,strong,em,u,s,a[href|target|title],img[src|alt|title|width|height|class],ul,ol,li,br,blockquote,table,thead,tbody,tr,th[scope],td[colspan|rowspan],span[class],div[class],pre,code',
           extended_valid_elements: 'div[class|style],span[class|style]',
           forced_root_block: 'p',
+          force_p_newlines: true,
           remove_trailing_brs: true,
           convert_urls: false,
           relative_urls: false,

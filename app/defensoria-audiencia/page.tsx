@@ -6,11 +6,8 @@ import ContactModal from "@/components/defensoria/contact-modal";
 import SolicitudesCarousel from "@/components/SolicitudesCarousel";
 import DefensoraProfileSection from "@/components/defensoria/defensora-profile-section";
 import RecentRequestsSection from "@/components/defensoria/recent-requests-section";
+import AnnualReportsSection from "@/components/defensoria/annual-reports-section";
 import ConoceLaLeyButton from "@/components/defensoria/conoce-la-ley-button";
-import dynamic from "next/dynamic";
-
-// Disable SSR for AnnualReportsSection to prevent hydration mismatch
-const AnnualReportsSection = dynamic(() => import("@/components/defensoria/annual-reports-section"), { ssr: false });
 
 export default function DefensoriaAudienciaPage() {
   return (

@@ -1328,149 +1328,111 @@ export default function DefensoriaAdmin() {
                         </Dialog>
                       </div>
                     ) : (
-                      <div className="space-y-6">
-                        {/* Group reports by year for better organization */}
-                        {(() => {
-                          // Group annual reports by year
-                          const groupedByYear: { [year: string]: DefensoriaContent[] } = {}
-                          
-                          annualReports.forEach((item) => {
-                            const year = item.metadata?.year || item.title || 'Sin año'
-                            if (!groupedByYear[year]) {
-                              groupedByYear[year] = []
-                            }
-                            groupedByYear[year].push(item)
-                          })
-
-                          // Sort years in descending order
-                          const sortedYears = Object.keys(groupedByYear).sort((a, b) => {
-                            const yearA = parseInt(a) || 0
-                            const yearB = parseInt(b) || 0
-                            return yearB - yearA
-                          })
-
-                          return sortedYears.map((year) => (
-                            <div key={year} className="space-y-3">
-                              {/* Year header */}
-                              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border">
-                                <div className="flex items-center space-x-3">
-                                  <Badge className="bg-orange-100 text-orange-800 text-lg px-3 py-1">
-                                    {year}
+                      <div className="overflow-x-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Año</TableHead>
+                              <TableHead>Descripción</TableHead>
+                              <TableHead>Tipo</TableHead>
+                              <TableHead>Archivos</TableHead>
+                              <TableHead>Estado</TableHead>
+                              <TableHead>Última Actualización</TableHead>
+                              <TableHead>Acciones</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {annualReports.map((item) => (
+                              <TableRow key={item.id as string}>
+                                <TableCell className="font-medium">
+                                  <Badge className="bg-orange-100 text-orange-800">
+                                    {item.metadata?.year || item.title || 'N/A'}
                                   </Badge>
-                                  <span className="text-sm text-gray-600">
-                                    {groupedByYear[year].length} informe{groupedByYear[year].length !== 1 ? 's' : ''}
-                                  </span>
-                                </div>
-                              </div>
-
-                              {/* Reports table for this year */}
-                              <div className="overflow-x-auto">
-                                <Table>
-                                  <TableHeader>
-                                    <TableRow>
-                                      <TableHead>Tipo de Informe</TableHead>
-                                      <TableHead>Descripción</TableHead>
-                                      <TableHead>Archivos</TableHead>
-                                      <TableHead>Estado</TableHead>
-                                      <TableHead>Última Actualización</TableHead>
-                                      <TableHead>Acciones</TableHead>
-                                    </TableRow>
-                                  </TableHeader>
-                                  <TableBody>
-                                    {groupedByYear[year].map((item) => (
-                                      <TableRow key={item.id as string}>
-                                        <TableCell>
-                                          <Badge className="bg-purple-100 text-purple-800">
-                                            {item.metadata?.reportType || 'Plan de Trabajo'}
-                                          </Badge>
-                                        </TableCell>
-                                        <TableCell className="max-w-xs">
-                                          <div>
-                                            <p className="font-medium truncate">
-                                              {item.metadata?.description || item.content || 'Sin descripción'}
-                                            </p>
-                                            {item.metadata?.period && (
-                                              <p className="text-sm text-gray-500">
-                                                Período: {item.metadata.period}
-                                              </p>
-                                            )}
-                                          </div>
-                                        </TableCell>
-                                        <TableCell>
-                                          <div className="flex space-x-2">
-                                            {item.metadata?.pdfUrl && (
-                                              <a href={item.metadata.pdfUrl} target="_blank" rel="noopener noreferrer">
-                                                <Badge className="bg-red-100 text-red-800 cursor-pointer hover:bg-red-200">
-                                                  PDF
-                                                </Badge>
-                                              </a>
-                                            )}
-                                            {item.metadata?.wordUrl && (
-                                              <a href={item.metadata.wordUrl} target="_blank" rel="noopener noreferrer">
-                                                <Badge className="bg-blue-100 text-blue-800 cursor-pointer hover:bg-blue-200">
-                                                  Word
-                                                </Badge>
-                                              </a>
-                                            )}
-                                            {!item.metadata?.pdfUrl && !item.metadata?.wordUrl && (
-                                              <span className="text-sm text-gray-500">Sin archivos</span>
-                                            )}
-                                          </div>
-                                        </TableCell>
-                                        <TableCell>
-                                          <Badge variant={item.is_active ? "default" : "secondary"}>
-                                            {item.is_active ? 'Activo' : 'Inactivo'}
-                                          </Badge>
-                                        </TableCell>
-                                        <TableCell>
-                                          {new Date(item.updated_at).toLocaleDateString('es-MX', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                          })}
-                                        </TableCell>
-                                        <TableCell>
-                                          <div className="flex space-x-2">
-                                            <Button
-                                              size="sm"
-                                              variant="outline"
-                                              onClick={() => {
-                                                setEditingContent(item);
-                                                setFormData({
-                                                  section: item.section,
-                                                  title: item.metadata?.year || item.title || '',
-                                                  content: item.metadata?.description || item.content || '',
-                                                  image_url: item.image_url || '',
-                                                  file_url: item.file_url || '',
-                                                  metadata: item.metadata || {},
-                                                  display_order: item.display_order,
-                                                  is_active: item.is_active
-                                                });
-                                                setIsDialogOpen(true);
-                                              }}
-                                            >
-                                              <Edit className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                              size="sm"
-                                              variant="outline"
-                                              onClick={() => handleDelete(item.id)}
-                                              className="text-red-600 hover:text-red-700"
-                                            >
-                                              <Trash2 className="w-4 h-4" />
-                                            </Button>
-                                          </div>
-                                        </TableCell>
-                                      </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </div>
-                            </div>
-                          ))
-                        })()}
+                                </TableCell>
+                                <TableCell>
+                                  <div>
+                                    <p className="font-medium">{item.metadata?.description || item.content || 'Sin descripción'}</p>
+                                    {item.metadata?.period && (
+                                      <p className="text-sm text-gray-500">Período: {item.metadata.period}</p>
+                                    )}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge className="bg-blue-100 text-blue-800">
+                                    {item.metadata?.reportType || 'Informe Anual'}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex space-x-2">
+                                    {item.metadata?.pdfUrl && (
+                                      <a href={item.metadata.pdfUrl} target="_blank" rel="noopener noreferrer">
+                                        <Badge className="bg-red-100 text-red-800 cursor-pointer hover:bg-red-200">
+                                          PDF
+                                        </Badge>
+                                      </a>
+                                    )}
+                                    {item.metadata?.wordUrl && (
+                                      <a href={item.metadata.wordUrl} target="_blank" rel="noopener noreferrer">
+                                        <Badge className="bg-blue-100 text-blue-800 cursor-pointer hover:bg-blue-200">
+                                          Word
+                                        </Badge>
+                                      </a>
+                                    )}
+                                    {!item.metadata?.pdfUrl && !item.metadata?.wordUrl && (
+                                      <span className="text-sm text-gray-500">Sin archivos</span>
+                                    )}
+                                  </div>
+                                </TableCell>
+                                <TableCell>
+                                  <Badge variant={item.is_active ? "default" : "secondary"}>
+                                    {item.is_active ? 'Activo' : 'Inactivo'}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell>
+                                  {new Date(item.updated_at).toLocaleDateString('es-MX', {
+                                    year: 'numeric',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  })}
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex space-x-2">
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => {
+                                        setEditingContent(item);
+                                        setFormData({
+                                          section: item.section,
+                                          title: item.metadata?.year || item.title || '',
+                                          content: item.metadata?.description || item.content || '',
+                                          image_url: item.image_url || '',
+                                          file_url: item.file_url || '',
+                                          metadata: item.metadata || {},
+                                          display_order: item.display_order,
+                                          is_active: item.is_active
+                                        });
+                                        setIsDialogOpen(true);
+                                      }}
+                                    >
+                                      <Edit className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      onClick={() => handleDelete(item.id)}
+                                      className="text-red-600 hover:text-red-700"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
                       </div>
                     )}
                   </CardContent>
