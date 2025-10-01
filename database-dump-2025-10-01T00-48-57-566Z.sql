@@ -203,6 +203,47 @@ ALTER SEQUENCE public.defensoria_content_id_seq OWNED BY public.defensoria_conte
 
 
 --
+-- Name: documents; Type: TABLE; Schema: public; Owner: neondb_owner
+--
+
+CREATE TABLE public.documents (
+    id integer NOT NULL,
+    title character varying(255) NOT NULL,
+    description text,
+    file_name character varying(255) NOT NULL,
+    file_url text NOT NULL,
+    file_size bigint,
+    category character varying(100) DEFAULT 'general'::character varying,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.documents OWNER TO neondb_owner;
+
+--
+-- Name: documents_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
+--
+
+CREATE SEQUENCE public.documents_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.documents_id_seq OWNER TO neondb_owner;
+
+--
+-- Name: documents_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
+--
+
+ALTER SEQUENCE public.documents_id_seq OWNED BY public.documents.id;
+
+
+--
 -- Name: homepage_config; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
@@ -305,7 +346,8 @@ CREATE TABLE public.live_streams (
     is_live boolean DEFAULT false,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    channel character varying(10)
+    channel character varying(10),
+    status character varying(20) DEFAULT 'offline'::character varying
 );
 
 
@@ -701,6 +743,44 @@ ALTER SEQUENCE public.tags_id_seq OWNED BY public.tags.id;
 
 
 --
+-- Name: timezone_config; Type: TABLE; Schema: public; Owner: neondb_owner
+--
+
+CREATE TABLE public.timezone_config (
+    id integer NOT NULL,
+    timezone character varying(100) NOT NULL,
+    display_name character varying(255) NOT NULL,
+    is_active boolean DEFAULT true,
+    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP
+);
+
+
+ALTER TABLE public.timezone_config OWNER TO neondb_owner;
+
+--
+-- Name: timezone_config_id_seq; Type: SEQUENCE; Schema: public; Owner: neondb_owner
+--
+
+CREATE SEQUENCE public.timezone_config_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.timezone_config_id_seq OWNER TO neondb_owner;
+
+--
+-- Name: timezone_config_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: neondb_owner
+--
+
+ALTER SEQUENCE public.timezone_config_id_seq OWNED BY public.timezone_config.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: neondb_owner
 --
 
@@ -812,6 +892,13 @@ ALTER TABLE ONLY public.defensoria_content ALTER COLUMN id SET DEFAULT nextval('
 
 
 --
+-- Name: documents id; Type: DEFAULT; Schema: public; Owner: neondb_owner
+--
+
+ALTER TABLE ONLY public.documents ALTER COLUMN id SET DEFAULT nextval('public.documents_id_seq'::regclass);
+
+
+--
 -- Name: homepage_config id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
@@ -889,6 +976,13 @@ ALTER TABLE ONLY public.tags ALTER COLUMN id SET DEFAULT nextval('public.tags_id
 
 
 --
+-- Name: timezone_config id; Type: DEFAULT; Schema: public; Owner: neondb_owner
+--
+
+ALTER TABLE ONLY public.timezone_config ALTER COLUMN id SET DEFAULT nextval('public.timezone_config_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: neondb_owner
 --
 
@@ -941,10 +1035,20 @@ COPY public.contact_messages (id, name, email, subject, message, status, created
 
 COPY public.defensoria_content (id, section, title, content, image_url, file_url, metadata, display_order, is_active, created_at, updated_at) FROM stdin;
 1	site_files	Documento		/uploads/general/579796de-65c1-4f3e-b391-ad0bd4112a23.png	/uploads/documents/9125b0a4-1f77-471d-8078-75e5182183a5.pdf	null	0	t	2025-09-24 12:02:09.409554	2025-09-24 12:12:05.565046
-2	conoce_ley	Proyecto Ley			/uploads/documents/d543ad59-a1a1-44aa-ac8f-1647f3aef163.pdf	{}	0	t	2025-09-24 16:25:34.826874	2025-09-24 16:25:34.826874
 3	defensora_profile	Mtra. María Gabriela Ortíz Portilla	Es Licenciada en Relaciones Internacionales por la Universidad Iberoamericana, con estudios en Derecho Internacional en la Université Jean Moulin Lyon, Francia. Cuenta con una Maestría en Derecho por la Universidad Anáhuac, un Máster en Comunicación Política y Gobernanza por The George Washington University y cursó un programa de liderazgo frente a tecnologías en Harvard. Desde abril de 2022 se desempeña como Defensora de la Audiencia del Canal del Congreso, donde ha impulsado proyectos en favor de la igualdad de género y los derechos de las audiencias, como el foro virtual de mujeres especialistas en violencia de género y mediática realizado en 2023. Es además titular de difusión de la Asociación Mexicana de Defensores de Audiencia y de la Organización Iberoamericana de Defensores de Audiencia.	/uploads/general/c0d57e06-41a4-4355-bde4-cbc8de8d76b3.png		{}	0	t	2025-09-24 16:26:41.926459	2025-09-24 16:26:41.926459
 4	recent_requests	ejemplo	ejemplo			{"date": "2025-09-25", "type": "Felicitaciones", "status": "Resuelto"}	0	t	2025-09-24 16:27:12.505229	2025-09-24 16:27:12.505229
 6	annual_reports	2024	Resumen	\N	\N	{"year": "2024", "pdfUrl": "/uploads/documents/481f323d-5ead-44dc-b929-e661d9111980.pdf", "period": "", "wordUrl": "/uploads/documents/e38c512a-44eb-45dd-805c-822ded2952f9.docx", "reportType": "Reporte Especial", "description": "Resumen"}	0	t	2025-09-25 17:58:46.769331	2025-09-25 18:17:40.84285
+11	annual_reports	2023	Informe anual de actividades 2023	\N	\N	{"year": "2023", "pdfUrl": "/uploads/documents/42d385eb-b4d0-48bd-8e56-04b902afdaee.pdf", "period": "Enero - Diciembre 2023", "wordUrl": "", "reportType": "Informe Anual", "description": "Informe anual de actividades 2023"}	0	t	2025-09-25 20:51:05.375386	2025-09-25 20:51:05.375386
+12	annual_reports	2025	Plan de trabajo integral primer semestre 2025	\N	\N	{"year": "2025", "pdfUrl": "/uploads/documents/3c60b9f7-34c0-468b-842d-a32b2cdfc6ad.pdf", "period": "Enero - Junio 2025", "wordUrl": "/uploads/documents/8e08ab25-5de9-4c5a-8a74-4a8e7a843ae1.docx", "reportType": "Plan de Trabajo", "description": "Plan de trabajo integral primer semestre 2025"}	0	t	2025-09-25 21:41:11.0703	2025-09-26 10:06:26.821056
+13	annual_reports	2025	Resumen	\N	\N	{"year": "2025", "pdfUrl": "", "period": "", "wordUrl": "/uploads/documents/c396d2d6-d1b7-4e27-9657-0e784e00fb03.docx", "reportType": "Reporte Especial", "description": "Resumen"}	0	t	2025-09-26 10:07:34.689758	2025-09-29 13:52:04.798627
+\.
+
+
+--
+-- Data for Name: documents; Type: TABLE DATA; Schema: public; Owner: neondb_owner
+--
+
+COPY public.documents (id, title, description, file_name, file_url, file_size, category, created_at, updated_at) FROM stdin;
 \.
 
 
@@ -972,10 +1076,10 @@ COPY public.legislators (id, name, parliamentary_group_id, legislature, state, t
 -- Data for Name: live_streams; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
-COPY public.live_streams (id, title, thumbnail_url, stream_url, is_live, created_at, updated_at, channel) FROM stdin;
-14	Foro Nacional para el Análisis y la Construcción de Iniciativas Legislativas en Materia de Justicia Social, Derechos Humanos y Participación Ciudadana. Legislación y participación integral de movilidad y transparencia social.	/uploads/transmisiones/ec4d2586-046a-4d34-b793-7644cb501652.png	https://ccstreaming.packet.mx/WebRTCAppEE/play.html?id=45.3_kd5oiNTTWO0gEOFc875423kf52&playOrder=hls	t	2025-07-14 23:10:38.93686	2025-07-14 23:10:38.93686	D+
-13	test2	/uploads/transmisiones/6991b559-86b8-401a-a390-533b6005c832.png	https://ccstreaming.packet.mx/WebRTCAppEE/play.html?id=45.2_kd5oiNTTWO0gEOFc423456787er&playOrder=hls	t	2025-07-14 23:04:08.388192	2025-07-14 23:04:08.388192	D+
-12	prueba	/uploads/transmisiones/f0f045a2-3e77-4f94-ab22-e8f68188dfe4.jpeg	https://ccstreaming.packet.mx/WebRTCAppEE/play.html?id=45.1_kd5oiNTTWO0gEOFc431277834&playOrder=hls	t	2025-07-14 22:51:14.309208	2025-07-14 22:51:14.309208	C+
+COPY public.live_streams (id, title, thumbnail_url, stream_url, is_live, created_at, updated_at, channel, status) FROM stdin;
+14	Foro Nacional para el Análisis y la Construcción de Iniciativas Legislativas en Materia de Justicia Social, Derechos Humanos y Participación Ciudadana. Legislación y participación integral de movilidad y transparencia social.	/uploads/transmisiones/ec4d2586-046a-4d34-b793-7644cb501652.png	https://ccstreaming.packet.mx/WebRTCAppEE/play.html?id=45.3_kd5oiNTTWO0gEOFc875423kf52&playOrder=hls	t	2025-07-14 23:10:38.93686	2025-07-14 23:10:38.93686	D+	live
+13	test2	/uploads/transmisiones/6991b559-86b8-401a-a390-533b6005c832.png	https://ccstreaming.packet.mx/WebRTCAppEE/play.html?id=45.2_kd5oiNTTWO0gEOFc423456787er&playOrder=hls	t	2025-07-14 23:04:08.388192	2025-07-14 23:04:08.388192	S+	live
+12	prueba	/uploads/transmisiones/f0f045a2-3e77-4f94-ab22-e8f68188dfe4.jpeg	https://ccstreaming.packet.mx/WebRTCAppEE/play.html?id=45.1_kd5oiNTTWO0gEOFc431277834&playOrder=hls	t	2025-07-14 22:51:14.309208	2025-07-14 22:51:14.309208	C+	signal_open
 \.
 
 
@@ -985,12 +1089,16 @@ COPY public.live_streams (id, title, thumbnail_url, stream_url, is_live, created
 
 COPY public.news (id, title, summary, content, image_url, category, published_at, created_at, updated_at, status, is_featured, featured_rank) FROM stdin;
 29	Noticia de Prueba - Borrador	Esta es una noticia guardada como borrador para testing	Contenido completo de la noticia en borrador	/images/test.jpg	Temas de actualidad	2025-09-18 18:26:22.143465	2025-09-18 18:26:22.143465	2025-09-18 18:26:22.143465	draft	t	1
+42	test	test	<p><strong>Lorem Ipsum</strong><span> es simplemente el texto de relleno de las imprentas y archivos de texto. Lorem Ipsum ha sido el texto de relleno estándar de las industrias desde el año 1500, cuando un impresor (N. del T. persona que se dedica a la imprenta) desconocido usó una galería de textos y los mezcló de tal manera que logró hacer un libro de textos especimen. No sólo sobrevivió 500 años, sino que tambien ingresó como texto de relleno en documentos electrónicos, quedando esencialmente igual al original. Fue popularizado en los 60s con la creación de las hojas "Letraset", las cuales contenian pasajes de Lorem Ipsum, y más recientemente con software de autoedición, como por ejemplo Aldus PageMaker, el cual incluye versiones de Lorem Ipsum.</span></p>\n<p><a href="https://dev2025.canaldelcongreso.gob.mx/" target="_blank" rel="noopener"><span>link</span></a></p>	/uploads/news/2cfce8c2-1b59-43f3-9987-01031b5c8f63.jpg	Trabajo en comisiones	2025-09-29 17:51:00	2025-09-29 11:50:33.577228	2025-09-29 11:50:33.577228	published	f	\N
+43	test 2	test 2	<p>test 2</p>	/uploads/news/d4b3d524-e620-4d46-9815-f82eafef8c69.jpg	Trabajo en pleno	2025-09-29 18:02:00	2025-09-29 12:01:21.992113	2025-09-29 12:01:21.992113	published	f	\N
 32	Noticia Destacada 3	Tercera noticia destacada	Contenido de la tercera noticia	/images/test1.jpg	Senado	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	published	t	2
 33	Noticia Destacada 4	Cuarta noticia destacada	Contenido de la cuarta noticia	/images/test4.jpg	Cámara de Diputados	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	published	t	3
+39	Timezone Test 19:00	Round-trip timezone test	Testing if 19:00 remains 19:00	\N	test	2025-09-30 01:00:00	2025-09-29 11:25:58.652805	2025-09-29 11:25:58.652805	published	f	\N
+44	Noticia 30 de Sept 6:30PM	Noticia 30 de Sept 6:30PM	<p>Noticia 30 de Sept 6:30PM</p>\n<p>Actualización de Nota</p>	/uploads/news/1b432aa3-0088-4f98-b9c6-e0be881425a8.png	Temas de actualidad	2025-10-01 00:30:00	2025-09-30 18:40:20.038701	2025-09-30 18:40:20.038701	published	f	\N
 31	Noticia Publicada Super Especial	Esta noticia ya está publicada	Contenido de noticia ya publicada	/uploads/news/fd70cb84-2e52-47b4-ac4f-dc7bd2b05dd4.png	Relaciones Exteriores	2025-09-15 23:26:00	2025-09-18 18:26:22.143465	2025-09-18 18:26:22.143465	published	t	0
-35	Noticia 23 Spt 10AM	Noticia del 23 de sept 10am	<h4>Noticia del 23 d<img src="/uploads/news/f059d64e-80f5-47f1-9fcc-122323761a39.png" alt="" class="mx-auto block">e sept 10am</h4>	/uploads/news/0d9b4ade-d110-46ab-bd38-3a1c5aab414d.jpeg	Temas de actualidad	2025-09-23 12:00:00	2025-09-23 19:25:11.793517	2025-09-23 19:25:11.793517	published	f	\N
 34	Noticia Destacada 5	Quinta noticia destacada	<div class="two-column-layout">\n<p>Contenido de la quinta noticia</p>\n<p>texto de prueba</p>\n<p></p>\n<p><img src="/uploads/news/4b3c3c9c-f4ff-47e1-952a-9e667dfff99e.png" width="191" height="191"></p>\n<p></p>\n<p>mas texto</p>\n</div>	/images/test5.jpg	Mesa Directiva	2025-09-18 17:33:00	2025-09-18 19:33:43.840105	2025-09-18 19:33:43.840105	published	t	4
 30	Noticia Programada	Esta noticia está programada para publicar en 2 minutos	<div class="two-column-layout">\n<p>Contenido de noticia programada Es</p>\n<p></p>\n<p></p>\n<p></p>\n<p></p>\n<p><img src="/uploads/news/a0862e97-e808-4a09-9402-f1f3291145c8.png" width="254" height="254"></p>\n<p>texto</p>\n</div>	/images/test2.jpg	Trabajo en comisiones	2025-09-24 15:41:00	2025-09-18 18:26:22.143465	2025-09-18 18:26:22.143465	published	t	1
+35	Noticia 26 Spt 5PM	Noticia del 23 de sept 10am	<h4>Noticia del 23 d<img src="/uploads/news/f059d64e-80f5-47f1-9fcc-122323761a39.png" alt="" class="mx-auto block">e sept 10am</h4>	/uploads/news/0d9b4ade-d110-46ab-bd38-3a1c5aab414d.jpeg	Temas de actualidad	2025-09-26 23:00:00	2025-09-23 19:25:11.793517	2025-09-23 19:25:11.793517	published	f	\N
 \.
 
 
@@ -1050,8 +1158,8 @@ COPY public.programs (id, title, description, image_url, order_index, created_at
 COPY public.radio_categories (id, name, slug, description, image_url, link_url, display_order, active, created_at, updated_at) FROM stdin;
 2	NOTICIAS CONGRESO	noticias-congreso	Noticias y actualizaciones del Congreso	/images/placeholder.jpg	/radio/noticias-del-congreso-radio/episodios	2	t	2025-09-23 23:50:36.492817	2025-09-23 23:50:36.492817
 3	PROGRAMAS	programas	Todos los programas de Radio Congreso	/images/placeholder.jpg	/radio/mi-radio	3	t	2025-09-23 23:50:36.492817	2025-09-23 23:50:36.492817
-1	ENTREVISTAS	entrevistas		/images/placeholder.jpg	/radio/entrevistas	1	t	2025-09-23 23:50:36.492817	2025-09-23 21:41:57.445779
 4	PREGUNTA AL CONGRESO	pregunta-al-congreso		/uploads/general/70b92bdc-c77a-4a02-b506-7a4dc8236185.jpg	/radio/pregunta-al-congreso/episodes	0	t	2025-09-23 21:43:09.064129	2025-09-24 00:10:30.122975
+1	ENTREVISTAS	entrevistas		/images/placeholder.jpg	/radio/entrevistas	1	t	2025-09-23 23:50:36.492817	2025-09-29 11:41:59.26695
 \.
 
 
@@ -1108,6 +1216,15 @@ COPY public.tags (id, name, slug, created_at) FROM stdin;
 
 
 --
+-- Data for Name: timezone_config; Type: TABLE DATA; Schema: public; Owner: neondb_owner
+--
+
+COPY public.timezone_config (id, timezone, display_name, is_active, created_at, updated_at) FROM stdin;
+1	America/Mexico_City	Ciudad de México (CST/CDT)	t	2025-09-29 11:07:48.421137	2025-09-29 11:07:48.421137
+\.
+
+
+--
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: neondb_owner
 --
 
@@ -1137,7 +1254,7 @@ COPY public.video_news (id, title, description, video_url, thumbnail_url, catego
 -- Name: categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.categories_id_seq', 6, true);
+SELECT pg_catalog.setval('public.categories_id_seq', 18, true);
 
 
 --
@@ -1158,7 +1275,14 @@ SELECT pg_catalog.setval('public.contact_messages_id_seq', 1, false);
 -- Name: defensoria_content_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.defensoria_content_id_seq', 10, true);
+SELECT pg_catalog.setval('public.defensoria_content_id_seq', 13, true);
+
+
+--
+-- Name: documents_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
+--
+
+SELECT pg_catalog.setval('public.documents_id_seq', 1, false);
 
 
 --
@@ -1186,7 +1310,7 @@ SELECT pg_catalog.setval('public.live_streams_id_seq', 14, true);
 -- Name: news_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.news_id_seq', 35, true);
+SELECT pg_catalog.setval('public.news_id_seq', 44, true);
 
 
 --
@@ -1235,7 +1359,14 @@ SELECT pg_catalog.setval('public.radio_programs_id_seq', 5, true);
 -- Name: tags_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
 --
 
-SELECT pg_catalog.setval('public.tags_id_seq', 6, true);
+SELECT pg_catalog.setval('public.tags_id_seq', 18, true);
+
+
+--
+-- Name: timezone_config_id_seq; Type: SEQUENCE SET; Schema: public; Owner: neondb_owner
+--
+
+SELECT pg_catalog.setval('public.timezone_config_id_seq', 1, true);
 
 
 --
@@ -1298,6 +1429,14 @@ ALTER TABLE ONLY public.contact_messages
 
 ALTER TABLE ONLY public.defensoria_content
     ADD CONSTRAINT defensoria_content_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: documents documents_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+--
+
+ALTER TABLE ONLY public.documents
+    ADD CONSTRAINT documents_pkey PRIMARY KEY (id);
 
 
 --
@@ -1442,6 +1581,14 @@ ALTER TABLE ONLY public.tags
 
 ALTER TABLE ONLY public.tags
     ADD CONSTRAINT tags_slug_key UNIQUE (slug);
+
+
+--
+-- Name: timezone_config timezone_config_pkey; Type: CONSTRAINT; Schema: public; Owner: neondb_owner
+--
+
+ALTER TABLE ONLY public.timezone_config
+    ADD CONSTRAINT timezone_config_pkey PRIMARY KEY (id);
 
 
 --
