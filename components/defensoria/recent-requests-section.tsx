@@ -206,7 +206,7 @@ export default function RecentRequestsSection() {
           </button>
 
           {/* Carousel Container */}
-          <div className="overflow-visible" ref={emblaRef}>
+          <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {requests.map((request) => (
                 <div key={request.id} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 pl-6">
