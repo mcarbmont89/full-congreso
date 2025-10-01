@@ -31,11 +31,7 @@ export default function RecentRequestsSection() {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     align: 'start',
-    slidesToScroll: 1,
-    breakpoints: {
-      '(min-width: 768px)': { slidesToScroll: 1 },
-      '(min-width: 1024px)': { slidesToScroll: 1 }
-    }
+    slidesToScroll: 1
   })
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(false)
   const [nextBtnDisabled, setNextBtnDisabled] = useState(false)
@@ -213,7 +209,7 @@ export default function RecentRequestsSection() {
           <div className="overflow-visible" ref={emblaRef}>
             <div className="flex">
               {requests.map((request) => (
-                <div key={request.id} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] pl-6">
+                <div key={request.id} className="flex-[0_0_100%] md:flex-[0_0_50%] lg:flex-[0_0_33.333%] min-w-0 pl-6">
                   <div className="bg-white overflow-visible mr-6 shadow-[0_6px_20px_rgba(0,0,0,0.07)] relative">
                     {/* Light gray spacer for checkmark */}
                     <div className="h-5 bg-gray-200 relative">
