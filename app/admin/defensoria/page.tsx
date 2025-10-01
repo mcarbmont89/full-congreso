@@ -329,129 +329,73 @@ export default function DefensoriaAdmin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    // Specific validation for annual reports
-    if (activeTab === 'annual_reports') {
-      if (!formData.title || !formData.content) { // Title is now year, content is description
-        setDialogMessage('Por favor completa el año y la descripción del informe')
-        return
-      }
-      if (!selectedPdfFile && !selectedWordFile && !editingId) {
-        // Allow submission if editing and no new files are selected, but require at least one file if creating
-        setDialogMessage('Por favor, selecciona al menos un archivo PDF o Word para el informe')
-        return
-      }
-    } else {
-      // Generic validation for other sections
-      if (!formData.title) {
-        setDialogMessage('Por favor, introduce un título')
-        return
-      }
+    // Generic validation for all sections
+    if (!formData.title) {
+      toast({
+        title: "Error",
+        description: "Por favor, introduce un título",
+        variant: "destructive"
+      })
+      return
     }
 
+    // For recent_requests, also validate content
+    if (activeTab === 'recent_requests' && !formData.content) {
+      toast({
+        title: "Error", 
+        description: "Por favor, introduce el contenido de la respuesta",
+        variant: "destructive"
+      })
+      return
+    }
 
-    setIsUploading(true)
+    setIsLoading(true)
     try {
       let finalFileUrl = formData.file_url
       let finalImageUrl = formData.image_url
-      let pdfUrl = ''
-      let wordUrl = ''
 
-      // Handle file uploads for annual reports
-      if (activeTab === 'annual_reports') {
-        if (selectedPdfFile) {
-          pdfUrl = await uploadFile(selectedPdfFile) as string // Assuming uploadFile returns string for PDF
-        }
-        if (selectedWordFile) {
-          const uploadResult = await uploadFile(selectedWordFile)
-          // Handle both cases: string URL or object with URLs
-          if (typeof uploadResult === 'object' && uploadResult.originalUrl) {
-            wordUrl = uploadResult.originalUrl
-            // If PDF conversion was successful, also use the PDF URL
-            if (uploadResult.pdfUrl && !pdfUrl) {
-              pdfUrl = uploadResult.pdfUrl
-            }
+      // Handle file upload for sections like 'conoce_ley' or 'defensora_profile'
+      if (selectedFile) {
+        const uploadedUrl = await uploadFile(selectedFile)
+        if (typeof uploadedUrl === 'string' && uploadedUrl) {
+          if (selectedFile.type.startsWith('image/')) {
+            finalImageUrl = uploadedUrl
           } else {
-            wordUrl = uploadResult as string
+            finalFileUrl = uploadedUrl
           }
         }
-
-        // Preserve existing URLs if no new files are uploaded for editing
-        if (editingId) {
-          const currentItem = content.find(item => item.id === editingId);
-          pdfUrl = pdfUrl || currentItem?.metadata?.pdfUrl || ''
-          wordUrl = wordUrl || currentItem?.metadata?.wordUrl || ''
-        }
-
-        // Update formData for annual reports section
-        formData.metadata = {
-          ...(formData.metadata || {}),
-          year: formData.title, // Year is now in title field for annual reports
-          description: formData.content, // Description is in content field
-          period: formData.metadata?.period,
-          reportType: formData.metadata?.reportType,
-          pdfUrl: pdfUrl,
-          wordUrl: wordUrl
-        };
-        // Clear selected files after successful upload
-        setSelectedPdfFile(null)
-        setSelectedWordFile(null)
-
-      } else {
-        // Handle file upload for other sections (like 'conoce_ley' or 'defensora_profile')
-        if (selectedFile) {
-          const uploadedUrl = await uploadFile(selectedFile)
-          if (typeof uploadedUrl === 'string' && uploadedUrl) { // Check if it's a string URL
-            if (selectedFile.type.startsWith('image/')) {
-              finalImageUrl = uploadedUrl
-            } else {
-              finalFileUrl = uploadedUrl
-            }
-          }
-        }
-        // Update formData with potentially new image/file URLs
-        formData.image_url = finalImageUrl
-        formData.file_url = finalFileUrl
       }
 
+      // Create FormData for the request
+      const submitFormData = new FormData()
+      submitFormData.append('section', activeTab)
+      submitFormData.append('title', formData.title)
+      submitFormData.append('content', formData.content || '')
+      submitFormData.append('display_order', formData.display_order.toString())
+      submitFormData.append('is_active', formData.is_active.toString())
 
-      const url = editingId
-        ? `/api/defensoria-audiencia` // Use the same endpoint for PUT, backend will handle based on ID
-        : '/api/defensoria-audiencia'
+      // Add metadata
+      submitFormData.append('metadata', JSON.stringify(formData.metadata || {}))
 
+      // Add file URLs if available
+      if (finalFileUrl) {
+        submitFormData.append('file_url', finalFileUrl)
+      }
+      if (finalImageUrl) {
+        submitFormData.append('image_url', finalImageUrl)
+      }
+
+      // Add ID for updates
+      if (editingId) {
+        submitFormData.append('id', editingId.toString())
+      }
+
+      const url = '/api/defensoria-audiencia'
       const method = editingId ? 'PUT' : 'POST'
-      const payload = { ...formData, section: activeTab, file_url: finalFileUrl, image_url: finalImageUrl }
-
-      // Adjust payload for annual reports to use metadata fields correctly
-      if (activeTab === 'annual_reports') {
-        payload.title = formData.metadata?.year || formData.title; // Ensure title is year
-        payload.content = formData.metadata?.description || formData.content; // Ensure content is description
-        payload.file_url = formData.metadata?.pdfUrl; // Use pdfUrl from metadata
-        // The original code had `image_url: formData.metadata?.wordUrl`, which is likely a mistake.
-        // `wordUrl` should ideally be stored in metadata or a dedicated field if the API supports it.
-        // For now, we'll stick to using `file_url` for PDF and `metadata.wordUrl` for Word.
-        payload.metadata = {
-          year: formData.metadata?.year,
-          description: formData.metadata?.description,
-          period: formData.metadata?.period,
-          reportType: formData.metadata?.reportType,
-          pdfUrl: pdfUrl || formData.metadata?.pdfUrl, // Use newly uploaded or existing
-          wordUrl: wordUrl || formData.metadata?.wordUrl // Use newly uploaded or existing
-        };
-        // Ensure title and content are set correctly for the table view if needed by backend schema
-        payload.title = formData.metadata?.year || '';
-        payload.content = formData.metadata?.description || '';
-        payload.file_url = pdfUrl || formData.metadata?.pdfUrl; // Use PDF URL for file_url if available
-        // The original code didn't explicitly handle a separate URL for Word docs in the main fields.
-        // The new structure stores wordUrl in metadata.
-      }
-
 
       const response = await fetch(url, {
         method,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
+        body: submitFormData
       })
 
       if (response.ok) {
@@ -461,7 +405,8 @@ export default function DefensoriaAdmin() {
         })
 
         resetForm()
-        loadContent()
+        setShowForm(false)
+        await loadContent()
       } else {
         const error = await response.json()
         toast({
@@ -478,9 +423,7 @@ export default function DefensoriaAdmin() {
         variant: "destructive"
       })
     } finally {
-      setIsUploading(false)
-      // Clear dialog message after submission attempt
-      setDialogMessage('')
+      setIsLoading(false)
     }
   }
 
@@ -499,13 +442,14 @@ export default function DefensoriaAdmin() {
     setSelectedFile(null)
     setImagePreview('')
     setEditingId(null)
+    setShowForm(false)
     // Reset annual report specific files and messages
     setSelectedPdfFile(null)
     setSelectedWordFile(null)
     setDialogMessage('')
     setIsDialogOpen(false)
-    setIsUploading(false) // Ensure upload state is reset
-    setUploadMessage('') // Clear any upload messages
+    setIsUploading(false)
+    setUploadMessage('')
   }
 
   const handleEdit = (item: DefensoriaContent) => {
@@ -527,8 +471,8 @@ export default function DefensoriaAdmin() {
     if (item.section === 'annual_reports') {
       setFormData(prev => ({
         ...prev,
-        title: item.metadata?.year || item.title || '', // Use year from metadata as title
-        content: item.metadata?.description || item.content || '', // Use description from metadata as content
+        title: item.metadata?.year || item.title || '',
+        content: item.metadata?.description || item.content || '',
         metadata: {
           year: item.metadata?.year || '',
           description: item.metadata?.description || '',
@@ -537,7 +481,7 @@ export default function DefensoriaAdmin() {
           pdfUrl: item.metadata?.pdfUrl || '',
           wordUrl: item.metadata?.wordUrl || ''
         }
-      }));
+      }))
     }
 
     setShowForm(true)
