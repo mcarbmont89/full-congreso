@@ -1,0 +1,514 @@
+
+===============================================================================
+DEPLOYMENT INSTRUCTIONS FOR ON-PREMISE SERVER
+Canal del Congreso - Next.js Application
+===============================================================================
+
+OVERVIEW
+--------
+This document provides step-by-step instructions to fix the auto-publish 
+scheduler error and deploy updates to your on-premise production server.
+
+ERROR BEING FIXED
+-----------------
+- Error: "Failed to parse URL from http://localhoHola st:3000"
+- Issue: Auto-publish scheduler trying to execute during server-side rendering
+- Solution: Ensure client-side only execution with proper error handling
+
+
+===============================================================================
+SECTION 1: FILE CHANGES REQUIRED
+===============================================================================
+
+FILE 1: components/auto-publish-scheduler.tsx
+----------------------------------------------
+ACTION: Replace entire file content
+
+LOCATION: components/auto-publish-scheduler.tsx
+
+NEW CONTENT:
+```typescript
+"use client"
+
+import { useEffect } from 'react'
+
+export default function AutoPublishScheduler() {
+  useEffect(() => {
+    // Ensure we're in the browser
+    if (typeof window === 'undefined') return
+
+    const autoPublish = async () => {
+      try {
+        // Auto-publish scheduled news
+        try {
+          const newsResponse = await fetch('/api/news/publish-scheduled', {
+            method: 'POST',
+          })
+
+          if (newsResponse.ok) {
+            const newsData = await newsResponse.json()
+            if (newsData.publishedCount > 0) {
+              console.log('Auto-publish news successful:', newsData)
+            }
+          } else {
+            console.warn(`Auto-publish news failed: ${newsResponse.status} ${newsResponse.statusText}`)
+          }
+        } catch (newsError) {
+          console.warn('Auto-publish news error:', newsError instanceof Error ? newsError.message : 'Unknown error')
+        }
+
+        // Auto-publish scheduled radio episodes
+        try {
+          const radioResponse = await fetch('/api/radio/episodes/publish-scheduled', {
+            method: 'POST',
+          })
+
+          if (radioResponse.ok) {
+            const radioData = await radioResponse.json()
+            if (radioData.publishedCount > 0) {
+              console.log('Auto-publish radio successful:', radioData)
+            }
+          } else {
+            console.warn(`Auto-publish radio failed: ${radioResponse.status} ${radioResponse.statusText}`)
+          }
+        } catch (radioError) {
+          console.warn('Auto-publish radio error:', radioError instanceof Error ? radioError.message : 'Unknown error')
+        }
+      } catch (error) {
+        console.error('Auto-publish error:', error)
+      }
+    }
+
+    // Run immediately on mount
+    autoPublish()
+
+    // Then run every 60 seconds
+    const interval = setInterval(autoPublish, 60000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  return null
+}
+```
+
+KEY CHANGES:
+- Added browser check: if (typeof window === 'undefined') return
+- Changed interval from 5 minutes to 60 seconds
+- Only logs when items are actually published
+- Better error handling with try-catch blocks
+
+
+FILE 2: lib/api-client.ts (OPTIONAL BUT RECOMMENDED)
+-----------------------------------------------------
+ACTION: Add new functions at the end of the file (before the last line)
+
+LOCATION: lib/api-client.ts
+
+ADD THIS CODE AT THE END:
+```typescript
+// Auto-publish functions
+export async function autoPublishScheduledNews(): Promise<{ success: boolean; publishedCount: number }> {
+  try {
+    const response = await fetch('/api/news/publish-scheduled', {
+      method: 'POST',
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to auto-publish scheduled news')
+    }
+
+    return response.json()
+  } catch (error) {
+    console.error('Auto-publish news error:', error)
+    return { success: false, publishedCount: 0 }
+  }
+}
+
+export async function autoPublishScheduledRadio(): Promise<{ success: boolean; publishedCount: number }> {
+  try {
+    const response = await fetch('/api/radio/episodes/publish-scheduled', {
+      method: 'POST',
+    })
+
+    if (!response.ok) {
+      throw new Error('Failed to auto-publish scheduled radio')
+    }
+
+    return response.json()
+  } catch (error) {
+    console.error('Auto-publish radio error:', error)
+    return { success: false, publishedCount: 0 }
+  }
+}
+```
+
+
+===============================================================================
+SECTION 2: DEPLOYMENT STEPS
+===============================================================================
+
+STEP 1: CONNECT TO SERVER
+--------------------------
+Open your terminal and connect via SSH:
+
+ssh your-username@your-server-ip
+
+Example:
+ssh admin@192.168.1.100
+
+
+STEP 2: NAVIGATE TO APPLICATION DIRECTORY
+------------------------------------------
+cd /path/to/your/nextjs-app
+
+Example:
+cd /var/www/canal-congreso
+
+
+STEP 3: BACKUP CURRENT FILES
+-----------------------------
+Create backups of files that will be modified:
+
+cp components/auto-publish-scheduler.tsx components/auto-publish-scheduler.tsx.backup
+cp lib/api-client.ts lib/api-client.ts.backup
+
+Optional: Create a full backup:
+tar -czf backup-$(date +%Y%m%d-%H%M%S).tar.gz .
+
+
+STEP 4: APPLY FILE CHANGES
+---------------------------
+You have three options to apply changes:
+
+OPTION A - Using nano editor:
+nano components/auto-publish-scheduler.tsx
+[Paste the new content from FILE 1 above]
+[Press Ctrl+X, then Y, then Enter to save]
+
+nano lib/api-client.ts
+[Add the new functions from FILE 2 at the end]
+[Press Ctrl+X, then Y, then Enter to save]
+
+OPTION B - Using vi/vim editor:
+vi components/auto-publish-scheduler.tsx
+[Press 'i' to enter insert mode]
+[Delete old content and paste new content]
+[Press Esc, then type :wq and press Enter]
+
+OPTION C - Upload files via SCP from your local machine:
+scp /local/path/auto-publish-scheduler.tsx user@server:/path/to/app/components/
+scp /local/path/api-client.ts user@server:/path/to/app/lib/
+
+
+STEP 5: VERIFY CHANGES
+----------------------
+Check that files were updated correctly:
+
+cat components/auto-publish-scheduler.tsx | head -20
+cat lib/api-client.ts | tail -30
+
+
+STEP 6: INSTALL DEPENDENCIES (if needed)
+-----------------------------------------
+npm install
+
+
+STEP 7: BUILD THE APPLICATION
+------------------------------
+npm run build
+
+Wait for the build to complete. This may take 2-5 minutes.
+
+Check for any build errors. If successful, you should see:
+"✓ Compiled successfully"
+
+
+STEP 8: RESTART THE APPLICATION
+--------------------------------
+Choose the appropriate method based on your setup:
+
+METHOD A - Using PM2:
+pm2 restart nextjs-app
+pm2 logs nextjs-app --lines 100
+
+METHOD B - Using systemd:
+sudo systemctl restart your-nextjs-service
+sudo systemctl status your-nextjs-service
+journalctl -u your-nextjs-service -f
+
+METHOD C - Using direct node:
+[Stop current process with Ctrl+C if running in terminal]
+npm start
+
+Or for production:
+NODE_ENV=production npm start
+
+
+STEP 9: VERIFY DEPLOYMENT
+--------------------------
+Check application logs for confirmation:
+
+METHOD A - PM2:
+pm2 logs nextjs-app --lines 50
+
+METHOD B - systemd:
+journalctl -u your-nextjs-service -n 50 -f
+
+METHOD C - Direct logs:
+Check the console output
+
+
+EXPECTED LOG OUTPUT:
+- ✓ Server started successfully
+- ✓ Auto-publish checks running every 60 seconds
+- ✓ "Auto-publish news successful" (only when items publish)
+- ✓ "Auto-publish radio successful" (only when episodes publish)
+
+ERRORS TO WATCH FOR:
+- ✗ "Failed to parse URL from http://localhoHola st" (should NOT appear)
+- ✗ Connection errors to database
+- ✗ Build failures
+
+
+STEP 10: TEST THE APPLICATION
+------------------------------
+1. Open browser and navigate to your application URL
+2. Check the homepage loads correctly
+3. Navigate to admin panel
+4. Check scheduled news items
+5. Monitor logs for auto-publish activity
+
+
+===============================================================================
+SECTION 3: ENVIRONMENT VERIFICATION
+===============================================================================
+
+VERIFY ENVIRONMENT VARIABLES
+-----------------------------
+Check that your .env.local or .env.production file contains:
+
+cat .env.local
+
+Required variables:
+DATABASE_URL=postgresql://user:password@localhost:5432/database_name
+NODE_ENV=production
+NEXT_PUBLIC_APP_URL=https://your-domain.com
+
+If missing, create/update the file:
+nano .env.local
+[Add the required variables]
+[Save and exit]
+
+
+VERIFY DATABASE CONNECTION
+---------------------------
+Test database connectivity:
+
+psql -U your_db_user -d your_db_name -h localhost
+
+Or check via your application:
+curl http://localhost:3000/api/health
+
+
+VERIFY FILE PERMISSIONS
+------------------------
+Ensure proper permissions:
+
+ls -la components/auto-publish-scheduler.tsx
+ls -la lib/api-client.ts
+
+Should show read permissions for the user running the app.
+
+If needed, fix permissions:
+chmod 644 components/auto-publish-scheduler.tsx
+chmod 644 lib/api-client.ts
+
+
+===============================================================================
+SECTION 4: ROLLBACK PROCEDURE
+===============================================================================
+
+IF SOMETHING GOES WRONG
+-----------------------
+1. Stop the application
+2. Restore backup files:
+
+cp components/auto-publish-scheduler.tsx.backup components/auto-publish-scheduler.tsx
+cp lib/api-client.ts.backup lib/api-client.ts
+
+3. Rebuild:
+npm run build
+
+4. Restart:
+pm2 restart nextjs-app
+# OR
+sudo systemctl restart your-nextjs-service
+
+5. Contact support if issues persist
+
+
+===============================================================================
+SECTION 5: MONITORING AND MAINTENANCE
+===============================================================================
+
+MONITORING CHECKLIST
+--------------------
+□ Check logs every hour for first 24 hours
+□ Verify auto-publish is working (check at scheduled times)
+□ Monitor server resources (CPU, memory, disk)
+□ Check database connections
+□ Verify scheduled news items are publishing correctly
+□ Verify scheduled radio episodes are publishing correctly
+
+
+USEFUL MONITORING COMMANDS
+---------------------------
+# View real-time logs (PM2)
+pm2 logs nextjs-app --lines 100
+
+# View real-time logs (systemd)
+journalctl -u your-nextjs-service -f
+
+# Check application status
+pm2 status
+# OR
+sudo systemctl status your-nextjs-service
+
+# Check server resources
+htop
+# OR
+top
+
+# Check disk space
+df -h
+
+# Check database connections
+psql -U your_db_user -d your_db_name -c "SELECT COUNT(*) FROM pg_stat_activity;"
+
+
+LOG FILES TO MONITOR
+--------------------
+- Application logs: Check via PM2 or systemd
+- Nginx/Apache logs: /var/log/nginx/access.log or /var/log/apache2/access.log
+- System logs: /var/log/syslog
+- Database logs: /var/log/postgresql/postgresql-*.log
+
+
+===============================================================================
+SECTION 6: KEY CHANGES SUMMARY
+===============================================================================
+
+WHAT WAS FIXED
+--------------
+1. Browser-only execution: Added window check to prevent SSR execution
+2. Reduced logging noise: Only logs when items are actually published
+3. Better error handling: Isolated try-catch blocks prevent cascade failures
+4. Optimized interval: Changed from 5 minutes to 60 seconds
+5. Improved reliability: Multiple safety checks and fallbacks
+
+
+WHAT TO EXPECT AFTER DEPLOYMENT
+--------------------------------
+✓ No more "localhoHola st" URL parsing errors
+✓ Cleaner logs (less spam)
+✓ More responsive publishing (60s vs 5min)
+✓ Better error isolation (one failure doesn't break everything)
+✓ Scheduled news publishes automatically at the right time
+✓ Scheduled radio episodes publish automatically at the right time
+
+
+===============================================================================
+SECTION 7: TROUBLESHOOTING
+===============================================================================
+
+PROBLEM: Build fails
+SOLUTION:
+- Check Node.js version: node --version (should be 18+ or 20+)
+- Clear cache: rm -rf .next && npm run build
+- Check for syntax errors in modified files
+
+PROBLEM: Application won't start
+SOLUTION:
+- Check logs for specific error
+- Verify environment variables are set
+- Check database connection
+- Verify port 3000 is not in use: lsof -i :3000
+
+PROBLEM: Auto-publish not working
+SOLUTION:
+- Check browser console logs (client-side)
+- Check server logs for API errors
+- Verify database has scheduled items: psql query
+- Verify timezone settings are correct
+
+PROBLEM: Database connection errors
+SOLUTION:
+- Check DATABASE_URL in .env.local
+- Verify PostgreSQL is running: sudo systemctl status postgresql
+- Test connection: psql -U user -d database -h localhost
+- Check firewall rules
+
+PROBLEM: Permission denied errors
+SOLUTION:
+- Check file ownership: ls -la
+- Fix permissions: chmod 644 filename
+- Check user running the app has read access
+
+
+===============================================================================
+SECTION 8: SUPPORT AND CONTACT
+===============================================================================
+
+FOR ADDITIONAL HELP
+-------------------
+1. Check application logs first
+2. Review this document
+3. Check the main README.md file
+4. Contact your development team
+5. Check Replit documentation: https://docs.replit.com
+
+
+EMERGENCY ROLLBACK
+------------------
+If critical issues occur:
+1. Restore backup files immediately
+2. Rebuild and restart
+3. Document the issue
+4. Contact support
+
+
+===============================================================================
+DEPLOYMENT CHECKLIST
+===============================================================================
+
+PRE-DEPLOYMENT
+□ Backup current files
+□ Verify environment variables
+□ Check database connectivity
+□ Note current application status
+
+DEPLOYMENT
+□ Apply file changes (FILE 1)
+□ Apply file changes (FILE 2 - optional)
+□ Verify changes with cat/head/tail
+□ Run npm install (if needed)
+□ Run npm run build
+□ Check build output for errors
+□ Restart application
+
+POST-DEPLOYMENT
+□ Check application starts successfully
+□ Verify homepage loads
+□ Check logs for errors
+□ Verify auto-publish logs appear
+□ Test scheduled publishing
+□ Monitor for 24 hours
+
+===============================================================================
+END OF DEPLOYMENT INSTRUCTIONS
+===============================================================================
+
+Date: January 2025
+Version: 1.0
+Application: Canal del Congreso - Next.js Application
