@@ -6,11 +6,17 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Download, FileText, File } from 'lucide-react'
 
-interface ReportItem {
-  year: string
+interface ReportType {
+  type: string
   description: string
   pdfUrl?: string
   wordUrl?: string
+  id: string
+}
+
+interface YearGroup {
+  year: string
+  reports: ReportType[]
 }
 
 interface DefensoriaContent {
@@ -22,13 +28,14 @@ interface DefensoriaContent {
     year?: string
     description?: string
     fileType?: string
+    reportType?: string
     pdfUrl?: string
     wordUrl?: string
   }
 }
 
 export default function AnnualReportsSection() {
-  const [reports, setReports] = useState<ReportItem[]>([])
+  const [yearGroups, setYearGroups] = useState<YearGroup[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
@@ -38,54 +45,96 @@ export default function AnnualReportsSection() {
         if (response.ok) {
           const data = await response.json()
           if (data && data.length > 0) {
-            const reportItems = data.map((item: DefensoriaContent) => {
+            // Group reports by year
+            const groupedByYear: { [year: string]: ReportType[] } = {}
+            
+            data.forEach((item: DefensoriaContent) => {
               const metadata = item.metadata || {}
-              return {
-                year: metadata.year || item.title || '',
-                description: metadata.description || item.content || '',
-                pdfUrl: metadata.pdfUrl || (metadata.fileType === 'pdf' ? item.file_url : ''),
-                wordUrl: metadata.wordUrl || (metadata.fileType === 'word' ? item.file_url : '')
+              const year = metadata.year || item.title || ''
+              const reportType = metadata.reportType || 'INFORME ANUAL'
+              
+              if (!groupedByYear[year]) {
+                groupedByYear[year] = []
               }
-            }).sort((a: ReportItem, b: ReportItem) => parseInt(b.year) - parseInt(a.year))
-            setReports(reportItems)
+              
+              groupedByYear[year].push({
+                type: reportType,
+                description: metadata.description || item.content || reportType,
+                pdfUrl: metadata.pdfUrl,
+                wordUrl: metadata.wordUrl,
+                id: item.id // Add unique ID for stable keys
+              })
+            })
+            
+            // Convert to array and sort by year descending
+            const toNum = (y: string) => Number.parseInt(y, 10) || 0
+            const yearGroupsArray = Object.entries(groupedByYear)
+              .map(([year, reports]) => ({
+                year,
+                reports
+              }))
+              .sort((a, b) => toNum(b.year) - toNum(a.year))
+            
+            setYearGroups(yearGroupsArray)
           } else {
-            // Fallback data with 6 years to match the design
-            setReports([
+            // Fallback data grouped by year
+            setYearGroups([
               {
                 year: "2024",
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                pdfUrl: "/files/informe-2024.pdf",
-                wordUrl: "/files/informe-2024.docx"
+                reports: [
+                  {
+                    type: "INFORME ANUAL",
+                    description: "INFORME ANUAL",
+                    pdfUrl: "/files/informe-anual-2024.pdf",
+                    wordUrl: "/files/informe-anual-2024.docx",
+                    id: "fallback-2024-1"
+                  },
+                  {
+                    type: "PLAN DE TRABAJO",
+                    description: "PLAN DE TRABAJO",
+                    pdfUrl: "/files/plan-trabajo-2024.pdf",
+                    wordUrl: "/files/plan-trabajo-2024.docx",
+                    id: "fallback-2024-2"
+                  }
+                ]
               },
               {
                 year: "2023", 
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                pdfUrl: "/files/informe-2023.pdf",
-                wordUrl: "/files/informe-2023.docx"
+                reports: [
+                  {
+                    type: "INFORME ANUAL",
+                    description: "INFORME ANUAL",
+                    pdfUrl: "/files/informe-anual-2023.pdf",
+                    wordUrl: "/files/informe-anual-2023.docx",
+                    id: "fallback-2023-1"
+                  },
+                  {
+                    type: "PLAN DE TRABAJO",
+                    description: "PLAN DE TRABAJO",
+                    pdfUrl: "/files/plan-trabajo-2023.pdf",
+                    wordUrl: "/files/plan-trabajo-2023.docx",
+                    id: "fallback-2023-2"
+                  }
+                ]
               },
               {
                 year: "2022",
-                description: "INFORME ANUAL PLAN DE TRABAJO", 
-                pdfUrl: "/files/informe-2022.pdf",
-                wordUrl: "/files/informe-2022.docx"
-              },
-              {
-                year: "2021",
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                pdfUrl: "/files/informe-2021.pdf",
-                wordUrl: "/files/informe-2021.docx"
-              },
-              {
-                year: "2020",
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                pdfUrl: "/files/informe-2020.pdf",
-                wordUrl: "/files/informe-2020.docx"
-              },
-              {
-                year: "2019",
-                description: "INFORME ANUAL PLAN DE TRABAJO",
-                pdfUrl: "/files/informe-2019.pdf",
-                wordUrl: "/files/informe-2019.docx"
+                reports: [
+                  {
+                    type: "INFORME ANUAL",
+                    description: "INFORME ANUAL",
+                    pdfUrl: "/files/informe-anual-2022.pdf",
+                    wordUrl: "/files/informe-anual-2022.docx",
+                    id: "fallback-2022-1"
+                  },
+                  {
+                    type: "PLAN DE TRABAJO", 
+                    description: "PLAN DE TRABAJO",
+                    pdfUrl: "/files/plan-trabajo-2022.pdf",
+                    wordUrl: "/files/plan-trabajo-2022.docx",
+                    id: "fallback-2022-2"
+                  }
+                ]
               }
             ])
           }
@@ -93,42 +142,25 @@ export default function AnnualReportsSection() {
       } catch (error) {
         console.error('Error fetching annual reports:', error)
         // Set fallback data on error
-        setReports([
+        setYearGroups([
           {
             year: "2024",
-            description: "INFORME ANUAL PLAN DE TRABAJO",
-            pdfUrl: "/files/informe-2024.pdf",
-            wordUrl: "/files/informe-2024.docx"
-          },
-          {
-            year: "2023", 
-            description: "INFORME ANUAL PLAN DE TRABAJO",
-            pdfUrl: "/files/informe-2023.pdf",
-            wordUrl: "/files/informe-2023.docx"
-          },
-          {
-            year: "2022",
-            description: "INFORME ANUAL PLAN DE TRABAJO", 
-            pdfUrl: "/files/informe-2022.pdf",
-            wordUrl: "/files/informe-2022.docx"
-          },
-          {
-            year: "2021",
-            description: "INFORME ANUAL PLAN DE TRABAJO",
-            pdfUrl: "/files/informe-2021.pdf",
-            wordUrl: "/files/informe-2021.docx"
-          },
-          {
-            year: "2020",
-            description: "INFORME ANUAL PLAN DE TRABAJO",
-            pdfUrl: "/files/informe-2020.pdf",
-            wordUrl: "/files/informe-2020.docx"
-          },
-          {
-            year: "2019",
-            description: "INFORME ANUAL PLAN DE TRABAJO",
-            pdfUrl: "/files/informe-2019.pdf",
-            wordUrl: "/files/informe-2019.docx"
+            reports: [
+              {
+                type: "INFORME ANUAL",
+                description: "INFORME ANUAL",
+                pdfUrl: "/files/informe-anual-2024.pdf",
+                wordUrl: "/files/informe-anual-2024.docx",
+                id: "fallback-error-2024-1"
+              },
+              {
+                type: "PLAN DE TRABAJO",
+                description: "PLAN DE TRABAJO",
+                pdfUrl: "/files/plan-trabajo-2024.pdf",
+                wordUrl: "/files/plan-trabajo-2024.docx",
+                id: "fallback-error-2024-2"
+              }
+            ]
           }
         ])
       } finally {
@@ -139,11 +171,12 @@ export default function AnnualReportsSection() {
     fetchReports()
   }, [])
 
-  const handleDownload = (fileUrl: string, year: string, fileType: string) => {
+  const handleDownload = (fileUrl: string, year: string, reportType: string, fileType: string) => {
     if (fileUrl) {
       const link = document.createElement('a')
       link.href = fileUrl
-      link.download = `informe-${year}.${fileType === 'pdf' ? 'pdf' : 'docx'}`
+      const fileName = `${reportType.toLowerCase().replace(/\s+/g, '-')}-${year}.${fileType === 'pdf' ? 'pdf' : 'docx'}`
+      link.download = fileName
       document.body.appendChild(link)
       link.click()
       document.body.removeChild(link)
@@ -162,7 +195,7 @@ export default function AnnualReportsSection() {
       >
         <div className="container mx-auto px-4 md:px-6">
           <h2 className="text-center font-black text-[#4f148c] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
-            INFORMES Y REPORTES
+            INFORME DE DEFENSORÍA<br />DE AUDIENCIAS
           </h2>
           <div className="flex justify-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
@@ -183,67 +216,139 @@ export default function AnnualReportsSection() {
     >
       <div className="container mx-auto px-4 md:px-6">
         <h2 className="text-center font-black text-[#4f148c] tracking-tight uppercase leading-tight text-[26px] sm:text-[30px] md:text-[36px] mb-8 md:mb-10">
-          INFORMES Y REPORTES
+          INFORME DE DEFENSORÍA<br />DE AUDIENCIAS
         </h2>
 
-        {/* 3x2 Grid Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-          {reports.slice(0, 6).map((report, index) => (
-            <div key={index} className="bg-gray-200 rounded-lg overflow-hidden shadow-md">
+        {/* 3x2 Grid Layout - One card per year */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
+          {yearGroups.slice(0, 6).map((yearGroup) => (
+            <div key={yearGroup.year} className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-300">
               {/* Gray header with year */}
-              <div className="bg-gray-300 px-6 py-8 text-center">
-                <h3 className="text-5xl font-black text-gray-700">
-                  {report.year}
+              <div className="bg-gray-300 px-6 py-6 text-center border-b border-gray-400">
+                <h3 className="text-6xl font-black" style={{ color: "#7B2CBF" }}>
+                  {yearGroup.year}
                 </h3>
               </div>
 
-              {/* Purple section with description */}
-              <div className="bg-[#8b5cdf] px-6 py-4 text-center">
-                <p className="text-white text-sm font-bold uppercase leading-tight">
-                  {report.description}
-                </p>
-              </div>
-
-              {/* Download buttons */}
-              <div className="p-4 bg-gray-200">
-                <div className="flex justify-center space-x-3">
-                  {report.pdfUrl && (
-                    <button
-                      onClick={() => handleDownload(report.pdfUrl!, report.year, 'pdf')}
-                      className="w-10 h-10 bg-red-600 hover:bg-red-700 rounded-full flex items-center justify-center transition-colors duration-200"
-                      title="Descargar PDF"
-                    >
-                      <File className="w-5 h-5 text-white" />
-                    </button>
-                  )}
-                  
-                  {report.wordUrl && (
-                    <button
-                      onClick={() => handleDownload(report.wordUrl!, report.year, 'word')}
-                      className="w-10 h-10 bg-blue-600 hover:bg-blue-700 rounded-full flex items-center justify-center transition-colors duration-200"
-                      title="Descargar Word"
-                    >
-                      <FileText className="w-5 h-5 text-white" />
-                    </button>
-                  )}
-
-                  {!report.pdfUrl && !report.wordUrl && (
-                    <div className="flex space-x-3">
-                      <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center">
-                        <File className="w-5 h-5 text-gray-600" />
-                      </div>
-                      <div className="w-10 h-10 bg-gray-400 rounded-full flex items-center justify-center">
-                        <FileText className="w-5 h-5 text-gray-600" />
+              {/* Purple sections for each report type with inline icons */}
+              <div className="space-y-0">
+                {/* Show INFORME ANUAL if available */}
+                {yearGroup.reports.some(report => report.type === "INFORME ANUAL" || report.type === "Informe Anual") && (
+                  <div className="px-4 py-3" style={{ backgroundColor: "#7B2CBF" }}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white text-sm font-bold uppercase">
+                        INFORME ANUAL
+                      </span>
+                      <div className="flex space-x-2">
+                        {(() => {
+                          const report = yearGroup.reports.find(r => r.type === "INFORME ANUAL" || r.type === "Informe Anual")
+                          return report ? (
+                            <>
+                              {report.pdfUrl && (
+                                <button
+                                  onClick={() => handleDownload(report.pdfUrl!, yearGroup.year, "INFORME ANUAL", 'pdf')}
+                                  className="w-5 h-5 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full flex items-center justify-center transition-all duration-200"
+                                  title="Descargar PDF"
+                                >
+                                  <Download className="w-3 h-3 text-purple-700" />
+                                </button>
+                              )}
+                              {report.wordUrl && (
+                                <button
+                                  onClick={() => handleDownload(report.wordUrl!, yearGroup.year, "INFORME ANUAL", 'word')}
+                                  className="w-5 h-5 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full flex items-center justify-center transition-all duration-200"
+                                  title="Descargar Word"
+                                >
+                                  <Download className="w-3 h-3 text-purple-700" />
+                                </button>
+                              )}
+                            </>
+                          ) : null
+                        })()}
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
+
+                {/* Show PLAN DE TRABAJO if available */}
+                {yearGroup.reports.some(report => report.type === "PLAN DE TRABAJO" || report.type === "Plan de Trabajo") && (
+                  <div className="px-4 py-3" style={{ backgroundColor: "#7B2CBF" }}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white text-sm font-bold uppercase">
+                        PLAN DE TRABAJO
+                      </span>
+                      <div className="flex space-x-2">
+                        {(() => {
+                          const report = yearGroup.reports.find(r => r.type === "PLAN DE TRABAJO" || r.type === "Plan de Trabajo")
+                          return report ? (
+                            <>
+                              {report.pdfUrl && (
+                                <button
+                                  onClick={() => handleDownload(report.pdfUrl!, yearGroup.year, "PLAN DE TRABAJO", 'pdf')}
+                                  className="w-5 h-5 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full flex items-center justify-center transition-all duration-200"
+                                  title="Descargar PDF"
+                                >
+                                  <Download className="w-3 h-3 text-purple-700" />
+                                </button>
+                              )}
+                              {report.wordUrl && (
+                                <button
+                                  onClick={() => handleDownload(report.wordUrl!, yearGroup.year, "PLAN DE TRABAJO", 'word')}
+                                  className="w-5 h-5 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full flex items-center justify-center transition-all duration-200"
+                                  title="Descargar Word"
+                                >
+                                  <Download className="w-3 h-3 text-purple-700" />
+                                </button>
+                              )}
+                            </>
+                          ) : null
+                        })()}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Show other report types if available */}
+                {yearGroup.reports.filter(report => 
+                  report.type !== "INFORME ANUAL" && 
+                  report.type !== "Informe Anual" && 
+                  report.type !== "PLAN DE TRABAJO" && 
+                  report.type !== "Plan de Trabajo"
+                ).map((report, reportIndex) => (
+                  <div key={`${yearGroup.year}-${report.id || reportIndex}`} className="px-4 py-3" style={{ backgroundColor: "#7B2CBF" }}>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white text-sm font-bold uppercase">
+                        {report.type}
+                      </span>
+                      <div className="flex space-x-2">
+                        {report.pdfUrl && (
+                          <button
+                            onClick={() => handleDownload(report.pdfUrl!, yearGroup.year, report.type, 'pdf')}
+                            className="w-5 h-5 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full flex items-center justify-center transition-all duration-200"
+                            title="Descargar PDF"
+                          >
+                            <Download className="w-3 h-3 text-purple-700" />
+                          </button>
+                        )}
+                        {report.wordUrl && (
+                          <button
+                            onClick={() => handleDownload(report.wordUrl!, yearGroup.year, report.type, 'word')}
+                            className="w-5 h-5 bg-white bg-opacity-80 hover:bg-opacity-100 rounded-full flex items-center justify-center transition-all duration-200"
+                            title="Descargar Word"
+                          >
+                            <Download className="w-3 h-3 text-purple-700" />
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ))}
         </div>
 
-        {reports.length === 0 && (
+        {yearGroups.length === 0 && (
           <div className="text-center py-12">
             <FileText className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-700 mb-2">

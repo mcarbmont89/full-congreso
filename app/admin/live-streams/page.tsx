@@ -59,6 +59,7 @@ export default function LiveStreamsAdmin() {
       }
       const data = await response.json()
       console.log('Loaded streams in admin:', data)
+      console.log('Stream statuses:', data.map((s: LiveStream) => ({ id: s.id, title: s.title, status: s.status, isLive: s.isLive })))
       setStreams(data)
     } catch (error) {
       console.error('Error loading streams in admin:', error)
