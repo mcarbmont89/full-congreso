@@ -319,7 +319,7 @@ export default function TransparenciaPage() {
                     <h3 className="text-sm font-bold tracking-wide">NORMATIVIDAD GENERAL</h3>
                   </div>
                   
-                  <div className="mb-8 min-h-[280px]">
+                  <div className="mb-8 min-h-[200px]">
                     <p className="text-white/90 leading-relaxed text-sm">
                       Constitución, Ley Federal de Telecomunicaciones, Ley Federal de Transparencia y Acceso a la Información, Ley General de Protección de Datos Personales en Posesión de Sujetos Obligados, y Ley Federal de Archivos.
                     </p>
@@ -333,7 +333,7 @@ export default function TransparenciaPage() {
                     <h3 className="text-sm font-bold tracking-wide">NORMATIVIDAD INTERNA</h3>
                   </div>
                   
-                  <div className="mb-8 min-h-[280px]">
+                  <div className="mb-8 min-h-[200px]">
                     <p className="text-white/90 leading-relaxed text-sm">
                       Ley Orgánica del Congreso, Reglamento del Canal, Políticas de Comunicación, Guía de Usuario, Código de Ética, Lineamientos de la Defensoría de Audiencia, Reglas de Funcionamiento del Consejo Consultivo, Lineamientos Generales de Administración, entre otros.
                     </p>
@@ -364,7 +364,7 @@ export default function TransparenciaPage() {
                     <h3 className="text-sm font-bold tracking-wide">ÓRGANO RECTOR</h3>
                   </div>
                   
-                  <div className="mb-8 min-h-[280px]">
+                  <div className="mb-8 min-h-[200px]">
                     <p className="text-white/90 leading-relaxed text-sm">
                       El Canal del Congreso está regido por una comisión legislativa integrada de manera plural por representantes de la Cámara de Senadores y de la Cámara de Diputados, denominada "Comisión Bicameral del Canal de Televisión del Congreso.
                     </p>
@@ -378,7 +378,7 @@ export default function TransparenciaPage() {
                     <h3 className="text-sm font-bold tracking-wide">CONSEJO CONSULTIVO</h3>
                   </div>
                   
-                  <div className="mb-8 min-h-[280px]">
+                  <div className="mb-8 min-h-[200px]">
                     <p className="text-white/90 leading-relaxed text-sm">
                       El Canal del Congreso cuenta con un Consejo Consultivo, conformado por once especialistas con amplia trayectoria y reconocimiento en el ámbito de los medios de comunicación, propuestos por instituciones académicas, organizaciones civiles y otras.
                     </p>
