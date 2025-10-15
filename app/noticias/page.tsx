@@ -114,7 +114,7 @@ export default async function NewsPage() {
       
       // Filter to only show published news with publishedAt <= current date
       // Include all published news (including previously featured ones) in carousel/grid
-      newsItems = allNews.news.filter((item: NewsItem) => {
+      newsItems = (allNews?.news || []).filter((item: NewsItem) => {
         const publishedDate = new Date(item.publishedAt);
         return item.status === 'published' && publishedDate <= now;
       }).sort((a: NewsItem, b: NewsItem) => {
