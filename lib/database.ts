@@ -239,6 +239,21 @@ export async function createTables(pool: Pool): Promise<void> {
       )
     `)
     
+    // Transparency sections table for CMS-editable content
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS transparency_sections (
+        id SERIAL PRIMARY KEY,
+        section_key VARCHAR(100) UNIQUE NOT NULL,
+        section_title VARCHAR(255) NOT NULL,
+        icon_type VARCHAR(50),
+        cards_data JSONB NOT NULL DEFAULT '[]'::jsonb,
+        display_order INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT true,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+    
     await client.query('COMMIT')
   } catch (error) {
     await client.query('ROLLBACK')
