@@ -34,12 +34,9 @@ interface VideoNewsItem {
 
 async function getVideoNewsFromDB(): Promise<VideoNewsItem[]> {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/video-news/all`,
-      {
-        cache: "no-store",
-      },
-    );
+    const response = await fetch("/api/video-news/all", {
+      cache: "no-store",
+    });
 
     if (!response.ok) {
       console.error("Failed to fetch video news:", response.statusText);
@@ -83,13 +80,10 @@ function createSlug(title: string): string {
 export default async function NewsPage() {
   // Automatically publish any scheduled news that should now be live
   try {
-    await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/news/publish-scheduled`,
-      {
-        method: "POST",
-        cache: "no-store",
-      },
-    );
+    await fetch("/api/news/publish-scheduled", {
+      method: "POST",
+      cache: "no-store",
+    });
   } catch (error) {
     console.error("Error auto-publishing scheduled news:", error);
   }
@@ -101,12 +95,9 @@ export default async function NewsPage() {
 
   try {
     // Fetch all news (no need for separate featured news fetch since we're not displaying a featured section)
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/api/news/all`,
-      {
-        cache: "no-store",
-      },
-    );
+    const response = await fetch("/api/news/all", {
+      cache: "no-store",
+    });
 
     if (response.ok) {
       const allNews = await response.json();
