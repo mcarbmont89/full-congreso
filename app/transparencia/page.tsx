@@ -480,7 +480,25 @@ export default function TransparenciaPage() {
                               {card.items.map((item, itemIndex) => (
                                 <div key={itemIndex} className="flex items-center gap-2 text-sm">
                                   <span className="text-pink-400">●</span>
-                                  <span className="text-white/90">{item.label}</span>
+                                  {item.fileUrl ? (
+                                    <a 
+                                      href={item.fileUrl} 
+                                      download
+                                      className="text-white/90 hover:text-white hover:underline flex items-center gap-2 group"
+                                    >
+                                      <span>{item.label}</span>
+                                      {item.fileType && (
+                                        <span className="text-xs bg-pink-500/30 px-2 py-0.5 rounded group-hover:bg-pink-500/50 transition-colors">
+                                          {item.fileType.toUpperCase()}
+                                        </span>
+                                      )}
+                                      <svg className="w-4 h-4 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                      </svg>
+                                    </a>
+                                  ) : (
+                                    <span className="text-white/90">{item.label}</span>
+                                  )}
                                 </div>
                               ))}
                             </div>

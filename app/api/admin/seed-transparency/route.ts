@@ -133,42 +133,91 @@ export async function POST() {
           {
             title: 'INFORME DE ACTIVIDADES',
             description: '',
-            items: ['2021', '2020', '2019', '2018', '2017', '2016', '2015'],
+            items: [
+              { label: 'Actividades 2021' },
+              { label: 'Actividades 2020' },
+              { label: 'Actividades 2019' },
+              { label: 'Actividades 2018' },
+              { label: 'Actividades 2017' },
+              { label: 'Actividades 2016' },
+              { label: 'Actividades 2015' }
+            ],
             linkUrl: '#',
             hasButton: true
           },
           {
             title: 'INFORMES TRIMESTRALES',
             description: '',
-            items: ['2021', '2020', '2019', '2018', '2017', '2016', '2015'],
+            items: [
+              { label: 'Informe 2021' },
+              { label: 'Informe 2020' },
+              { label: 'Informe 2019' },
+              { label: 'Informe 2018' },
+              { label: 'Informe 2017' },
+              { label: 'Informe 2016' },
+              { label: 'Informe 2015' }
+            ],
             linkUrl: '#',
             hasButton: true
           },
           {
-            title: 'INFORMES DE AUDITORÍA',
+            title: 'PROGRAMA ANUAL DE TRABAJO',
             description: '',
-            items: ['2021', '2020', '2019', '2018', '2017', '2016', '2015'],
+            items: [
+              { label: 'Programa 2021' },
+              { label: 'Programa 2020' },
+              { label: 'Programa 2019' },
+              { label: 'Programa 2018' },
+              { label: 'Programa 2017' },
+              { label: 'Programa 2016' },
+              { label: 'Programa 2015' }
+            ],
             linkUrl: '#',
             hasButton: true
           },
           {
-            title: 'CUENTA PÚBLICA',
+            title: 'BITÁCORAS DE TRANSMISIÓN EN SEÑAL ABIERTA',
             description: '',
-            items: ['2021', '2020', '2019', '2018', '2017', '2016', '2015'],
+            items: [
+              { label: 'Bitácoras 2021' },
+              { label: 'Bitácoras 2020' },
+              { label: 'Bitácoras 2019' },
+              { label: 'Bitácoras 2018' },
+              { label: 'Bitácoras 2017' },
+              { label: 'Bitácoras 2016' },
+              { label: 'Bitácoras 2015' }
+            ],
             linkUrl: '#',
             hasButton: true
           },
           {
-            title: 'PADRÓN DE PROVEEDORES',
+            title: 'BASE DE DATOS DE ACERVO VIDEOGRÁFICO',
             description: '',
-            items: ['2021', '2020', '2019', '2018', '2017', '2016', '2015'],
+            items: [
+              { label: 'Acervo videográfico 2022' },
+              { label: 'Acervo videográfico 2021' },
+              { label: 'Acervo videográfico 2020' },
+              { label: 'Acervo videográfico 2019' },
+              { label: 'Acervo videográfico 2018' },
+              { label: 'Acervo videográfico 2017' },
+              { label: 'Acervo videográfico 2016' },
+              { label: 'Acervo videográfico 2015' }
+            ],
             linkUrl: '#',
             hasButton: true
           },
           {
-            title: 'ARCHIVOS HISTÓRICOS',
+            title: 'ESTADÍSTICAS DE PLATAFORMAS DIGITALES DEL CANAL',
             description: '',
-            items: ['2021', '2020', '2019', '2018', '2017', '2016', '2015'],
+            items: [
+              { label: 'Estadísticas 2021' },
+              { label: 'Estadísticas 2020' },
+              { label: 'Estadísticas 2019' },
+              { label: 'Estadísticas 2018' },
+              { label: 'Estadísticas 2017' },
+              { label: 'Estadísticas 2016' },
+              { label: 'Estadísticas 2015' }
+            ],
             linkUrl: '#',
             hasButton: true
           }

@@ -191,7 +191,9 @@ export default function TransparencySectionsAdmin() {
                             onChange={(e) => {
                               const newItems = [...card.items!]
                               newItems[itemIndex] = { ...newItems[itemIndex], label: e.target.value }
-                              updateCardField(index, 'items', newItems.map(i => i.label).join(', '))
+                              const newCards = [...editingSection.cardsData]
+                              newCards[index] = { ...newCards[index], items: newItems }
+                              setEditingSection({ ...editingSection, cardsData: newCards })
                             }}
                             placeholder="ej: Actividades 2021"
                             className="mt-1"
