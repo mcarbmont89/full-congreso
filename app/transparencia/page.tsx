@@ -805,56 +805,6 @@ export default function TransparenciaPage() {
             </div>
           </div>
         </section>
-
-        <section className="relative z-10 py-20 bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white">
-          <div className="container mx-auto px-6 text-center">
-            <div className="max-w-4xl mx-auto">
-              <div className="mb-8">
-                <h3 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                  DEFENSORÍA DE AUDIENCIA
-                </h3>
-                <p className="text-xl text-purple-200">Canal del Congreso</p>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 mb-8 border border-white/20">
-                <p className="text-lg text-white leading-relaxed">
-                  La Defensoría de Audiencia es el mecanismo de participación ciudadana que garantiza el derecho a la información, 
-                  recibe y da seguimiento a las observaciones, quejas y sugerencias del público respecto a los contenidos y servicios del Canal del Congreso.
-                </p>
-              </div>
-
-              <div className="flex flex-col lg:flex-row items-center justify-center gap-6">
-                <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-                  <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-7 h-7 text-white">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                    </svg>
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm text-purple-200 font-medium">Correo electrónico</p>
-                    <a href="mailto:defensoria.audiencia@canaldelcongreso.gob.mx" className="text-lg font-semibold text-white hover:text-purple-200 transition-colors">
-                      defensoria.audiencia@canaldelcongreso.gob.mx
-                    </a>
-                  </div>
-                </div>
-
-                <div className="flex items-center space-x-4 bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group">
-                  <div className="w-14 h-14 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-7 h-7 text-white">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                    </svg>
-                  </div>
-                  <div className="text-left">
-                    <p className="text-sm text-purple-200 font-medium">Envía tu consulta</p>
-                    <Link href="/contacto" className="text-lg font-semibold text-white hover:text-purple-200 transition-colors">
-                      Formulario de contacto
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
       <Footer />
     </>
