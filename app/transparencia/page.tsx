@@ -4,12 +4,18 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Footer from "@/components/footer"
 
+interface TransparencyFileItem {
+  label: string
+  fileUrl?: string
+  fileType?: string
+}
+
 interface TransparencyCard {
   title: string
   description: string
   linkUrl?: string
   hasButton?: boolean
-  items?: string[]
+  items?: TransparencyFileItem[]
 }
 
 interface TransparencySection {
@@ -474,7 +480,7 @@ export default function TransparenciaPage() {
                               {card.items.map((item, itemIndex) => (
                                 <div key={itemIndex} className="flex items-center gap-2 text-sm">
                                   <span className="text-pink-400">●</span>
-                                  <span className="text-white/90">{item}</span>
+                                  <span className="text-white/90">{item.label}</span>
                                 </div>
                               ))}
                             </div>

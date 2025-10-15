@@ -9,12 +9,18 @@ import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeft, Save, Edit } from "lucide-react"
 import Link from "next/link"
 
+interface TransparencyFileItem {
+  label: string
+  fileUrl?: string
+  fileType?: string
+}
+
 interface TransparencyCard {
   title: string
   description: string
   linkUrl?: string
   hasButton?: boolean
-  items?: string[]
+  items?: TransparencyFileItem[]
 }
 
 interface TransparencySection {
@@ -99,8 +105,8 @@ export default function TransparencySectionsAdmin() {
     if (!editingSection) return
     const newCards = [...editingSection.cardsData]
     if (field === 'items' && typeof value === 'string') {
-      // Convert comma-separated string to array
-      const items = value.split(',').map(item => item.trim()).filter(item => item)
+      // Convert comma-separated string to array of file items
+      const items = value.split(',').map(label => ({ label: label.trim() })).filter(item => item.label)
       newCards[cardIndex] = { ...newCards[cardIndex], items }
     } else {
       newCards[cardIndex] = { ...newCards[cardIndex], [field]: value }
@@ -166,14 +172,87 @@ export default function TransparencySectionsAdmin() {
                   />
                 </div>
                 {card.items && card.items.length > 0 && (
-                  <div>
-                    <Label>Elementos de Lista (separados por comas)</Label>
-                    <Input
-                      value={card.items.join(', ')}
-                      onChange={(e) => updateCardField(index, 'items', e.target.value)}
-                      placeholder="2021, 2020, 2019..."
-                    />
-                    <p className="text-xs text-gray-500 mt-1">Los elementos se mostrarán como puntos en una lista</p>
+                  <div className="space-y-4">
+                    <Label>Elementos de Lista con Archivos Descargables</Label>
+                    {card.items.map((item, itemIndex) => (
+                      <div key={itemIndex} className="border rounded-lg p-4 space-y-3">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-sm font-medium">Elemento {itemIndex + 1}</Label>
+                          {item.fileUrl && item.fileType && (
+                            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                              {item.fileType.toUpperCase()}
+                            </span>
+                          )}
+                        </div>
+                        <div>
+                          <Label className="text-xs text-gray-600">Etiqueta</Label>
+                          <Input
+                            value={item.label}
+                            onChange={(e) => {
+                              const newItems = [...card.items!]
+                              newItems[itemIndex] = { ...newItems[itemIndex], label: e.target.value }
+                              updateCardField(index, 'items', newItems.map(i => i.label).join(', '))
+                            }}
+                            placeholder="ej: Actividades 2021"
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-xs text-gray-600">Archivo (PDF, Word, Excel)</Label>
+                          <div className="flex items-center gap-2 mt-1">
+                            <Input
+                              type="file"
+                              accept=".pdf,.doc,.docx,.xls,.xlsx"
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0]
+                                if (!file) return
+                                
+                                const formData = new FormData()
+                                formData.append('file', file)
+                                formData.append('type', 'documents')
+                                
+                                try {
+                                  const response = await fetch('/api/upload', {
+                                    method: 'POST',
+                                    body: formData
+                                  })
+                                  
+                                  if (response.ok) {
+                                    const data = await response.json()
+                                    const newItems = [...card.items!]
+                                    newItems[itemIndex] = {
+                                      ...newItems[itemIndex],
+                                      fileUrl: data.url,
+                                      fileType: file.name.split('.').pop() || 'pdf'
+                                    }
+                                    const newCards = [...editingSection.cardsData]
+                                    newCards[index] = { ...newCards[index], items: newItems }
+                                    setEditingSection({ ...editingSection, cardsData: newCards })
+                                  } else {
+                                    alert('Error al subir el archivo')
+                                  }
+                                } catch (error) {
+                                  console.error('Error uploading file:', error)
+                                  alert('Error al subir el archivo')
+                                }
+                              }}
+                              className="flex-1"
+                            />
+                            {item.fileUrl && (
+                              <a 
+                                href={item.fileUrl} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-600 hover:underline text-xs"
+                              >
+                                Ver archivo
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <p className="text-xs text-gray-500">Los elementos con archivo se mostrarán como enlaces de descarga</p>
                   </div>
                 )}
                 {card.hasButton && (
