@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
+import { Checkbox } from "@/components/ui/checkbox"
 import { ArrowLeft, Save, Edit } from "lucide-react"
 import Link from "next/link"
 
@@ -101,7 +102,7 @@ export default function TransparencySectionsAdmin() {
     setEditingSection({ ...editingSection, sectionTitle: title })
   }
 
-  const updateCardField = (cardIndex: number, field: keyof TransparencyCard, value: string | string[]) => {
+  const updateCardField = (cardIndex: number, field: keyof TransparencyCard, value: string | string[] | boolean) => {
     if (!editingSection) return
     const newCards = [...editingSection.cardsData]
     if (field === 'items' && typeof value === 'string') {
@@ -257,6 +258,18 @@ export default function TransparencySectionsAdmin() {
                     <p className="text-xs text-gray-500">Los elementos con archivo se mostrarán como enlaces de descarga</p>
                   </div>
                 )}
+                
+                <div className="flex items-center space-x-2">
+                  <Checkbox
+                    id={`hasButton-${index}`}
+                    checked={card.hasButton || false}
+                    onCheckedChange={(checked) => updateCardField(index, 'hasButton', checked as boolean)}
+                  />
+                  <Label htmlFor={`hasButton-${index}`} className="text-sm font-normal cursor-pointer">
+                    Mostrar botón de enlace
+                  </Label>
+                </div>
+                
                 {card.hasButton && (
                   <div>
                     <Label>URL del Enlace</Label>
