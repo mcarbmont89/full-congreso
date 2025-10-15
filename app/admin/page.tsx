@@ -133,6 +133,26 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
+          {/* Transparency Sections */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Secciones de Transparencia
+              </CardTitle>
+              <CardDescription>
+                Administrar contenido de transparencia
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Link href="/admin/transparency-sections">
+                <Button className="w-full min-h-[44px] text-sm sm:text-base">
+                  Gestionar Transparencia
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
           {/* Settings */}
           <Card>
             <CardHeader>
