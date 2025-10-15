@@ -219,9 +219,9 @@ export default function AnnualReportsSection() {
           INFORME DE DEFENSORÍA<br />DE AUDIENCIAS
         </h2>
 
-        {/* Single row with 3 cards maximum */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-4xl mx-auto">
-          {yearGroups.slice(0, 3).map((yearGroup) => (
+        {/* Display all years in responsive grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 max-w-7xl mx-auto">
+          {yearGroups.map((yearGroup) => (
             <div key={yearGroup.year} className="bg-white rounded-lg overflow-hidden shadow-lg border border-gray-300">
               {/* Gray header with year */}
               <div className="bg-gray-300 px-6 py-6 text-center border-b border-gray-400">
