@@ -3,10 +3,11 @@ import { getTransparencySectionByKeyFromDB, updateTransparencySectionInDB } from
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { sectionKey: string } }
+  { params }: { params: Promise<{ sectionKey: string }> }
 ) {
   try {
-    const section = await getTransparencySectionByKeyFromDB(params.sectionKey)
+    const { sectionKey } = await params
+    const section = await getTransparencySectionByKeyFromDB(sectionKey)
     
     if (!section) {
       return NextResponse.json({ error: 'Section not found' }, { status: 404 })
@@ -21,11 +22,12 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { sectionKey: string } }
+  { params }: { params: Promise<{ sectionKey: string }> }
 ) {
   try {
+    const { sectionKey } = await params
     const data = await request.json()
-    const updatedSection = await updateTransparencySectionInDB(params.sectionKey, data)
+    const updatedSection = await updateTransparencySectionInDB(sectionKey, data)
     
     if (!updatedSection) {
       return NextResponse.json({ error: 'Section not found or no changes made' }, { status: 404 })
