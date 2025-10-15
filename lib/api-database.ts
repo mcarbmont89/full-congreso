@@ -1374,3 +1374,129 @@ export async function deleteVideoNewsFromDB(id: string): Promise<boolean> {
   const result = await pool.query('DELETE FROM video_news WHERE id = $1', [id])
   return (result.rowCount ?? 0) > 0
 }
+
+// Transparency Sections CRUD functions
+export interface TransparencySection {
+  id: string
+  sectionKey: string
+  sectionTitle: string
+  iconType?: string
+  cardsData: any[]
+  displayOrder: number
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date
+}
+
+export async function getAllTransparencySectionsFromDB(): Promise<TransparencySection[]> {
+  try {
+    const pool = getDB()
+    const result = await pool.query(`
+      SELECT id, section_key as "sectionKey", section_title as "sectionTitle", 
+             icon_type as "iconType", cards_data as "cardsData", 
+             display_order as "displayOrder", is_active as "isActive",
+             created_at as "createdAt", updated_at as "updatedAt"
+      FROM transparency_sections
+      WHERE is_active = true
+      ORDER BY display_order ASC, id ASC
+    `)
+
+    return result.rows.map(row => ({
+      ...row,
+      id: row.id.toString(),
+      createdAt: new Date(row.createdAt),
+      updatedAt: new Date(row.updatedAt)
+    }))
+  } catch (error) {
+    console.error('Error fetching transparency sections:', error)
+    return []
+  }
+}
+
+export async function getTransparencySectionByKeyFromDB(sectionKey: string): Promise<TransparencySection | null> {
+  try {
+    const pool = getDB()
+    const result = await pool.query(`
+      SELECT id, section_key as "sectionKey", section_title as "sectionTitle", 
+             icon_type as "iconType", cards_data as "cardsData", 
+             display_order as "displayOrder", is_active as "isActive",
+             created_at as "createdAt", updated_at as "updatedAt"
+      FROM transparency_sections
+      WHERE section_key = $1
+    `, [sectionKey])
+
+    if (result.rows.length === 0) return null
+
+    const row = result.rows[0]
+    return {
+      ...row,
+      id: row.id.toString(),
+      createdAt: new Date(row.createdAt),
+      updatedAt: new Date(row.updatedAt)
+    }
+  } catch (error) {
+    console.error('Error fetching transparency section by key:', error)
+    return null
+  }
+}
+
+export async function updateTransparencySectionInDB(
+  sectionKey: string, 
+  data: { sectionTitle?: string; iconType?: string; cardsData?: any[]; displayOrder?: number; isActive?: boolean }
+): Promise<TransparencySection | null> {
+  try {
+    const pool = getDB()
+    const fields: string[] = []
+    const values: any[] = []
+    let paramIndex = 1
+
+    if (data.sectionTitle !== undefined) {
+      fields.push(`section_title = $${paramIndex++}`)
+      values.push(data.sectionTitle)
+    }
+    if (data.iconType !== undefined) {
+      fields.push(`icon_type = $${paramIndex++}`)
+      values.push(data.iconType)
+    }
+    if (data.cardsData !== undefined) {
+      fields.push(`cards_data = $${paramIndex++}`)
+      values.push(JSON.stringify(data.cardsData))
+    }
+    if (data.displayOrder !== undefined) {
+      fields.push(`display_order = $${paramIndex++}`)
+      values.push(data.displayOrder)
+    }
+    if (data.isActive !== undefined) {
+      fields.push(`is_active = $${paramIndex++}`)
+      values.push(data.isActive)
+    }
+
+    if (fields.length === 0) return null
+
+    fields.push(`updated_at = CURRENT_TIMESTAMP`)
+    values.push(sectionKey)
+
+    const result = await pool.query(`
+      UPDATE transparency_sections 
+      SET ${fields.join(', ')}
+      WHERE section_key = $${paramIndex}
+      RETURNING id, section_key as "sectionKey", section_title as "sectionTitle", 
+                icon_type as "iconType", cards_data as "cardsData", 
+                display_order as "displayOrder", is_active as "isActive",
+                created_at as "createdAt", updated_at as "updatedAt"
+    `, values)
+
+    if (result.rows.length === 0) return null
+
+    const row = result.rows[0]
+    return {
+      ...row,
+      id: row.id.toString(),
+      createdAt: new Date(row.createdAt),
+      updatedAt: new Date(row.updatedAt)
+    }
+  } catch (error) {
+    console.error('Error updating transparency section:', error)
+    throw error
+  }
+}
