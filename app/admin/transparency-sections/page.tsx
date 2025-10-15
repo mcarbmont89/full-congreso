@@ -95,10 +95,16 @@ export default function TransparencySectionsAdmin() {
     setEditingSection({ ...editingSection, sectionTitle: title })
   }
 
-  const updateCardField = (cardIndex: number, field: keyof TransparencyCard, value: string) => {
+  const updateCardField = (cardIndex: number, field: keyof TransparencyCard, value: string | string[]) => {
     if (!editingSection) return
     const newCards = [...editingSection.cardsData]
-    newCards[cardIndex] = { ...newCards[cardIndex], [field]: value }
+    if (field === 'items' && typeof value === 'string') {
+      // Convert comma-separated string to array
+      const items = value.split(',').map(item => item.trim()).filter(item => item)
+      newCards[cardIndex] = { ...newCards[cardIndex], items }
+    } else {
+      newCards[cardIndex] = { ...newCards[cardIndex], [field]: value }
+    }
     setEditingSection({ ...editingSection, cardsData: newCards })
   }
 
@@ -159,6 +165,17 @@ export default function TransparencySectionsAdmin() {
                     rows={4}
                   />
                 </div>
+                {card.items && card.items.length > 0 && (
+                  <div>
+                    <Label>Elementos de Lista (separados por comas)</Label>
+                    <Input
+                      value={card.items.join(', ')}
+                      onChange={(e) => updateCardField(index, 'items', e.target.value)}
+                      placeholder="2021, 2020, 2019..."
+                    />
+                    <p className="text-xs text-gray-500 mt-1">Los elementos se mostrarán como puntos en una lista</p>
+                  </div>
+                )}
                 {card.hasButton && (
                   <div>
                     <Label>URL del Enlace</Label>
