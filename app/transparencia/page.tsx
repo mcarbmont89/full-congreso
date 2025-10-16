@@ -459,27 +459,6 @@ export default function TransparenciaPage() {
                             </svg>
                           </a>
                         )}
-                      </div>roup">
-                        <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20">
-                          <div className="inline-block bg-purple-600 rounded-full px-5 py-2 mb-5">
-                            <h3 className="text-xs font-bold tracking-wide">{card.title}</h3>
-                          </div>
-                          
-                          <div className="mb-6 min-h-[200px]">
-                            <p className="text-white/90 leading-relaxed text-sm">
-                              {card.description}
-                            </p>
-                          </div>
-                          
-                          {card.hasButton && (
-                            <button className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-full transition-all duration-300 group-hover:scale-105">
-                              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                              </svg>
-                              <span className="text-sm">Entra aquí</span>
-                            </button>
-                          )}
-                        </div>
                       </div>
                     ))}
                   </div>
