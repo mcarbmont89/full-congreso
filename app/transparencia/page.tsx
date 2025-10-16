@@ -79,7 +79,7 @@ export default function TransparenciaPage() {
           <div className="absolute bottom-10 right-10 w-96 h-96 bg-pink-400/20 rounded-full blur-3xl"></div>
         </div>
 
-        <section className="relative z-10 pt-0 pb-0">
+        <section className="relative z-10 pt-0 pb-0 mt-8">
           <div className="w-full h-[150px] overflow-hidden bg-gradient-to-r from-purple-900 to-purple-700">
             <img 
               src="/images/transparency/transparencia-banner.png" 
