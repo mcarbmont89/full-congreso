@@ -100,7 +100,8 @@ export default function TransparenciaPage() {
             className="absolute inset-0 w-full h-full bg-cover bg-center opacity-50"
             style={{
               backgroundImage: `url('/images/transparency/purple-gradient-bg.png')`,
-              top: '150px'
+              top: '-150px',
+              height: 'calc(100% + 150px)'
             }}
           />
           <div className="container mx-auto px-6 relative z-10">
