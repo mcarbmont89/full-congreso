@@ -80,11 +80,11 @@ export default function TransparenciaPage() {
         </div>
 
         <section className="relative z-10 pt-0 pb-0">
-          <div className="w-full">
+          <div className="w-full h-[200px] md:h-[300px] overflow-hidden">
             <img 
               src="/images/transparency/transparencia-banner.png" 
               alt="Transparencia" 
-              className="w-full h-auto object-cover"
+              className="w-full h-full object-cover"
             />
           </div>
         </section>
