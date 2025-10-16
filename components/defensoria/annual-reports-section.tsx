@@ -44,6 +44,7 @@ export default function AnnualReportsSection() {
         const response = await fetch('/api/defensoria-audiencia?section=annual_reports')
         if (response.ok) {
           const data = await response.json()
+          console.log('Annual reports raw data:', data)
           if (data && data.length > 0) {
             // Group reports by year
             const groupedByYear: { [year: string]: ReportType[] } = {}
@@ -52,6 +53,8 @@ export default function AnnualReportsSection() {
               const metadata = item.metadata || {}
               const year = metadata.year || item.title || ''
               const reportType = metadata.reportType || 'INFORME ANUAL'
+              
+              console.log('Processing item:', { id: item.id, year, reportType, metadata })
               
               if (!groupedByYear[year]) {
                 groupedByYear[year] = []
@@ -66,6 +69,8 @@ export default function AnnualReportsSection() {
               })
             })
             
+            console.log('Grouped by year:', groupedByYear)
+            
             // Convert to array and sort by year descending
             const toNum = (y: string) => Number.parseInt(y, 10) || 0
             const yearGroupsArray = Object.entries(groupedByYear)
@@ -75,6 +80,7 @@ export default function AnnualReportsSection() {
               }))
               .sort((a, b) => toNum(b.year) - toNum(a.year))
             
+            console.log('Final year groups array:', yearGroupsArray)
             setYearGroups(yearGroupsArray)
           } else {
             // Fallback data grouped by year
