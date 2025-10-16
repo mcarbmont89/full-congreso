@@ -96,9 +96,16 @@ export default function TransparenciaPage() {
         </section>
 
         <section className="relative z-10 py-12 pb-24">
-          <div className="container mx-auto px-6">
+          <div 
+            className="absolute inset-0 w-full h-full bg-cover bg-center opacity-50"
+            style={{
+              backgroundImage: `url('/images/transparency/purple-gradient-bg.png')`,
+              top: '150px'
+            }}
+          />
+          <div className="container mx-auto px-6 relative z-10">
             <div className="flex items-center justify-center">
-              <div className="relative w-full max-w-4xl" style={{ height: '600px' }}>
+              <div className="relative w-full max-w-4xl" style={{ height: '600px' }}></div></div>
 
                 <button onClick={() => scrollToSection('acerca')} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20 cursor-pointer">
                   <div className="w-48 h-48 rounded-full border-4 border-white/50 bg-purple-600/80 backdrop-blur-sm flex items-center justify-center hover:bg-purple-500 transition-all">
