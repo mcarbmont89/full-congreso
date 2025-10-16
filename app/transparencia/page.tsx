@@ -318,13 +318,12 @@ export default function TransparenciaPage() {
 
               return (
                 <>
-                  <div className="flex items-center gap-6 mb-12">
-                    <div className="w-20 h-20 rounded-full border-4 border-white bg-white/20 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
-                      </svg>
-                    </div>
-                    <h2 className="text-4xl md:text-5xl font-bold text-white">{section.sectionTitle}</h2>
+                  <div className="w-full mb-12">
+                    <img 
+                      src="/images/transparency/normatividad-banner.png" 
+                      alt="Normatividad" 
+                      className="w-full h-auto object-contain"
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
