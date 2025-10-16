@@ -79,20 +79,13 @@ export default function TransparenciaPage() {
           <div className="absolute bottom-10 right-10 w-96 h-96 bg-pink-400/20 rounded-full blur-3xl"></div>
         </div>
 
-        <section className="relative z-10 pt-20 pb-8">
-          <div className="container mx-auto px-6">
-            <div className="flex items-center justify-center gap-6 mb-4">
-              <h1 className="text-5xl md:text-7xl font-bold text-white tracking-wider flex items-center">
-                TRANSP
-                <span className="inline-flex items-center justify-center mx-2">
-                  <svg className="w-16 h-16 md:w-20 md:h-20" viewBox="0 0 100 100" fill="none">
-                    <circle cx="40" cy="40" r="25" stroke="white" strokeWidth="6" opacity="0.9"/>
-                    <line x1="58" y1="58" x2="75" y2="75" stroke="white" strokeWidth="6" strokeLinecap="round" opacity="0.9"/>
-                  </svg>
-                </span>
-                RENCIA
-              </h1>
-            </div>
+        <section className="relative z-10 pt-0 pb-0">
+          <div className="w-full">
+            <img 
+              src="/images/transparency/transparencia-banner.png" 
+              alt="Transparencia" 
+              className="w-full h-auto object-cover"
+            />
           </div>
         </section>
 
