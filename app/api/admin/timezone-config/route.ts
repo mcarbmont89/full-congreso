@@ -6,15 +6,27 @@ export async function GET() {
   try {
     const pool = getDB()
 
-    const result = await pool.query(`
-      SELECT * FROM timezone_config 
-      WHERE is_active = true 
-      ORDER BY updated_at DESC 
-      LIMIT 1
-    `)
+    let result
+    try {
+      result = await pool.query(`
+        SELECT * FROM timezone_config 
+        WHERE is_active = true 
+        ORDER BY updated_at DESC 
+        LIMIT 1
+      `)
+    } catch (dbError: any) {
+      if (dbError.code === '42703') {
+        result = await pool.query(`
+          SELECT * FROM timezone_config 
+          ORDER BY updated_at DESC 
+          LIMIT 1
+        `)
+      } else {
+        throw dbError
+      }
+    }
 
     if (result.rows.length === 0) {
-      // Return default timezone if none configured
       return NextResponse.json({
         timezone: 'America/Mexico_City',
         displayName: 'Ciudad de México (CST/CDT)',
@@ -25,7 +37,11 @@ export async function GET() {
     return NextResponse.json(result.rows[0])
   } catch (error) {
     console.error('Error fetching timezone config:', error)
-    return NextResponse.json({ error: 'Failed to fetch timezone config' }, { status: 500 })
+    return NextResponse.json({
+      timezone: 'America/Mexico_City',
+      displayName: 'Ciudad de México (CST/CDT)',
+      isActive: true
+    })
   }
 }
 
@@ -48,15 +64,34 @@ export async function POST(request: NextRequest) {
 
     const pool = getDB()
 
-    // Deactivate existing configurations
-    await pool.query('UPDATE timezone_config SET is_active = false')
+    // Try to deactivate existing configurations (if is_active column exists)
+    try {
+      await pool.query('UPDATE timezone_config SET is_active = false')
+    } catch (deactivateError: any) {
+      if (deactivateError.code !== '42703') {
+        throw deactivateError
+      }
+    }
 
     // Insert new configuration
-    const result = await pool.query(`
-      INSERT INTO timezone_config (timezone, display_name, is_active, created_at, updated_at)
-      VALUES ($1, $2, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-      RETURNING *
-    `, [timezone, displayName])
+    let result
+    try {
+      result = await pool.query(`
+        INSERT INTO timezone_config (timezone, display_name, is_active, created_at, updated_at)
+        VALUES ($1, $2, true, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+        RETURNING *
+      `, [timezone, displayName])
+    } catch (insertError: any) {
+      if (insertError.code === '42703') {
+        result = await pool.query(`
+          INSERT INTO timezone_config (timezone, display_name, created_at, updated_at)
+          VALUES ($1, $2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+          RETURNING *
+        `, [timezone, displayName])
+      } else {
+        throw insertError
+      }
+    }
 
     // Clear the cache so the new timezone takes effect immediately
     clearTimezoneCache()
@@ -78,16 +113,36 @@ export async function PUT(request: Request) {
 
     const pool = getDB()
 
-    // Deactivate all configurations first
-    await pool.query('UPDATE timezone_config SET is_active = false')
+    // Try to deactivate all configurations first (if is_active column exists)
+    try {
+      await pool.query('UPDATE timezone_config SET is_active = false')
+    } catch (deactivateError: any) {
+      if (deactivateError.code !== '42703') {
+        throw deactivateError
+      }
+    }
 
     // Update and activate the specified configuration
-    const result = await pool.query(`
-      UPDATE timezone_config 
-      SET timezone = $1, display_name = $2, is_active = true, updated_at = CURRENT_TIMESTAMP
-      WHERE id = $3
-      RETURNING *
-    `, [timezone, displayName, id])
+    let result
+    try {
+      result = await pool.query(`
+        UPDATE timezone_config 
+        SET timezone = $1, display_name = $2, is_active = true, updated_at = CURRENT_TIMESTAMP
+        WHERE id = $3
+        RETURNING *
+      `, [timezone, displayName, id])
+    } catch (updateError: any) {
+      if (updateError.code === '42703') {
+        result = await pool.query(`
+          UPDATE timezone_config 
+          SET timezone = $1, display_name = $2, updated_at = CURRENT_TIMESTAMP
+          WHERE id = $3
+          RETURNING *
+        `, [timezone, displayName, id])
+      } else {
+        throw updateError
+      }
+    }
 
     if (result.rows.length === 0) {
       return NextResponse.json({ error: 'Timezone configuration not found' }, { status: 404 })
