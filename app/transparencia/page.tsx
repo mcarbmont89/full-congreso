@@ -79,12 +79,20 @@ export default function TransparenciaPage() {
           <div className="absolute bottom-10 right-10 w-96 h-96 bg-pink-400/20 rounded-full blur-3xl"></div>
         </div>
 
-        <section className="relative z-10 pt-0 pb-0">
-          <div className="w-full h-[150px] overflow-hidden bg-gradient-to-r from-purple-900 to-purple-700">
+        <section className="relative z-10 pt-0 pb-0 mt-8">
+          <div className="w-full h-[150px] overflow-hidden relative">
+            <div 
+              className="absolute inset-0 w-full h-full"
+              style={{
+                backgroundImage: 'linear-gradient(135deg, #3b0764 0%, #6b21a8 50%, #9333ea 100%)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            />
             <img 
               src="/images/transparency/transparencia-banner.png" 
               alt="Transparencia" 
-              className="w-full h-full object-cover"
+              className="relative w-full h-full object-contain z-10"
             />
           </div>
         </section>
