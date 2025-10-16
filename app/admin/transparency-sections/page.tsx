@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Checkbox } from "@/components/ui/checkbox"
-import { ArrowLeft, Save, Edit } from "lucide-react"
+import { ArrowLeft, Save, Edit, Plus, Trash2 } from "lucide-react"
 import Link from "next/link"
 
 interface TransparencyFileItem {
@@ -115,6 +115,47 @@ export default function TransparencySectionsAdmin() {
     setEditingSection({ ...editingSection, cardsData: newCards })
   }
 
+  const addCard = () => {
+    if (!editingSection) return
+    const newCard: TransparencyCard = {
+      title: 'Nueva Tarjeta',
+      description: 'Descripción de la nueva tarjeta',
+      linkUrl: '',
+      hasButton: false,
+      items: []
+    }
+    setEditingSection({
+      ...editingSection,
+      cardsData: [...editingSection.cardsData, newCard]
+    })
+  }
+
+  const removeCard = (cardIndex: number) => {
+    if (!editingSection) return
+    const newCards = editingSection.cardsData.filter((_, index) => index !== cardIndex)
+    setEditingSection({
+      ...editingSection,
+      cardsData: newCards
+    })
+  }
+
+  const addItemToCard = (cardIndex: number) => {
+    if (!editingSection) return
+    const newCards = [...editingSection.cardsData]
+    const items = newCards[cardIndex].items || []
+    items.push({ label: 'Nuevo elemento', fileUrl: '', fileType: '' })
+    newCards[cardIndex] = { ...newCards[cardIndex], items }
+    setEditingSection({ ...editingSection, cardsData: newCards })
+  }
+
+  const removeItemFromCard = (cardIndex: number, itemIndex: number) => {
+    if (!editingSection) return
+    const newCards = [...editingSection.cardsData]
+    const items = (newCards[cardIndex].items || []).filter((_, index) => index !== itemIndex)
+    newCards[cardIndex] = { ...newCards[cardIndex], items }
+    setEditingSection({ ...editingSection, cardsData: newCards })
+  }
+
   if (isLoading) {
     return (
       <div className="container mx-auto p-6">
@@ -148,11 +189,28 @@ export default function TransparencySectionsAdmin() {
         </Card>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Tarjetas de Contenido</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl font-semibold">Tarjetas de Contenido</h2>
+            <Button onClick={addCard} size="sm">
+              <Plus className="w-4 h-4 mr-2" />
+              Agregar Tarjeta
+            </Button>
+          </div>
           {editingSection.cardsData.map((card, index) => (
             <Card key={index}>
               <CardHeader>
-                <CardTitle className="text-sm">Tarjeta {index + 1}</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-sm">Tarjeta {index + 1}</CardTitle>
+                  <Button 
+                    variant="destructive" 
+                    size="sm" 
+                    onClick={() => removeCard(index)}
+                    disabled={editingSection.cardsData.length === 1}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Eliminar
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
@@ -172,19 +230,39 @@ export default function TransparencySectionsAdmin() {
                     rows={4}
                   />
                 </div>
-                {card.items && card.items.length > 0 && (
-                  <div className="space-y-4">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
                     <Label>Elementos de Lista con Archivos Descargables</Label>
-                    {card.items.map((item, itemIndex) => (
-                      <div key={itemIndex} className="border rounded-lg p-4 space-y-3">
-                        <div className="flex items-center justify-between">
-                          <Label className="text-sm font-medium">Elemento {itemIndex + 1}</Label>
-                          {item.fileUrl && item.fileType && (
-                            <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
-                              {item.fileType.toUpperCase()}
-                            </span>
-                          )}
-                        </div>
+                    <Button 
+                      onClick={() => addItemToCard(index)} 
+                      size="sm" 
+                      variant="outline"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Agregar Elemento
+                    </Button>
+                  </div>
+                  {card.items && card.items.length > 0 && (
+                    <>
+                      {card.items.map((item, itemIndex) => (
+                        <div key={itemIndex} className="border rounded-lg p-4 space-y-3">
+                          <div className="flex items-center justify-between">
+                            <Label className="text-sm font-medium">Elemento {itemIndex + 1}</Label>
+                            <div className="flex items-center gap-2">
+                              {item.fileUrl && item.fileType && (
+                                <span className="text-xs bg-purple-100 text-purple-700 px-2 py-1 rounded">
+                                  {item.fileType.toUpperCase()}
+                                </span>
+                              )}
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => removeItemFromCard(index, itemIndex)}
+                              >
+                                <Trash2 className="w-4 h-4 text-red-500" />
+                              </Button>
+                            </div>
+                          </div>
                         <div>
                           <Label className="text-xs text-gray-600">Etiqueta</Label>
                           <Input
@@ -253,11 +331,12 @@ export default function TransparencySectionsAdmin() {
                             )}
                           </div>
                         </div>
-                      </div>
-                    ))}
-                    <p className="text-xs text-gray-500">Los elementos con archivo se mostrarán como enlaces de descarga</p>
-                  </div>
-                )}
+                        </div>
+                      ))}
+                      <p className="text-xs text-gray-500">Los elementos con archivo se mostrarán como enlaces de descarga</p>
+                    </>
+                  )}
+                </div>
                 
                 <div className="flex items-center space-x-2">
                   <Checkbox
