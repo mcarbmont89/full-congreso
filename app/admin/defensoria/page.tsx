@@ -464,6 +464,7 @@ export default function DefensoriaAdmin() {
       display_order: item.display_order,
       is_active: item.is_active
     })
+    setSelectedFile(null)
     setImagePreview(item.image_url || '')
     setEditingId(item.id)
 
@@ -698,17 +699,45 @@ export default function DefensoriaAdmin() {
 
         {/* Image Upload */}
         {config.fields.includes('image') && (
-          <div>
+          <div className="space-y-2">
             <Label htmlFor="image">Foto de la Defensora</Label>
-            <Input
-              id="image"
-              type="file"
-              onChange={handleFileSelect}
-              accept="image/*"
-            />
-            {imagePreview && (
-              <div className="mt-2">
-                <img src={imagePreview} alt="Preview" className="max-w-xs h-32 object-cover rounded" />
+            
+            {/* Show current image if editing */}
+            {editingContent && formData.image_url && !selectedFile && (
+              <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <p className="text-sm font-medium text-gray-700 mb-2">Foto actual:</p>
+                <img 
+                  src={formData.image_url} 
+                  alt="Foto actual" 
+                  className="max-w-xs h-32 object-cover rounded border border-gray-200" 
+                />
+              </div>
+            )}
+            
+            {/* File input */}
+            <div className="space-y-1">
+              <Input
+                id="image"
+                type="file"
+                onChange={handleFileSelect}
+                accept="image/*"
+                className="cursor-pointer"
+              />
+              <p className="text-xs text-gray-500">
+                {editingContent ? 'Selecciona una nueva foto para reemplazar la actual' : 'Selecciona una foto para la defensora'}
+              </p>
+            </div>
+            
+            {/* Show preview of newly selected image */}
+            {selectedFile && imagePreview && (
+              <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                <p className="text-sm font-medium text-green-700 mb-2">Nueva foto seleccionada:</p>
+                <img 
+                  src={imagePreview} 
+                  alt="Vista previa" 
+                  className="max-w-xs h-32 object-cover rounded border border-green-300" 
+                />
+                <p className="text-xs text-green-600 mt-1">✓ {selectedFile.name}</p>
               </div>
             )}
           </div>
