@@ -206,15 +206,10 @@ export default function TransparenciaPage() {
 
         <section id="informacion" className="relative py-16 scroll-mt-20 overflow-hidden">
           <div 
-            className="absolute inset-0"
+            className="absolute inset-0 bg-cover bg-center"
             style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0l25.98 15v30L30 60 4.02 45V15z' fill='%23ffffff' fill-opacity='0.15' fill-rule='evenodd'/%3E%3C/svg%3E")`,
-              backgroundSize: '60px 60px',
-              backgroundColor: 'transparent'
+              backgroundImage: `url('/images/transparency/hexagonal-pattern-bg.png')`
             }}
-          />
-          <div 
-            className="absolute inset-0 bg-gradient-to-br from-purple-700 via-purple-600 to-purple-800"
           />
           <div className="container mx-auto px-6 relative z-10">
             {(() => {
