@@ -21,12 +21,25 @@ interface Dataset {
   file_type: string
 }
 
+interface TransparencySection {
+  sectionKey: string
+  sectionTitle: string
+  cardsData: Array<{
+    title: string
+    description: string
+    linkUrl: string
+    hasButton: boolean
+  }>
+}
+
 export default function DatosAbiertosPage() {
   const [datasets, setDatasets] = useState<Dataset[]>([])
+  const [sectionData, setSectionData] = useState<TransparencySection | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     loadDatasets()
+    loadSectionData()
   }, [])
 
   const loadDatasets = async () => {
@@ -40,6 +53,18 @@ export default function DatosAbiertosPage() {
       console.error('Error loading datasets:', error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const loadSectionData = async () => {
+    try {
+      const response = await fetch('/api/transparency-sections/datos-abiertos')
+      if (response.ok) {
+        const data = await response.json()
+        setSectionData(data)
+      }
+    } catch (error) {
+      console.error('Error loading section data:', error)
     }
   }
 
@@ -72,15 +97,20 @@ export default function DatosAbiertosPage() {
       <Navbar />
       <TransparencySubmenu />
       <main className="container mx-auto px-4 py-12 min-h-screen">
-        <h1 className="text-3xl font-bold mb-6">Datos Abiertos</h1>
+        <h1 className="text-3xl font-bold mb-6">
+          {sectionData?.sectionTitle || 'Datos Abiertos'}
+        </h1>
 
-        <div className="prose max-w-none mb-8">
-          <p className="text-lg">
-            Los datos abiertos son información pública accesible, disponible en formatos técnicos y legales que permiten
-            su uso, reutilización y redistribución para cualquier fin. En esta sección podrás encontrar conjuntos de
-            datos relacionados con la actividad legislativa y parlamentaria.
-          </p>
-        </div>
+        {sectionData?.cardsData && sectionData.cardsData.length > 0 && (
+          <div className="prose max-w-none mb-8">
+            {sectionData.cardsData.map((card, index) => (
+              <div key={index} className="mb-6">
+                <h3 className="text-xl font-semibold mb-2">{card.title}</h3>
+                <p className="text-lg text-gray-700">{card.description}</p>
+              </div>
+            ))}
+          </div>
+        )}
 
         {loading ? (
           <div className="text-center py-12">
@@ -154,44 +184,6 @@ export default function DatosAbiertosPage() {
             ))}
           </div>
         )}
-
-        <div className="bg-blue-50 p-6 rounded-lg border border-blue-100 mb-12">
-          <h2 className="text-2xl font-semibold mb-4">Política de Datos Abiertos</h2>
-          <div className="prose max-w-none">
-            <p>
-              El Canal del Congreso se compromete a publicar de manera oportuna, accesible y usable la información
-              generada en el ejercicio de sus funciones, siguiendo los principios de datos abiertos:
-            </p>
-            <ul>
-              <li>
-                <strong>Completos:</strong> Todos los datos públicos están disponibles.
-              </li>
-              <li>
-                <strong>Primarios:</strong> Se publican tal como fueron recolectados en la fuente.
-              </li>
-              <li>
-                <strong>Oportunos:</strong> Se publican tan pronto como sea necesario para preservar su valor.
-              </li>
-              <li>
-                <strong>Accesibles:</strong> Están disponibles para el rango más amplio de usuarios y propósitos.
-              </li>
-              <li>
-                <strong>Procesables por máquina:</strong> Están estructurados para permitir su procesamiento
-                automatizado.
-              </li>
-              <li>
-                <strong>No discriminatorios:</strong> Disponibles para cualquier persona sin necesidad de registro.
-              </li>
-              <li>
-                <strong>No propietarios:</strong> Publicados en formatos abiertos, no controlados exclusivamente por
-                alguna entidad.
-              </li>
-              <li>
-                <strong>De libre licencia:</strong> No sujetos a restricciones de derechos de autor, patentes o marcas.
-              </li>
-            </ul>
-          </div>
-        </div>
       </main>
       <Footer />
     </>
