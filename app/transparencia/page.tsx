@@ -418,48 +418,9 @@ export default function TransparenciaPage() {
                     <h2 className="text-4xl md:text-5xl font-bold text-white">{section.sectionTitle}</h2>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {section.cardsData.map((card, index) => (
-                      <div key={index} className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/20 transition-all duration-300">
-                        <h3 className="text-2xl font-bold text-white mb-4">{card.title}</h3>
-                        <p className="text-white/90 mb-6 leading-relaxed">{card.description}</p>
-                        
-                        {card.items && card.items.length > 0 && (
-                          <ul className="space-y-3 mb-6">
-                            {card.items.map((item, itemIndex) => (
-                              <li key={itemIndex} className="flex items-start gap-3">
-                                {item.fileUrl ? (
-                                  <a 
-                                    href={item.fileUrl} 
-                                    target="_blank" 
-                                    rel="noopener noreferrer"
-                                    className="text-purple-200 hover:text-white transition-colors flex items-center gap-2 group"
-                                  >
-                                    <svg className="w-4 h-4 flex-shrink-0 mt-0.5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 20 20">
-                                      <path fillRule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586l-1.293-1.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clipRule="evenodd" />
-                                    </svg>
-                                    <span className="text-sm">{item.label}</span>
-                                  </a>
-                                ) : (
-                                  <span className="text-purple-200 text-sm">{item.label}</span>
-                                )}
-                              </li>
-                            ))}
-                          </ul>
-                        )}
-                        
-                        {card.hasButton && card.linkUrl && (
-                          <a
-                            href={card.linkUrl}
-                            className="inline-flex items-center gap-2 bg-white text-purple-700 px-6 py-2.5 rounded-lg font-semibold hover:bg-purple-100 transition-colors"
-                          >
-                            Entra aquí
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </a>
-                        )}
-                      </div>roup">
+                      <div key={index} className="group">
                         <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20">
                           <div className="inline-block bg-purple-600 rounded-full px-5 py-2 mb-5">
                             <h3 className="text-xs font-bold tracking-wide">{card.title}</h3>
