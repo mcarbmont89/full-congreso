@@ -148,7 +148,8 @@ export async function POST(request: NextRequest) {
     const section = formData.get('section') as string
     const title = formData.get('title') as string | undefined
     const content = formData.get('content') as string | undefined
-    const file = formData.get('file') as File | undefined
+    const image_url = formData.get('image_url') as string | undefined
+    const file_url = formData.get('file_url') as string | undefined
     const metadata = formData.get('metadata') ? JSON.parse(formData.get('metadata') as string) : {}
     const display_order = formData.get('display_order') ? parseInt(formData.get('display_order') as string, 10) : 0
     const is_active = formData.get('is_active') ? formData.get('is_active') === 'true' : true
@@ -160,23 +161,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    let file_url = null
-    if (file) {
-      // In a real application, you would upload the file to a storage service (e.g., S3, Cloudinary)
-      // and get a URL back. For this example, we'll just log the file info.
-      console.log('Received file:', file.name, 'Type:', file.type, 'Size:', file.size)
-      // Placeholder for actual file upload and URL generation
-      // file_url = await uploadFileToStorage(file); 
-      file_url = `/uploads/${file.name}`; // Example URL
-    }
-
-    console.log('Creating defensoria content:', { section, title, file_url })
+    console.log('Creating defensoria content:', { section, title, image_url, file_url })
 
     const result = await db.query(`
       INSERT INTO defensoria_content (section, title, content, image_url, file_url, metadata, display_order, is_active, updated_at)
       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP)
       RETURNING *
-    `, [section, title, content, null, file_url, JSON.stringify(metadata), display_order, is_active])
+    `, [section, title, content, image_url, file_url, JSON.stringify(metadata), display_order, is_active])
 
     console.log('Defensoria content created:', result.rows[0])
 
@@ -207,7 +198,8 @@ export async function PUT(request: NextRequest) {
     const section = formData.get('section') as string | undefined
     const title = formData.get('title') as string | undefined
     const content = formData.get('content') as string | undefined
-    const file = formData.get('file') as File | undefined
+    const image_url = formData.get('image_url') as string | undefined
+    const file_url = formData.get('file_url') as string | undefined
     const metadata = formData.get('metadata') ? JSON.parse(formData.get('metadata') as string) : undefined
     const display_order = formData.get('display_order') ? parseInt(formData.get('display_order') as string, 10) : undefined
     const is_active = formData.get('is_active') ? formData.get('is_active') === 'true' : undefined
@@ -220,16 +212,7 @@ export async function PUT(request: NextRequest) {
       )
     }
 
-    let file_url = undefined;
-    if (file) {
-      console.log('Received file for update:', file.name, 'Type:', file.type, 'Size:', file.size);
-      // Placeholder for actual file upload and URL generation
-      // file_url = await uploadFileToStorage(file);
-      file_url = `/uploads/${file.name}`; // Example URL
-    }
-
-
-    console.log('Updating defensoria content:', { id, section, title, file_url })
+    console.log('Updating defensoria content:', { id, section, title, image_url, file_url })
 
     const result = await db.query(`
       UPDATE defensoria_content 
@@ -244,7 +227,7 @@ export async function PUT(request: NextRequest) {
           updated_at = CURRENT_TIMESTAMP
       WHERE id = $1
       RETURNING *
-    `, [id, section, title, content, null, file_url, JSON.stringify(metadata), display_order, is_active])
+    `, [id, section, title, content, image_url, file_url, metadata ? JSON.stringify(metadata) : undefined, display_order, is_active])
 
     if (result.rows.length === 0) {
       return NextResponse.json(
