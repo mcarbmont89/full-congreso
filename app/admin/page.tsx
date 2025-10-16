@@ -171,7 +171,7 @@ export default function AdminDashboard() {
             </CardContent>
           </Card>
 
-          
+
 
 
           <Card>
@@ -213,23 +213,6 @@ export default function AdminDashboard() {
                 <div className="font-medium text-sm sm:text-base">Radio en Vivo</div>
                 <div className="text-xs sm:text-sm text-gray-600">Configurar transmisión en vivo</div>
               </Link>
-
-              <button 
-                onClick={async () => {
-                  try {
-                    const response = await fetch('/api/admin/init-radio', { method: 'POST' })
-                    const result = await response.json()
-                    alert(result.success ? 'Radio database initialized!' : 'Error: ' + result.error)
-                  } catch (error) {
-                    console.error('Error initializing radio:', error)
-                    alert('Error initializing radio database')
-                  }
-                }}
-                className="block w-full p-3 border rounded hover:bg-gray-50 text-left min-h-[44px] flex flex-col justify-center touch-manipulation"
-              >
-                <div className="font-medium text-sm sm:text-base">Inicializar Base de Datos Radio</div>
-                <div className="text-xs sm:text-sm text-gray-600">Crear tablas y datos iniciales</div>
-              </button>
             </div>
           </CardContent>
         </Card>

@@ -209,6 +209,14 @@ export default function AdminLayout({
               <span className="text-sm sm:text-base">Zona Horaria</span>
             </Link>
 
+            <Link 
+              href="/admin/transparency-sections" 
+              className={linkClassName("/admin/transparency-sections")}
+            >
+              <Eye className="h-4 w-4 flex-shrink-0" />
+              <span className="text-sm sm:text-base">Transparencia</span>
+            </Link>
+
             <div className="mt-4 pt-4 border-t border-gray-200">
               <Link 
                 href="/" 
