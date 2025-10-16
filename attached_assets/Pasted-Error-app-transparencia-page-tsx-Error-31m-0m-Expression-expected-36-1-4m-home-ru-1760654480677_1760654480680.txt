@@ -1,0 +1,41 @@
+Error: ./app/transparencia/page.tsx
+Error:   [31m×[0m Expression expected
+    ╭─[[36;1;4m/home/runner/workspace/app/transparencia/page.tsx[0m:75:1]
+ [2m72[0m │   }
+ [2m73[0m │ 
+ [2m74[0m │   return (
+ [2m75[0m │     <>
+    · [35;1m     ─[0m
+ [2m76[0m │       <main className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-600 to-pink-500">
+ [2m77[0m │         <div className="absolute inset-0 overflow-hidden pointer-events-none">
+ [2m78[0m │           <div className="absolute top-20 left-10 w-96 h-96 bg-purple-400/20 rounded-full blur-3xl"></div>
+    ╰────
+  [31m×[0m Expected corresponding JSX closing tag for <section>
+     ╭─[[36;1;4m/home/runner/workspace/app/transparencia/page.tsx[0m:202:1]
+ [2m199[0m │                 </button>
+ [2m200[0m │ 
+ [2m201[0m │               </div>
+ [2m202[0m │             </div>
+     · [35;1m            ──────[0m
+ [2m203[0m │           </div>
+ [2m204[0m │         </section>
+     ╰────
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./app/transparencia/page.tsx
+    at BuildError (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/client/components/react-dev-overlay/ui/container/build-error.js:43:41)
+    at react-stack-bottom-frame (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:23950:20)
+    at renderWithHooksAgain (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:5179:20)
+    at renderWithHooks (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:5091:22)
+    at updateFunctionComponent (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:8328:19)
+    at beginWork (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:9945:18)
+    at runWithFiberInDEV (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:1511:30)
+    at performUnitOfWork (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:15120:22)
+    at workLoopSync (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:14944:41)
+    at renderRootSync (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:14924:11)
+    at performWorkOnRoot (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:14411:13)
+    at performWorkOnRootViaSchedulerTask (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/react-dom/cjs/react-dom-client.development.js:16275:7)
+    at MessagePort.performWorkUntilDeadline (webpack-internal:///(app-pages-browser)/./node_modules/next/dist/compiled/scheduler/cjs/scheduler.development.js:45:48)
