@@ -82,11 +82,9 @@ export default function TransparenciaPage() {
         <section className="relative z-10 pt-0 pb-0 mt-8">
           <div className="w-full h-[150px] overflow-hidden relative">
             <div 
-              className="absolute inset-0 w-full h-full"
+              className="absolute inset-0 w-full h-full bg-cover bg-center"
               style={{
-                backgroundImage: 'linear-gradient(135deg, #3b0764 0%, #6b21a8 50%, #9333ea 100%)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center'
+                backgroundImage: `url('/images/transparency/purple-gradient-bg.png')`
               }}
             />
             <img 
