@@ -6,6 +6,29 @@ Radio Congreso is a comprehensive digital platform for the Mexican Congress buil
 
 The platform features a content management system for administrators to manage news articles, radio programs, live streams, and legislative information. It includes multiple transmission channels (45.1, 45.2, 45.3), live radio streaming with HLS support, and a responsive design optimized for mobile, tablet, and desktop devices.
 
+## Recent Changes (October 2025)
+
+### Transparency Portal Redesign
+- Redesigned all transparency cards using pure CSS/Tailwind (removed PNG dependencies)
+- Implemented unified TransparencyCard component with:
+  - Gradient pill-shaped headers (purple to fuchsia)
+  - Dark indigo/purple gradient body with rounded borders
+  - Shadow and glow effects for visual depth
+  - Optional circular "+" button with gradient
+  - Support for both descriptive text and downloadable file lists
+- Applied consistent design across all 7 transparency sections:
+  - Información de Utilidad Pública
+  - Estructura y Presupuesto
+  - Normatividad
+  - Compromisos con la Transparencia
+  - Transparencia Focalizada
+  - Datos Abiertos
+  - Acerca de Nosotros
+- Added comprehensive accessibility features:
+  - ARIA labels for screen readers
+  - Visible focus styles for keyboard navigation
+  - Semantic HTML structure
+
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
