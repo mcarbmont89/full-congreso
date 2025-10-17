@@ -8,13 +8,23 @@ The platform features a content management system for administrators to manage n
 
 ## Recent Changes (October 2025)
 
-### Transparency Portal Redesign
+### Transparency Portal Redesign - Button Update & Hydration Fix
+- **Button Design Enhancement**: Redesigned card buttons from circular "+" to pill-shaped "Entra aquí" buttons
+  - Gradient pill buttons (purple to fuchsia) with "+ Entra aquí" text
+  - Visual connecting line from button to card title
+  - Hover effects with scale transform and enhanced shadows
+  - Improved accessibility with descriptive ARIA labels
+- **React Hydration Fix**: Resolved critical loading state bug in transparency page
+  - Removed loading state to prevent server/client hydration mismatch
+  - Page now renders immediately and populates data via client-side fetch
+  - Fixed "Cargando..." infinite loop issue
+- **Instagram Icon SVG Fix**: Replaced malformed Instagram SVG path in footer
 - Redesigned all transparency cards using pure CSS/Tailwind (removed PNG dependencies)
 - Implemented unified TransparencyCard component with:
   - Gradient pill-shaped headers (purple to fuchsia)
   - Dark indigo/purple gradient body with rounded borders
   - Shadow and glow effects for visual depth
-  - Optional circular "+" button with gradient
+  - Pill-shaped "Entra aquí" button with connecting line to title
   - Support for both descriptive text and downloadable file lists
 - Applied consistent design across all 7 transparency sections with responsive grid layouts:
   - Información de Utilidad Pública (3-column grid)

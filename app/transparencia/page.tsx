@@ -31,27 +31,13 @@ interface TransparencySection {
 
 export default function TransparenciaPage() {
   const [sections, setSections] = useState<TransparencySection[]>([])
-  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    loadSections()
+    fetch('/api/transparency-sections', { cache: 'no-store' })
+      .then(res => res.json())
+      .then(data => setSections(data))
+      .catch(err => console.error('Error loading transparency sections:', err))
   }, [])
-
-  const loadSections = async () => {
-    try {
-      const response = await fetch('/api/transparency-sections', {
-        cache: 'no-store'
-      })
-      if (response.ok) {
-        const data = await response.json()
-        setSections(data)
-      }
-    } catch (error) {
-      console.error('Error loading transparency sections:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
 
   const getSectionByKey = (key: string) => {
     return sections.find(s => s.sectionKey === key)
@@ -62,14 +48,6 @@ export default function TransparenciaPage() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
-  }
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-700 via-purple-600 to-pink-500 flex items-center justify-center">
-        <p className="text-white text-xl">Cargando...</p>
-      </div>
-    )
   }
 
   return (

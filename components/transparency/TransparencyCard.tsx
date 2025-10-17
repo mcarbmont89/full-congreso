@@ -79,21 +79,26 @@ export default function TransparencyCard({
       </div>
 
       {hasButton && linkUrl && (
-        <Link 
-          href={linkUrl}
-          aria-label={`Ver más sobre ${title}`}
-          className="mt-6 flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-600 shadow-lg shadow-purple-500/50 hover:scale-110 transition-transform ring-2 ring-white/20 group-hover:shadow-xl group-hover:shadow-purple-500/70 focus:outline-none focus:ring-4 focus:ring-purple-400"
-        >
-          <svg 
-            className="w-8 h-8 text-white" 
-            fill="none" 
-            stroke="currentColor" 
-            viewBox="0 0 24 24"
-            aria-hidden="true"
+        <div className="relative mt-6">
+          <div className="absolute bottom-full left-1/2 -translate-x-1/2 w-0.5 h-8 bg-gradient-to-b from-transparent via-purple-400/50 to-purple-400"></div>
+          
+          <Link 
+            href={linkUrl}
+            aria-label={`Ver más sobre ${title}`}
+            className="flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-purple-600 to-fuchsia-600 shadow-lg shadow-purple-500/50 hover:scale-105 transition-transform ring-2 ring-white/20 group-hover:shadow-xl group-hover:shadow-purple-500/70 focus:outline-none focus:ring-4 focus:ring-purple-400"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
-          </svg>
-        </Link>
+            <svg 
+              className="w-5 h-5 text-white" 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M12 4v16m8-8H4" />
+            </svg>
+            <span className="text-white font-semibold text-sm">Entra aquí</span>
+          </Link>
+        </div>
       )}
     </div>
   )
