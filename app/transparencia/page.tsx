@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Footer from "@/components/footer"
+import TransparencyCard from "@/components/transparency/TransparencyCard"
 
 interface TransparencyFileItem {
   label: string
@@ -228,30 +229,13 @@ export default function TransparenciaPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {section.cardsData.map((card, index) => (
-                      <div key={index} className="group">
-                        <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20">
-                          <div className="inline-block bg-purple-600 rounded-full px-6 py-2 mb-6">
-                            <h3 className="text-sm font-bold tracking-wide">{card.title}</h3>
-                          </div>
-
-                          <div className="mb-8 min-h-[240px]">
-                            <p className="text-white/90 leading-relaxed text-sm">
-                              {card.description}
-                            </p>
-                          </div>
-
-                          {card.hasButton && card.linkUrl && (
-                            <a href={card.linkUrl}>
-                              <button className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-5 rounded-full transition-all duration-300 group-hover:scale-105">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                <span className="text-sm">Entra aquí</span>
-                              </button>
-                            </a>
-                          )}
-                        </div>
-                      </div>
+                      <TransparencyCard
+                        key={index}
+                        title={card.title}
+                        description={card.description}
+                        linkUrl={card.linkUrl}
+                        hasButton={card.hasButton}
+                      />
                     ))}
                   </div>
                 </>
@@ -284,30 +268,13 @@ export default function TransparenciaPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                     {section.cardsData.map((card, index) => (
-                      <div key={index} className="group">
-                        <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20">
-                          <div className="inline-block bg-purple-600 rounded-full px-6 py-2 mb-6">
-                            <h3 className="text-sm font-bold tracking-wide">{card.title}</h3>
-                          </div>
-
-                          <div className="mb-8 min-h-[240px]">
-                            <p className="text-white/90 leading-relaxed text-sm">
-                              {card.description}
-                            </p>
-                          </div>
-
-                          {card.hasButton && card.linkUrl && (
-                            <a href={card.linkUrl}>
-                              <button className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-5 rounded-full transition-all duration-300 group-hover:scale-105">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                <span className="text-sm">Entra aquí</span>
-                              </button>
-                            </a>
-                          )}
-                        </div>
-                      </div>
+                      <TransparencyCard
+                        key={index}
+                        title={card.title}
+                        description={card.description}
+                        linkUrl={card.linkUrl}
+                        hasButton={card.hasButton}
+                      />
                     ))}
                   </div>
                 </>
@@ -340,30 +307,13 @@ export default function TransparenciaPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                     {section.cardsData.map((card, index) => (
-                      <div key={index} className="group">
-                        <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20">
-                          <div className="inline-block bg-purple-600 rounded-full px-6 py-2 mb-6">
-                            <h3 className="text-sm font-bold tracking-wide">{card.title}</h3>
-                          </div>
-
-                          <div className="mb-8 min-h-[200px]">
-                            <p className="text-white/90 leading-relaxed text-sm">
-                              {card.description}
-                            </p>
-                          </div>
-
-                          {card.hasButton && card.linkUrl && (
-                            <a href={card.linkUrl}>
-                              <button className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-5 rounded-full transition-all duration-300 group-hover:scale-105">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                <span className="text-sm">Entra aquí</span>
-                              </button>
-                            </a>
-                          )}
-                        </div>
-                      </div>
+                      <TransparencyCard
+                        key={index}
+                        title={card.title}
+                        description={card.description}
+                        linkUrl={card.linkUrl}
+                        hasButton={card.hasButton}
+                      />
                     ))}
                   </div>
                 </>
@@ -396,30 +346,13 @@ export default function TransparenciaPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                     {section.cardsData.map((card, index) => (
-                      <div key={index} className="group">
-                        <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20">
-                          <div className="inline-block bg-purple-600 rounded-full px-6 py-2 mb-6">
-                            <h3 className="text-sm font-bold tracking-wide">{card.title}</h3>
-                          </div>
-
-                          <div className="mb-8 min-h-[200px]">
-                            <p className="text-white/90 leading-relaxed text-sm">
-                              {card.description}
-                            </p>
-                          </div>
-
-                          {card.hasButton && card.linkUrl && (
-                            <a href={card.linkUrl}>
-                              <button className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-5 rounded-full transition-all duration-300 group-hover:scale-105">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                <span className="text-sm">Entra aquí</span>
-                              </button>
-                            </a>
-                          )}
-                        </div>
-                      </div>
+                      <TransparencyCard
+                        key={index}
+                        title={card.title}
+                        description={card.description}
+                        linkUrl={card.linkUrl}
+                        hasButton={card.hasButton}
+                      />
                     ))}
                   </div>
                 </>
@@ -603,30 +536,13 @@ export default function TransparenciaPage() {
 
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {section.cardsData.map((card, index) => (
-                      <div key={index} className="group">
-                        <div className="bg-gradient-to-br from-purple-700 to-purple-900 rounded-3xl p-6 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-                          <div className="inline-block bg-purple-500 rounded-full px-5 py-2 mb-5">
-                            <h3 className="text-xs font-bold tracking-wide">{card.title}</h3>
-                          </div>
-
-                          <div className="mb-6 min-h-[120px]">
-                            <p className="text-white/90 leading-relaxed text-sm">
-                              {card.description}
-                            </p>
-                          </div>
-
-                          {card.hasButton && card.linkUrl && (
-                            <a href={card.linkUrl}>
-                              <button className="inline-flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm border-2 border-white/40 text-white font-semibold py-2 px-4 rounded-full transition-all duration-300 group-hover:scale-105">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                                </svg>
-                                <span className="text-sm">Entra aquí</span>
-                              </button>
-                            </a>
-                          )}
-                        </div>
-                      </div>
+                      <TransparencyCard
+                        key={index}
+                        title={card.title}
+                        description={card.description}
+                        linkUrl={card.linkUrl}
+                        hasButton={card.hasButton}
+                      />
                     ))}
                   </div>
                 </>
