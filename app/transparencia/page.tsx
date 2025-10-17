@@ -260,8 +260,14 @@ export default function TransparenciaPage() {
           </div>
         </section>
 
-        <section id="estructura" className="bg-gradient-to-br from-purple-700 via-purple-600 to-purple-800 py-16 scroll-mt-20">
-          <div className="container mx-auto px-6">
+        <section id="estructura" className="relative py-16 scroll-mt-20 overflow-hidden">
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('/images/transparency/hexagonal-pattern-bg.png')`
+            }}
+          />
+          <div className="container mx-auto px-6 relative z-10">
             {(() => {
               const section = getSectionByKey('estructura-presupuesto')
               if (!section) return null
@@ -310,8 +316,14 @@ export default function TransparenciaPage() {
           </div>
         </section>
 
-        <section id="normatividad" className="bg-gradient-to-br from-purple-700 via-purple-600 to-purple-800 py-16 scroll-mt-20">
-          <div className="container mx-auto px-6">
+        <section id="normatividad" className="relative py-16 scroll-mt-20 overflow-hidden">
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('/images/transparency/hexagonal-pattern-bg.png')`
+            }}
+          />
+          <div className="container mx-auto px-6 relative z-10">
             {(() => {
               const section = getSectionByKey('normatividad')
               if (!section) return null
@@ -360,8 +372,14 @@ export default function TransparenciaPage() {
           </div>
         </section>
 
-        <section id="compromisos" className="bg-gradient-to-br from-purple-700 via-purple-600 to-purple-800 py-16 scroll-mt-20">
-          <div className="container mx-auto px-6">
+        <section id="compromisos" className="relative py-16 scroll-mt-20 overflow-hidden">
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('/images/transparency/hexagonal-pattern-bg.png')`
+            }}
+          />
+          <div className="container mx-auto px-6 relative z-10">
             {(() => {
               const section = getSectionByKey('compromisos-transparencia')
               if (!section) return null
@@ -410,8 +428,14 @@ export default function TransparenciaPage() {
           </div>
         </section>
 
-        <section id="focalizada" className="bg-gradient-to-br from-purple-700 via-purple-600 to-purple-800 py-16 scroll-mt-20">
-          <div className="container mx-auto px-6">
+        <section id="focalizada" className="relative py-16 scroll-mt-20 overflow-hidden">
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('/images/transparency/hexagonal-pattern-bg.png')`
+            }}
+          />
+          <div className="container mx-auto px-6 relative z-10">
             {(() => {
               const section = getSectionByKey('transparencia-focalizada')
               if (!section) return null
@@ -476,8 +500,14 @@ export default function TransparenciaPage() {
           </div>
         </section>
 
-        <section id="datos-abiertos" className="bg-gradient-to-br from-purple-700 via-purple-600 to-purple-800 py-16 scroll-mt-20">
-          <div className="container mx-auto px-6">
+        <section id="datos-abiertos" className="relative py-16 scroll-mt-20 overflow-hidden">
+          <div 
+            className="absolute inset-0 bg-cover bg-center"
+            style={{
+              backgroundImage: `url('/images/transparency/hexagonal-pattern-bg.png')`
+            }}
+          />
+          <div className="container mx-auto px-6 relative z-10">
             {(() => {
               const section = getSectionByKey('datos-abiertos')
               if (!section) return null
