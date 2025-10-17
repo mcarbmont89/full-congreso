@@ -368,13 +368,12 @@ export default function TransparenciaPage() {
 
               return (
                 <>
-                  <div className="flex items-center gap-6 mb-12">
-                    <div className="w-20 h-20 rounded-full border-4 border-white bg-white/20 flex items-center justify-center flex-shrink-0">
-                      <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
-                      </svg>
-                    </div>
-                    <h2 className="text-4xl md:text-5xl font-bold text-white">{section.sectionTitle}</h2>
+                  <div className="w-full mb-12">
+                    <img 
+                      src="/images/transparency/compromisos-banner.png" 
+                      alt="Compromisos con la Transparencia" 
+                      className="w-full h-auto object-contain"
+                    />
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
