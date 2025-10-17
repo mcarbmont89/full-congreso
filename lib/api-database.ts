@@ -1404,8 +1404,8 @@ export async function getAllTransparencySectionsFromDB(): Promise<TransparencySe
     return result.rows.map(row => ({
       ...row,
       id: row.id.toString(),
-      createdAt: new Date(row.createdAt),
-      updatedAt: new Date(row.updatedAt)
+      createdAt: row.createdAt instanceof Date ? row.createdAt.toISOString() : row.createdAt,
+      updatedAt: row.updatedAt instanceof Date ? row.updatedAt.toISOString() : row.updatedAt
     }))
   } catch (error) {
     console.error('Error fetching transparency sections:', error)

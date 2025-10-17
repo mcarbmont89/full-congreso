@@ -16,18 +16,19 @@ The platform features a content management system for administrators to manage n
   - Shadow and glow effects for visual depth
   - Optional circular "+" button with gradient
   - Support for both descriptive text and downloadable file lists
-- Applied consistent design across all 7 transparency sections:
-  - Información de Utilidad Pública
-  - Estructura y Presupuesto
-  - Normatividad
-  - Compromisos con la Transparencia
-  - Transparencia Focalizada
-  - Datos Abiertos
-  - Acerca de Nosotros
+- Applied consistent design across all 7 transparency sections with responsive grid layouts:
+  - Información de Utilidad Pública (3-column grid)
+  - Estructura y Presupuesto (3-column grid)
+  - Normatividad (3-column grid)
+  - Compromisos con la Transparencia (3-column grid)
+  - Transparencia Focalizada (3-column grid)
+  - Datos Abiertos (3-column grid)
+  - Acerca de Nosotros (4-column grid)
 - Added comprehensive accessibility features:
   - ARIA labels for screen readers
   - Visible focus styles for keyboard navigation
   - Semantic HTML structure
+- Fixed Date serialization in transparency sections API for proper JSON responses
 
 ## User Preferences
 
